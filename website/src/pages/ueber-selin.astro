@@ -1,13 +1,56 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
 import Button from "../components/Button.astro";
-import ImagePlaceholder from "../components/ImagePlaceholder.astro";
+import Icon from "../components/Icon.astro";
+import SelinSlideshow from "../components/SelinSlideshow.astro";
 import CtaBanner from "../components/CtaBanner.astro";
-import { morpheusJourney, site } from "../data/site";
+import { whatsappLink, site } from "../data/site";
+import selinHero from "../assets/selin-1.jpeg";
+import phase1 from "../assets/morpheus-5.jpeg";
+import phase2 from "../assets/morpheus-3.jpeg";
+import phase3 from "../assets/morpheus-meer.jpeg";
 
 const title = "Über Selin Weikard & die Geschichte von Morpheus";
 const description =
   "Kein Diplom, aber drei Jahre echte Erfahrung: Wie aus der Krankheit von Rhodesian Ridgeback Morpheus die ganzheitliche Arbeit von Selin Weikard wurde.";
+
+const chips = [
+  { icon: "book", t: "In Ausbildung zur Tierheilpraktikerin" },
+  { icon: "search", t: "3 Jahre Eigenrecherche" },
+  { icon: "leaf", t: "Schwerpunkt Tierhomöopathie" },
+  { icon: "users", t: "Netzwerk aus echten Experten" },
+];
+
+const journey = [
+  {
+    src: phase1,
+    pos: "center 26%",
+    phase: "Die Leidenszeit",
+    punch: "Die Hundemütze als Notlösung.",
+    caption:
+      "Sie sollte verhindern, dass er sich beim Kopfschütteln die Ohren aufschlägt – aber keine Antwort auf die eigentliche Frage: Warum ist sein Immunsystem so aus dem Gleichgewicht?",
+    alt: "Morpheus mit Hundemütze blickt in die Kamera",
+  },
+  {
+    src: phase2,
+    pos: "center 38%",
+    phase: "Der Prozess",
+    punch: "Darm sanieren, Ursache angehen.",
+    caption:
+      "Ernährung umgestellt, Belastungen ausgeleitet. Die alten Spuren sind noch da – aber er findet Schritt für Schritt zurück zu sich.",
+    alt: "Ruhige Nahaufnahme vom Gesicht von Morpheus",
+  },
+  {
+    src: phase3,
+    pos: "66% center",
+    phase: "Heute",
+    punch: "Gesund, frei, mit wachem Blick.",
+    caption:
+      "Mit fast 8 Jahren: glänzendes Fell, klare Augen, keine Ohrenprobleme mehr. Ich koche bis heute für ihn – aus Überzeugung.",
+    alt: "Morpheus am Meer im warmen Abendlicht",
+  },
+];
 
 const schema = {
   "@context": "https://schema.org",
@@ -22,30 +65,62 @@ const schema = {
 };
 ---
 <BaseLayout title={title} description={description} path="/ueber-selin" schema={schema}>
-  <!-- Hero -->
-  <section class="bg-gradient-to-b from-petrol-50 to-sand-50">
-    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-20 lg:px-8">
-      <div class="reveal">
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 via-sand-50 to-sand-50">
+    <div class="pointer-events-none absolute -right-24 top-0 h-96 w-96 rounded-full bg-petrol-100/60 blur-3xl"></div>
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24 lg:px-8">
+      <div class="reveal is-visible">
         <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Über mich</p>
-        <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">
+        <h1 class="mt-3 font-serif text-4xl leading-[1.08] text-petrol-900 sm:text-5xl lg:text-[3.2rem]">
           Vom Skeptiker zur Überzeugungstäterin
         </h1>
-        <p class="prose-lead mt-6">
-          Ich gehörte selbst zu den Menschen, die über Homöopathie gelacht haben. Zuckerkügelchen,
-          Einbildung, Placebo – ich kannte alle Argumente, und ich habe sie selbst benutzt. Dann kam
-          Morpheus.
+        <p class="prose-lead mt-6 max-w-xl">
+          Ich gehörte selbst zu den Menschen, die über Homöopathie gelacht haben – Zuckerkügelchen,
+          Einbildung, Placebo. Ich kannte alle Argumente und habe sie selbst benutzt. Dann kam
+          <strong class="text-petrol-800">Morpheus</strong>.
         </p>
+        <ul class="mt-7 flex flex-wrap gap-2.5">
+          {
+            chips.map((c) => (
+              <li class="inline-flex items-center gap-2 rounded-full border border-petrol-100 bg-white/70 px-3.5 py-1.5 text-sm font-medium text-petrol-800">
+                <Icon name={c.icon} class="h-4 w-4 text-clay-600" strokeWidth={2} />
+                {c.t}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-8">
+          <Button href={whatsappLink()} variant="primary" size="lg" external class="wag-hover group">
+            <Icon name="paw" class="wag h-5 w-5" />
+            Lern mich kennen
+          </Button>
+        </div>
       </div>
-      <div class="reveal">
-        <ImagePlaceholder label="Portrait: Selin Weikard mit Morpheus" ratio="portrait" tone="petrol" class="shadow-xl" />
+      <div class="reveal is-visible">
+        <div class="mx-auto max-w-sm overflow-hidden rounded-[1.75rem] border-[6px] border-white shadow-2xl lg:max-w-none">
+          <Image
+            src={selinHero}
+            alt="Selin Weikard mit Morpheus im blühenden Rapsfeld"
+            widths={[480, 768, 1024]}
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            loading="eager"
+            fetchpriority="high"
+            class="aspect-[4/5] w-full object-cover"
+            style="object-position: center 35%;"
+          />
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Fließtext-Geschichte -->
-  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="rich-text reveal">
-      <h2>Wie Morpheus zu mir kam</h2>
+  <!-- ===================== MEINE GESCHICHTE ===================== -->
+  <section class="mx-auto max-w-3xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="reveal text-center">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Meine Geschichte</p>
+      <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl">Drei Jahre, die alles verändert haben</h2>
+    </div>
+    <div class="rich-text reveal mt-10">
+      <h3>Wie Morpheus zu mir kam</h3>
       <p>
         Ich habe mir meine Züchterin bewusst ausgesucht – ich wollte einen Welpen, der sozialisiert
         mit anderen Tieren aufwächst. Pferde, Hunde, das ganze Leben. Kein Zwinger, kein isolierter
@@ -60,7 +135,7 @@ const schema = {
       </p>
       <blockquote>„Tiere suchen sich ihren Menschen aus. Da bin ich mir inzwischen sicher.“</blockquote>
 
-      <h2>Drei Jahre, die alles verändert haben</h2>
+      <h3>Der lange Kampf</h3>
       <p>
         Mit einem Jahr fingen Morpheus’ Ohrenprobleme an. Was harmlos aussah, wurde zu einem Kampf,
         der drei Jahre dauern sollte. Antibiotika und Ohrenspülungen brachten keine dauerhafte
@@ -78,7 +153,7 @@ const schema = {
         Wer Recht hatte, hat die Zeit entschieden.“
       </blockquote>
 
-      <h2>Der Wendepunkt</h2>
+      <h3>Der Wendepunkt</h3>
       <p>
         Der Wendepunkt kam nicht vom nächsten Medikament, sondern von einem Perspektivwechsel: Ich
         habe aufgehört, einzelne Symptome zu jagen, und angefangen, seinen ganzen Körper zu
@@ -93,28 +168,44 @@ const schema = {
         hat, wenn nichts anderes mehr half.
       </p>
     </div>
-  </article>
+  </section>
 
-  <!-- Bildstrecke -->
-  <section class="bg-sand-100 py-20">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <!-- ===================== DER WEG VON MORPHEUS (Galerie) ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-900 to-petrol-950 py-24 text-sand-100">
+    <div class="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-petrol-700/30 blur-3xl"></div>
+    <Icon name="paw" class="paw-deco pointer-events-none absolute bottom-8 right-8 h-44 w-44 text-white/[0.03]" />
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <h2 class="font-serif text-3xl text-petrol-900 sm:text-4xl">Der Weg von Morpheus</h2>
-        <p class="mt-4 text-lg text-sand-600">
-          Drei Jahre, drei Phasen. Was Ursachenarbeit wirklich bedeutet – am echten Hund.
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-300">Der Weg von Morpheus</p>
+        <h2 class="mt-3 font-serif text-3xl text-white sm:text-4xl">Drei Jahre, drei Phasen</h2>
+        <p class="mt-4 text-lg leading-relaxed text-sand-100/75">
+          Kein Vorher-Nachher-Versprechen – sondern ein echter Weg, dokumentiert am eigenen Hund.
         </p>
       </div>
-      <div class="mt-12 grid gap-8 md:grid-cols-3">
+      <div class="stagger mt-14 grid gap-6 md:grid-cols-3">
         {
-          morpheusJourney.map((item, i) => (
-            <figure class="reveal">
-              <div class="relative">
-                <ImagePlaceholder label={item.alt} ratio="portrait" tone={i === 2 ? "petrol" : "sand"} />
-                <span class="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-petrol-800 shadow-sm">
-                  {i + 1}. {item.phase}
+          journey.map((item, i) => (
+            <figure class="reveal group">
+              <div class="relative overflow-hidden rounded-2xl shadow-xl ring-1 ring-white/10">
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  widths={[400, 640, 900]}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  loading="lazy"
+                  class="aspect-[3/4] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
+                  style={`object-position:${item.pos}`}
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-petrol-950/95 via-petrol-950/20 to-transparent" />
+                <span class="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-black/35 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-clay-500 text-[0.65rem] text-white">{i + 1}</span>
+                  {item.phase}
                 </span>
+                <figcaption class="absolute inset-x-0 bottom-0 p-5">
+                  <p class="font-serif text-xl leading-snug text-white">{item.punch}</p>
+                </figcaption>
               </div>
-              <figcaption class="mt-4 text-sm leading-relaxed text-sand-600">{item.caption}</figcaption>
+              <p class="mt-4 text-sm leading-relaxed text-sand-100/70">{item.caption}</p>
             </figure>
           ))
         }
@@ -122,10 +213,47 @@ const schema = {
     </div>
   </section>
 
-  <!-- Transparenz / Qualifikation -->
-  <section class="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
-    <div class="reveal rounded-2xl border border-sand-200 bg-white p-8 sm:p-10">
-      <h2 class="font-serif text-2xl text-petrol-900">Ehrlich zu meiner Qualifikation</h2>
+  <!-- ===================== SELIN & MORPHEUS ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-clay-50 via-sand-100 to-clay-100/60 py-24">
+    <Icon name="paw" class="paw-deco pointer-events-none absolute -left-8 top-12 h-40 w-40 text-clay-300/25" />
+    <Icon name="paw" class="paw-deco-alt pointer-events-none absolute bottom-10 right-8 h-24 w-24 text-clay-300/20" />
+    <div class="relative mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+      <div class="reveal">
+        <div class="mx-auto max-w-sm overflow-hidden rounded-[1.75rem] border-[6px] border-white shadow-2xl lg:max-w-none">
+          <SelinSlideshow />
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Seit dem ersten Tag ein Team</p>
+        <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl">Warum ich das mache</h2>
+        <p class="mt-5 leading-relaxed text-sand-700">
+          Dieses Angebot ist nicht am Reißbrett entstanden, sondern aus Liebe zu meinem Hund. Was als
+          verzweifelte Suche nach einer Lösung für Morpheus begann, soll anderen Hundehaltern nicht
+          erst nach Jahren zur Verfügung stehen.
+        </p>
+        <p class="mt-4 leading-relaxed text-sand-700">
+          Mein Anspruch: Jeder Hundehalter, der bereit ist, sich wirklich mit der Gesundheit seines
+          Hundes zu beschäftigen, soll Zugang zu diesem ganzheitlichen Wissen bekommen – unabhängig
+          vom Wohnort.
+        </p>
+        <figure class="mt-8 rounded-2xl bg-white/70 p-6 shadow-sm ring-1 ring-clay-100">
+          <Icon name="sparkle" class="h-6 w-6 text-clay-400" />
+          <blockquote class="mt-2 font-serif text-xl italic leading-relaxed text-petrol-800">
+            Aufgeben war keine Option – weil die Liebe zu meinem Hund einfach stärker war.
+          </blockquote>
+          <figcaption class="mt-3 text-sm font-medium text-clay-700">— Selin Weikard</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TRANSPARENZ / QUALIFIKATION ===================== -->
+  <section class="mx-auto max-w-4xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="reveal rounded-3xl border border-sand-200 bg-white p-8 shadow-sm sm:p-10">
+      <span class="icon-chip mb-5 flex h-12 w-12 bg-petrol-100 text-petrol-600">
+        <Icon name="shield" class="h-6 w-6" />
+      </span>
+      <h2 class="font-serif text-2xl text-petrol-900 sm:text-3xl">Ehrlich zu meiner Qualifikation</h2>
       <p class="mt-4 leading-relaxed text-sand-700">
         Ich habe keine formale Ausbildung zur Tierheilpraktikerin abgeschlossen und stelle das offen
         dar: Ich bin <strong class="text-petrol-800">in Ausbildung zur Tierheilpraktikerin mit
@@ -145,6 +273,9 @@ const schema = {
   </section>
 
   <div class="pb-24">
-    <CtaBanner title="Sollen wir uns kennenlernen?" text="Erzähl mir von deinem Hund – im Erst-Check schauen wir gemeinsam, wo die Ursache liegen könnte." />
+    <CtaBanner
+      title="Sollen wir uns kennenlernen?"
+      text="Erzähl mir von deinem Hund – im Erst-Check schauen wir gemeinsam, wo die Ursache liegen könnte."
+    />
   </div>
 </BaseLayout>

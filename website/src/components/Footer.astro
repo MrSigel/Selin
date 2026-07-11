@@ -1,10 +1,21 @@
 ---
 import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
 import { nav, whatsappLink, site } from "../data/site";
 const year = 2026;
+
+const contact = [
+  { icon: "chat", label: "Kontakt & Terminbuchung", href: "/kontakt", external: false },
+  { icon: "paw", label: "Anfrage über WhatsApp", href: whatsappLink(), external: true },
+  { icon: "book", label: "Gratis-Checkliste", href: "/lead-magnet", external: false },
+  { icon: "sparkle", label: site.email, href: `mailto:${site.email}`, external: false },
+];
 ---
-<footer class="mt-24 border-t border-petrol-800 bg-petrol-900 text-sand-100">
-  <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+<footer class="relative mt-24 overflow-hidden bg-gradient-to-b from-petrol-900 to-petrol-950 text-sand-100">
+  <div class="h-1 w-full bg-gradient-to-r from-petrol-700 via-clay-500 to-petrol-700"></div>
+  <Icon name="paw" class="paw-deco pointer-events-none absolute -bottom-6 right-10 h-48 w-48 text-white/[0.03]" />
+
+  <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
       <div class="lg:col-span-2">
         <Logo variant="light" />
@@ -12,13 +23,20 @@ const year = 2026;
           Ganzheitliche Begleitung für die Gesundheit deines Hundes – Ursache statt Symptom.
           Aus eigener Erfahrung mit Rhodesian Ridgeback Morpheus. Online, weltweit.
         </p>
-        <p class="mt-5 font-serif text-lg text-sand-100 italic">
-          „{site.claim}"
-        </p>
+        <p class="mt-5 max-w-md font-serif text-lg italic text-sand-100">„{site.claim}"</p>
+        <a
+          href={whatsappLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="wag-hover group mt-6 inline-flex items-center gap-2 rounded-full bg-clay-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-clay-700 hover:-translate-y-0.5"
+        >
+          <Icon name="paw" class="wag h-4 w-4" />
+          Erst-Check anfragen
+        </a>
       </div>
 
       <div>
-        <h2 class="text-sm font-semibold uppercase tracking-wider text-sand-100">Navigation</h2>
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-sand-100">Seiten</h2>
         <ul class="mt-4 space-y-2.5 text-sm">
           {
             nav.map((item) => (
@@ -34,21 +52,24 @@ const year = 2026;
 
       <div>
         <h2 class="text-sm font-semibold uppercase tracking-wider text-sand-100">Kontakt</h2>
-        <ul class="mt-4 space-y-2.5 text-sm">
-          <li>
-            <a href="/kontakt" class="text-sand-200/80 transition-colors hover:text-white">Kontakt & Terminbuchung</a>
-          </li>
-          <li>
-            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" class="text-sand-200/80 transition-colors hover:text-white">
-              Anfrage über WhatsApp
-            </a>
-          </li>
-          <li>
-            <a href={`mailto:${site.email}`} class="text-sand-200/80 transition-colors hover:text-white">{site.email}</a>
-          </li>
-          <li>
-            <a href="/lead-magnet" class="text-sand-200/80 transition-colors hover:text-white">Gratis-Checkliste</a>
-          </li>
+        <ul class="mt-4 space-y-3 text-sm">
+          {
+            contact.map((c) => (
+              <li>
+                <a
+                  href={c.href}
+                  target={c.external ? "_blank" : undefined}
+                  rel={c.external ? "noopener noreferrer" : undefined}
+                  class="group flex items-center gap-2.5 text-sand-200/80 transition-colors hover:text-white"
+                >
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-clay-300 transition-colors group-hover:bg-white/10">
+                    <Icon name={c.icon} class="h-4 w-4" strokeWidth={2} />
+                  </span>
+                  <span>{c.label}</span>
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>

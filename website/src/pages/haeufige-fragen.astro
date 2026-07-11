@@ -1,26 +1,40 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import CtaBanner from "../components/CtaBanner.astro";
-import { faqs, site } from "../data/site";
+import { faqs, whatsappLink, site } from "../data/site";
 
 const title = "Häufige Fragen zur ganzheitlichen Hundegesundheit";
 const description =
   "Ersetzt das den Tierarzt? Wie läuft eine Sitzung ab? Antworten auf die wichtigsten Fragen zur ganzheitlichen Begleitung von Selin Weikard.";
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Startseite", item: site.domain },
+      { "@type": "ListItem", position: 2, name: "Häufige Fragen", item: `${site.domain}/haeufige-fragen` },
+    ],
+  },
+];
 ---
 <BaseLayout title={title} description={description} path="/haeufige-fragen" schema={schema}>
-  <section class="bg-gradient-to-b from-petrol-50 to-sand-50">
-    <div class="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20 lg:px-8">
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 to-sand-50">
+    <Icon name="paw" class="paw-deco pointer-events-none absolute -right-6 top-6 h-32 w-32 text-clay-300/20" />
+    <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20 lg:px-8">
       <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Häufige Fragen</p>
       <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Ehrliche Antworten vorab</h1>
       <p class="prose-lead mx-auto mt-6 max-w-2xl">
@@ -30,8 +44,38 @@ const schema = {
     </div>
   </section>
 
-  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <FaqAccordion items={faqs} />
+  <!-- ===================== FRAGEN ===================== -->
+  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-3">
+      <!-- Sticky Kontaktkarte -->
+      <aside class="lg:sticky lg:top-28 lg:self-start">
+        <div class="reveal rounded-2xl border border-sand-200 bg-white p-7 shadow-sm">
+          <span class="icon-chip flex h-12 w-12 bg-clay-100 text-clay-600">
+            <Icon name="chat" class="h-6 w-6" />
+          </span>
+          <h2 class="mt-5 font-serif text-xl text-petrol-900">Deine Frage ist nicht dabei?</h2>
+          <p class="mt-2 text-sm leading-relaxed text-sand-600">
+            Schreib mir einfach über WhatsApp – ich antworte persönlich und unverbindlich.
+          </p>
+          <div class="mt-5">
+            <Button href={whatsappLink()} variant="primary" external class="wag-hover group w-full justify-center">
+              <Icon name="paw" class="wag h-5 w-5" />
+              Frage stellen
+            </Button>
+          </div>
+          <ul class="mt-6 space-y-2.5 border-t border-sand-100 pt-5 text-sm text-sand-600">
+            <li class="flex items-center gap-2"><Icon name="check" class="h-4 w-4 text-petrol-500" strokeWidth={3} /> Persönliche Antwort von Selin</li>
+            <li class="flex items-center gap-2"><Icon name="check" class="h-4 w-4 text-petrol-500" strokeWidth={3} /> Online &amp; weltweit</li>
+            <li class="flex items-center gap-2"><Icon name="check" class="h-4 w-4 text-petrol-500" strokeWidth={3} /> Ohne Verpflichtung</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Akkordeon -->
+      <div class="reveal lg:col-span-2">
+        <FaqAccordion items={faqs} />
+      </div>
+    </div>
   </section>
 
   <div class="pb-24">

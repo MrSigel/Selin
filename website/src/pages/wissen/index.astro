@@ -1,13 +1,27 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import ImagePlaceholder from "../../components/ImagePlaceholder.astro";
+import { Image } from "astro:assets";
+import Icon from "../../components/Icon.astro";
 import CtaBanner from "../../components/CtaBanner.astro";
 import { getCollection } from "astro:content";
 import { site } from "../../data/site";
+import cover1 from "../../assets/morpheus-5.jpeg";
+import cover2 from "../../assets/morpheus-4.jpeg";
+import cover3 from "../../assets/morpheus-2.jpeg";
+import cover4 from "../../assets/morpheus-meer.jpeg";
+
+const covers: Record<string, ImageMetadata> = {
+  "hund-trotz-tierarzt-nicht-gesund": cover1,
+  "darmgesundheit-hund-ausleitung": cover2,
+  "ernaehrungsumstellung-hund-wann-hilft": cover3,
+  "allergien-hund-symptom-oder-ursache": cover4,
+};
+const fallback = cover4;
 
 const posts = (await getCollection("wissen")).sort(
   (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
 );
+const [featured, ...rest] = posts;
 
 const title = "Wissen – Fachartikel zu ganzheitlicher Hundegesundheit";
 const description =
@@ -31,8 +45,10 @@ const schema = {
 };
 ---
 <BaseLayout title={title} description={description} path="/wissen" schema={schema}>
-  <section class="bg-gradient-to-b from-petrol-50 to-sand-50">
-    <div class="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20 lg:px-8">
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 to-sand-50">
+    <Icon name="paw" class="paw-deco pointer-events-none absolute -right-6 top-8 h-32 w-32 text-clay-300/20" />
+    <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20 lg:px-8">
       <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Wissen</p>
       <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Ehrliches Wissen, echte Erfahrung</h1>
       <p class="prose-lead mx-auto mt-6 max-w-2xl">
@@ -43,12 +59,54 @@ const schema = {
   </section>
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="stagger grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Featured -->
+    {
+      featured && (
+        <a
+          href={`/wissen/${featured.id}`}
+          class="reveal group grid overflow-hidden rounded-3xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg lg:grid-cols-2"
+        >
+          <div class="relative overflow-hidden">
+            <Image
+              src={covers[featured.id] ?? fallback}
+              alt={featured.data.title}
+              widths={[480, 768, 1024]}
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              class="h-full min-h-[16rem] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <span class="absolute left-4 top-4 rounded-full bg-clay-600 px-3 py-1 text-xs font-semibold text-white">Neuester Artikel</span>
+          </div>
+          <div class="flex flex-col justify-center p-8 sm:p-10">
+            <div class="flex items-center gap-3 text-xs text-sand-500">
+              <span class="rounded-full bg-petrol-100 px-2.5 py-1 font-medium text-petrol-700">{featured.data.category}</span>
+              {featured.data.readingTime && <span>{featured.data.readingTime}</span>}
+            </div>
+            <h2 class="mt-4 font-serif text-2xl leading-snug text-petrol-900 sm:text-3xl group-hover:text-petrol-700">
+              {featured.data.title}
+            </h2>
+            <p class="mt-3 leading-relaxed text-sand-600">{featured.data.description}</p>
+            <span class="mt-5 inline-flex items-center gap-1.5 font-medium text-petrol-600 group-hover:text-clay-600">
+              Weiterlesen
+              <Icon name="arrowRight" class="h-4 w-4 transition-transform group-hover:translate-x-1" strokeWidth={2} />
+            </span>
+          </div>
+        </a>
+      )
+    }
+
+    <!-- Übrige Artikel -->
+    <div class="stagger mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {
-        posts.map((post) => (
+        rest.map((post) => (
           <article class="reveal group flex flex-col overflow-hidden rounded-2xl border border-sand-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-            <a href={`/wissen/${post.id}`} class="block">
-              <ImagePlaceholder label={post.data.imageLabel ?? post.data.category} ratio="wide" tone="petrol" class="rounded-none" />
+            <a href={`/wissen/${post.id}`} class="relative block overflow-hidden">
+              <Image
+                src={covers[post.id] ?? fallback}
+                alt={post.data.title}
+                widths={[400, 640]}
+                sizes="(max-width: 768px) 100vw, 33vw"
+                class="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
             </a>
             <div class="flex flex-1 flex-col p-6">
               <div class="flex items-center gap-3 text-xs text-sand-500">
