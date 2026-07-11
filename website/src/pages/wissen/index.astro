@@ -52,7 +52,7 @@ const schema = {
       <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Wissen</p>
       <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Ehrliches Wissen, echte Erfahrung</h1>
       <p class="prose-lead mx-auto mt-6 max-w-2xl">
-        Kein Marketing, keine Heilversprechen – sondern das, was ich in drei Jahren mit Morpheus und
+        Kein Marketing, keine Floskeln – sondern das, was ich in drei Jahren mit Morpheus und
         in meiner Arbeit tatsächlich gelernt habe. Für Hundehalter, die die Ursache verstehen wollen.
       </p>
     </div>
@@ -98,8 +98,11 @@ const schema = {
     <div class="stagger mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {
         rest.map((post) => (
-          <article class="reveal group flex flex-col overflow-hidden rounded-2xl border border-sand-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-            <a href={`/wissen/${post.id}`} class="relative block overflow-hidden">
+          <a
+            href={`/wissen/${post.id}`}
+            class="reveal group flex flex-col overflow-hidden rounded-2xl border border-sand-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+          >
+            <div class="relative block overflow-hidden">
               <Image
                 src={covers[post.id] ?? fallback}
                 alt={post.data.title}
@@ -107,14 +110,14 @@ const schema = {
                 sizes="(max-width: 768px) 100vw, 33vw"
                 class="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-            </a>
+            </div>
             <div class="flex flex-1 flex-col p-6">
               <div class="flex items-center gap-3 text-xs text-sand-500">
                 <span class="rounded-full bg-petrol-100 px-2.5 py-1 font-medium text-petrol-700">{post.data.category}</span>
                 {post.data.readingTime && <span>{post.data.readingTime}</span>}
               </div>
-              <h2 class="mt-3 font-serif text-xl leading-snug text-petrol-900">
-                <a href={`/wissen/${post.id}`} class="transition-colors group-hover:text-petrol-700">{post.data.title}</a>
+              <h2 class="mt-3 font-serif text-xl leading-snug text-petrol-900 transition-colors group-hover:text-petrol-700">
+                {post.data.title}
               </h2>
               <p class="mt-2 flex-1 text-sm leading-relaxed text-sand-600">{post.data.description}</p>
               <div class="mt-4 flex items-center justify-between text-xs text-sand-500">
@@ -122,7 +125,7 @@ const schema = {
                 <span class="font-medium text-petrol-600 group-hover:text-clay-600">Weiterlesen →</span>
               </div>
             </div>
-          </article>
+          </a>
         ))
       }
     </div>

@@ -9,7 +9,7 @@ imageLabel: "Foto: Morpheus heute, glänzendes Fell"
 
 „Allergien gehen nie weg. Er braucht immer die Spritze.“ Diesen Satz habe ich bei Morpheus bei jedem Besuch gehört. Er klang endgültig. Und lange habe ich ihn geglaubt.
 
-Heute bekommt Morpheus keine Spritze mehr. Seine Allergien sind weg. Nicht „gemanagt“ – weg. Ich erzähle das nicht als Heilversprechen, sondern weil es zeigt, dass die Geschichte nicht immer dort endet, wo sie scheinbar festgeschrieben ist.
+Heute bekommt Morpheus keine Spritze mehr. Seine Allergien sind weg. Nicht „gemanagt“ – weg. Ich erzähle das, weil es zeigt, dass die Geschichte nicht immer dort endet, wo sie scheinbar festgeschrieben ist.
 
 ## Zwei Wege, mit Allergien umzugehen
 

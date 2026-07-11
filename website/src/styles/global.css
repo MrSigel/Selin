@@ -1,54 +1,61 @@
 @import "tailwindcss";
 
 /* Selbstgehostete Schriften (DSGVO-konform, kein externer Font-CDN) */
-@import "@fontsource-variable/fraunces/index.css";
-@import "@fontsource-variable/inter/index.css";
+@import "@fontsource-variable/newsreader/index.css";
+@import "@fontsource-variable/newsreader/standard-italic.css";
+@import "@fontsource-variable/hanken-grotesk/index.css";
 
 /* ------------------------------------------------------------------ */
-/*  Design-System – Selin Weikard · Ganzheitliche Hundegesundheit      */
-/*  Farbwelt aus dem Konzept: Petrol #2A6B7C, Hellblau #EAF4F7         */
+/*  Design-System – Selin Weikard · „Unter der Oberfläche“             */
+/*  Pinie (Tiefe) · Ocker-Honig (Heilkunde) · Hafer (Papier)          */
+/*  Token-Namen (petrol/clay/sand) bleiben als semantische Rollen:     */
+/*    petrol = Pinien-Grün · clay = Ocker-Honig · sand = Hafer          */
 /* ------------------------------------------------------------------ */
 @theme {
-  /* Marken-Petrol (primär) */
-  --color-petrol-50: #f0f7f9;
-  --color-petrol-100: #eaf4f7;
-  --color-petrol-200: #c9e2e9;
-  --color-petrol-300: #9fccd7;
-  --color-petrol-400: #5fa3b4;
-  --color-petrol-500: #3d8496;
-  --color-petrol-600: #2a6b7c;
-  --color-petrol-700: #245a68;
-  --color-petrol-800: #214b57;
-  --color-petrol-900: #1f3f49;
-  --color-petrol-950: #0f272e;
+  /* Pinien-Grün – Struktur, Tiefe, „unter der Oberfläche“ */
+  --color-petrol-50: #eef4f0;
+  --color-petrol-100: #d8e6dd;
+  --color-petrol-200: #b2cdbc;
+  --color-petrol-300: #83ac94;
+  --color-petrol-400: #54886a;
+  --color-petrol-500: #386c4d;
+  --color-petrol-600: #2a5740;
+  --color-petrol-700: #234737;
+  --color-petrol-800: #1e3b2d;
+  --color-petrol-900: #172d24;
+  --color-petrol-950: #0e1c16;
 
-  /* Warmer Akzent (Terracotta) – für CTAs & Highlights */
-  --color-clay-50: #fbf5f1;
-  --color-clay-100: #f6e7dd;
-  --color-clay-200: #ecccb8;
-  --color-clay-300: #e0aa8b;
-  --color-clay-400: #d3835d;
-  --color-clay-500: #c9683f;
-  --color-clay-600: #bb5334;
-  --color-clay-700: #9c412c;
-  --color-clay-800: #7e3629;
-  --color-clay-900: #672f25;
+  /* Ocker-Honig – der eine warme Akzent (Naturheilkunde, goldene Stunde) */
+  --color-clay-50: #faf3e4;
+  --color-clay-100: #f3e4c3;
+  --color-clay-200: #e8c98d;
+  --color-clay-300: #dbab54;
+  --color-clay-400: #cd9433;
+  --color-clay-500: #b57f22;
+  --color-clay-600: #9c6015;
+  --color-clay-700: #7e4d14;
+  --color-clay-800: #663f16;
+  --color-clay-900: #543514;
 
-  /* Warmes Neutral (Sand/Creme) statt kaltem Grau */
-  --color-sand-50: #faf8f5;
-  --color-sand-100: #f4f0ea;
-  --color-sand-200: #e8e0d4;
-  --color-sand-300: #d5c8b6;
-  --color-sand-400: #b3a48d;
-  --color-sand-500: #8f8069;
-  --color-sand-600: #6f6350;
-  --color-sand-700: #574d3f;
-  --color-sand-800: #3d362c;
-  --color-sand-900: #241f19;
+  /* Hafer – warmes Papier-Neutral */
+  --color-sand-50: #f3f0e7;
+  --color-sand-100: #eae5d7;
+  --color-sand-200: #dbd4c0;
+  --color-sand-300: #c6bda3;
+  --color-sand-400: #a49a7d;
+  --color-sand-500: #7f755b;
+  --color-sand-600: #615943;
+  --color-sand-700: #4a4535;
+  --color-sand-800: #343028;
+  --color-sand-900: #211e17;
+
+  /* Rost (Morpheus’ Fell) – sehr sparsam als Referenz */
+  --color-rust-500: #a9542e;
+  --color-rust-600: #8f4526;
 
   /* Schriften */
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader Variable", ui-serif, Georgia, serif;
 }
 
 /* Basis */
@@ -71,9 +78,14 @@
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
     font-weight: 500;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.01em;
     color: var(--color-petrol-900);
     text-wrap: balance;
+  }
+  /* Newsreader trägt große Headlines am besten mit etwas mehr Gewicht */
+  h1 {
+    font-weight: 560;
+    letter-spacing: -0.018em;
   }
 
   p {

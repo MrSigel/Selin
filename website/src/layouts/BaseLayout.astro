@@ -21,7 +21,7 @@ const {
   description = site.description,
   path = Astro.url.pathname,
   schema,
-  ogImage = "/images/og-default.svg",
+  ogImage = "/images/og.png",
 } = Astro.props;
 
 const canonical = new URL(path, site.domain).href;
@@ -38,8 +38,13 @@ const baseSchema = {
   url: site.domain,
   email: site.email,
   telephone: site.phone,
-  image: new URL("/images/og-default.svg", site.domain).href,
-  logo: new URL("/favicon.svg", site.domain).href,
+  image: new URL("/images/og.png", site.domain).href,
+  logo: {
+    "@type": "ImageObject",
+    url: new URL("/android-chrome-512x512.png", site.domain).href,
+    width: 512,
+    height: 512,
+  },
   slogan: site.claim,
   priceRange: "€€",
   areaServed: "Weltweit",
@@ -77,11 +82,20 @@ const baseSchema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- Favicons & App-Icons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#172d24" />
+    <meta name="msapplication-TileColor" content="#172d24" />
+    <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -91,7 +105,13 @@ const baseSchema = {
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:image" content={new URL(ogImage, site.domain).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Selin Weikard – Ursache statt Symptom" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, site.domain).href} />
 
     <SchemaOrg schema={baseSchema} />
     {schema && <SchemaOrg schema={schema} />}

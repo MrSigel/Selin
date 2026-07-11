@@ -17,7 +17,7 @@ const prefill = `Hallo Selin, ich interessiere mich für das Paket „${pkg.name
 
 const flow = [
   { icon: "chat", t: "Anfrage über WhatsApp", d: "Du meldest dich, wir klären kurz dein Anliegen – unverbindlich." },
-  { icon: "calendar", t: "Termin & Zahlung", d: "Sichere Zahlung per Link, dein Termin ist online gebucht." },
+  { icon: "calendar", t: "Termin & Zahlung", d: "Wir stimmen deinen Termin direkt im Chat ab, die Zahlung läuft sicher per Link." },
   { icon: "play", t: "Sitzung online", d: "Wir sprechen per Videocall – danach bekommst du alles schriftlich." },
 ];
 
@@ -152,7 +152,6 @@ const schema = [
               <Icon name="paw" class="wag h-5 w-5" />
               Über WhatsApp anfragen
             </Button>
-            <Button href={site.bookingUrl} variant="ghost" size="lg" external>Termin buchen</Button>
           </div>
           <ul class="mt-6 space-y-2.5 border-t border-sand-100 pt-5 text-sm text-sand-600">
             <li class="flex items-center gap-2"><Icon name="check" class="h-4 w-4 text-petrol-500" strokeWidth={3} /> Unverbindlich – erst schauen wir, ob es passt</li>

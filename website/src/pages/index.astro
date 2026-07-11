@@ -7,6 +7,7 @@ import morpheusPhase2 from "../assets/morpheus-3.jpeg";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import Marquee from "../components/Marquee.astro";
+import SurfaceDivider from "../components/SurfaceDivider.astro";
 import MorpheusSlideshow from "../components/MorpheusSlideshow.astro";
 import SelinSlideshow from "../components/SelinSlideshow.astro";
 import PackageCard from "../components/PackageCard.astro";
@@ -138,14 +139,16 @@ const journey = [
     <div class="pointer-events-none absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-clay-100/40 blur-3xl"></div>
     <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-stretch lg:py-24 lg:px-8">
       <div class="reveal is-visible flex flex-col justify-center">
-        <h1 class="font-serif text-4xl leading-[1.08] text-petrol-900 sm:text-5xl lg:text-[3.6rem]">
-          Ich war da, wo du jetzt bist. Und ich weiß, wie es weitergeht.
+        <h1 class="font-serif text-[2.7rem] leading-[1.04] text-petrol-900 sm:text-5xl lg:text-[3.7rem]">
+          Ich war da, wo du jetzt bist.
+          <span class="italic font-normal text-petrol-600"> Und ich weiß, wie es weitergeht.</span>
         </h1>
         <p class="prose-lead mt-6 max-w-xl">
           Wenn der Tierarzt nichts Eindeutiges findet oder immer nur Symptome behandelt werden:
-          Ich helfe dir, die eigentliche <strong class="text-petrol-800">Ursache</strong> hinter den
-          Beschwerden und dem Verhalten deines Hundes zu verstehen – ganzheitlich, ehrlich und aus
-          eigener Erfahrung.
+          Ich helfe dir, die eigentliche
+          <strong class="font-medium text-petrol-900 underline decoration-clay-400 decoration-2 underline-offset-4">Ursache</strong>
+          hinter den Beschwerden und dem Verhalten deines Hundes zu verstehen – ganzheitlich, ehrlich
+          und aus eigener Erfahrung.
         </p>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <Button href={whatsappLink()} variant="primary" size="lg" external class="wag-hover group">
@@ -159,7 +162,7 @@ const journey = [
         </div>
         <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-sand-600">
           {
-            ["Aus 3 Jahren echter Erfahrung", "Ursache statt Symptom", "Ohne Heilversprechen"].map((t) => (
+            ["Aus 3 Jahren echter Erfahrung", "Ursache statt Symptom", "Online, weltweit"].map((t) => (
               <span class="flex items-center gap-2">
                 <span class="flex h-5 w-5 items-center justify-center rounded-full bg-petrol-100">
                   <Icon name="check" class="h-3 w-3 text-petrol-600" strokeWidth={2.5} />
@@ -196,6 +199,9 @@ const journey = [
       </div>
     </div>
   </section>
+
+  <!-- Signatur: Oberflächenlinie mit Wurzel (Ursache statt Symptom) -->
+  <SurfaceDivider />
 
   <!-- ===================== LAUFENDER ICON-BALKEN ===================== -->
   <Marquee />

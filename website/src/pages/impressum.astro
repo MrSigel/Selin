@@ -4,8 +4,9 @@ import { legal } from "../data/site";
 ---
 <LegalLayout
   title="Impressum"
-  description="Impressum und Anbieterkennzeichnung von Selin Weikard – Ganzheitliche Hundegesundheit."
+  description="Impressum und Anbieterkennzeichnung gemäß § 5 DDG."
   path="/impressum"
+  showDate={false}
 >
   <h2>Angaben gemäß § 5 DDG</h2>
   <p>
@@ -15,10 +16,13 @@ import { legal } from "../data/site";
     {legal.country}
   </p>
 
+  <h2>Vertreten durch</h2>
+  <p>{legal.representative}</p>
+
   <h2>Kontakt</h2>
   <p>
-    E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a><br />
-    Telefon: <a href={`tel:${legal.phone.replace(/\s/g, "")}`}>{legal.phone}</a>
+    Telefon: <a href={`tel:${legal.phone.replace(/\s/g, "")}`}>{legal.phone}</a><br />
+    E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a>
   </p>
 
   <h2>Umsatzsteuer-Identifikationsnummer</h2>
@@ -29,7 +33,8 @@ import { legal } from "../data/site";
 
   <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
   <p>
-    {legal.name}, Anschrift wie oben.
+    {legal.representative}<br />
+    {legal.name}, {legal.street}, {legal.postalCode} {legal.city}, {legal.country}
   </p>
 
   <h2>Haftung für Inhalte</h2>

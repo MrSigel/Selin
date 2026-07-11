@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import CtaBanner from "../components/CtaBanner.astro";
-import { site } from "../data/site";
+import { site, whatsappLink } from "../data/site";
 
 const title = "Podcast „Drei Perspektiven, ein Hund“";
 const description =
@@ -63,9 +63,9 @@ const schema = {
           vollständigeres Bild ergeben, als jeder für sich. Ehrlich, fachlich und aus der Praxis.
         </p>
         <div class="mt-8">
-          <Button href={site.bookingUrl} variant="primary" size="lg" external class="wag-hover group">
+          <Button href={whatsappLink("Hallo Selin, benachrichtige mich bitte über WhatsApp, sobald der Podcast startet.")} variant="primary" size="lg" external class="wag-hover group">
             <Icon name="paw" class="wag h-5 w-5" />
-            Benachrichtigen lassen
+            Über WhatsApp benachrichtigen lassen
           </Button>
         </div>
       </div>

@@ -10,8 +10,13 @@ import { legal } from "../data/site";
   <h2>1. Verantwortlicher</h2>
   <p>
     Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br />
-    {legal.name}, {legal.street}, {legal.postalCode} {legal.city}, {legal.country}<br />
+    {legal.name}, vertreten durch {legal.representative}<br />
+    {legal.street}, {legal.postalCode} {legal.city}, {legal.country}<br />
     E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a> · Telefon: {legal.phone}
+  </p>
+  <p>
+    Kontakt in Datenschutzfragen: <a href={`mailto:${legal.email}`}>{legal.email}</a>, Telefon
+    +359 88 224 8211.
   </p>
 
   <h2>2. Allgemeines zur Datenverarbeitung</h2>
@@ -40,29 +45,21 @@ import { legal } from "../data/site";
 
   <h2>5. Kontaktaufnahme</h2>
   <p>
-    Wenn du uns per E-Mail, Kontaktformular oder über den Messenger-Dienst WhatsApp kontaktierst,
-    werden deine Angaben zur Bearbeitung der Anfrage und für den Fall von Anschlussfragen gespeichert
-    (Art. 6 Abs. 1 lit. b bzw. lit. f DSGVO). Diese Daten geben wir nicht ohne deine Einwilligung
-    weiter.
+    Wenn du uns per E-Mail oder über den Messenger-Dienst WhatsApp kontaktierst, werden deine Angaben
+    zur Bearbeitung der Anfrage und für den Fall von Anschlussfragen gespeichert (Art. 6 Abs. 1 lit. b
+    bzw. lit. f DSGVO). Diese Daten geben wir nicht ohne deine Einwilligung weiter.
   </p>
 
   <h2>6. WhatsApp</h2>
   <p>
-    Für die Kommunikation bieten wir die Kontaktaufnahme über WhatsApp (Anbieter: WhatsApp Ireland
-    Limited, ein Unternehmen der Meta-Gruppe) an. Wenn du uns über WhatsApp schreibst, werden die von
-    dir übermittelten Daten von WhatsApp verarbeitet. Auf die Datenverarbeitung durch WhatsApp haben
-    wir keinen Einfluss; es gelten zusätzlich die Datenschutzbestimmungen von WhatsApp. Die Nutzung
-    erfolgt auf Grundlage deiner freiwilligen Kontaktaufnahme (Art. 6 Abs. 1 lit. a DSGVO).
+    Anfragen und Terminabstimmungen erfolgen über den Messenger-Dienst WhatsApp (Anbieter: WhatsApp
+    Ireland Limited, ein Unternehmen der Meta-Gruppe). Wenn du uns über WhatsApp schreibst, werden die
+    von dir übermittelten Daten von WhatsApp verarbeitet. Auf die Datenverarbeitung durch WhatsApp
+    haben wir keinen Einfluss; es gelten zusätzlich die Datenschutzbestimmungen von WhatsApp. Die
+    Nutzung erfolgt auf Grundlage deiner freiwilligen Kontaktaufnahme (Art. 6 Abs. 1 lit. a DSGVO).
   </p>
 
-  <h2>7. Terminbuchung</h2>
-  <p>
-    Für die Vereinbarung von Terminen nutzen wir einen externen Buchungsdienst. Die dort eingegebenen
-    Daten (z. B. Name, E-Mail, Terminwunsch) werden ausschließlich zur Durchführung der Terminbuchung
-    verarbeitet (Art. 6 Abs. 1 lit. b DSGVO).
-  </p>
-
-  <h2>8. Zahlungsabwicklung</h2>
+  <h2>7. Zahlungsabwicklung</h2>
   <p>
     Für kostenpflichtige Leistungen setzen wir Zahlungsdienstleister ein. Die für die Zahlung
     erforderlichen Daten werden direkt an den jeweiligen Dienstleister übermittelt und dort gemäß
@@ -70,15 +67,7 @@ import { legal } from "../data/site";
     Kartennummern verarbeiten wir nicht selbst.
   </p>
 
-  <h2>9. Newsletter &amp; kostenlose Materialien</h2>
-  <p>
-    Wenn du dich für kostenlose Materialien (z. B. Checkliste) oder einen Newsletter einträgst,
-    verwenden wir die angegebene E-Mail-Adresse im Double-Opt-in-Verfahren. Deine Einwilligung
-    (Art. 6 Abs. 1 lit. a DSGVO) kannst du jederzeit widerrufen, etwa über den Abmeldelink in jeder
-    E-Mail.
-  </p>
-
-  <h2>10. Deine Rechte</h2>
+  <h2>8. Deine Rechte</h2>
   <p>Dir stehen gegenüber uns folgende Rechte hinsichtlich deiner personenbezogenen Daten zu:</p>
   <ul>
     <li>Recht auf Auskunft (Art. 15 DSGVO)</li>
@@ -93,13 +82,13 @@ import { legal } from "../data/site";
     personenbezogenen Daten zu beschweren.
   </p>
 
-  <h2>11. Datensicherheit</h2>
+  <h2>9. Datensicherheit</h2>
   <p>
     Diese Website nutzt aus Sicherheitsgründen eine SSL-/TLS-Verschlüsselung. Eine verschlüsselte
     Verbindung erkennst du an „https://“ in der Adresszeile deines Browsers.
   </p>
 
-  <h2>12. Aktualität</h2>
+  <h2>10. Aktualität</h2>
   <p>
     Diese Datenschutzerklärung ist aktuell gültig (Stand: {legal.lastUpdated}). Durch die
     Weiterentwicklung der Website oder geänderte gesetzliche Vorgaben kann es notwendig werden, diese

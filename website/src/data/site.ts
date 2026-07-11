@@ -13,19 +13,19 @@ export const site = {
   email: "info@limit-breakers.eu",
   phone: "+359 895 500 755",
   // WhatsApp: internationale Nummer ohne + und ohne Leerzeichen (TODO: echte Nummer eintragen)
+  // Alle Anfragen laufen ausschließlich über WhatsApp.
   whatsappNumber: "491700000000",
   whatsappPrefill:
-    "Hallo Selin, ich möchte mehr über den Erst-Check für meinen Hund erfahren.",
-  // Terminbuchung (Cal.com / Calendly) – TODO: echten Link eintragen
-  bookingUrl: "https://cal.com/selin-weikard/erst-check",
+    "Können wir den Erst-Check durchführen damit ich weiß welches Paket das richtige ist?",
 } as const;
 
 /**
  * Rechtliche Angaben für Impressum, Datenschutz & AGB.
- * Kontaktdaten zunächst über die betreibende Gesellschaft; Name = Selin Weikard.
+ * Betreibende Gesellschaft: Limitbreakers OOD (kein Personenname im Impressum).
  */
 export const legal = {
-  name: "Selin Weikard",
+  name: "Limitbreakers OOD",
+  representative: "Dr. Maya Neidenowa",
   street: "Shipka 36",
   postalCode: "1504",
   city: "Sofia",
@@ -277,7 +277,7 @@ export const faqs = [
   },
   {
     q: "Wie läuft eine Sitzung online ab?",
-    a: "Die Sitzungen finden online per Videocall statt – ortsunabhängig, weltweit. Wir gehen die Anamnese durch, betrachten Ernährung, Körper und Verhalten deines Hundes gemeinsam und du bekommst im Anschluss eine schriftliche Einordnung. Termine werden flexibel über eine Online-Terminbuchung koordiniert.",
+    a: "Die Sitzungen finden online per Videocall statt – ortsunabhängig, weltweit. Wir gehen die Anamnese durch, betrachten Ernährung, Körper und Verhalten deines Hundes gemeinsam und du bekommst im Anschluss eine schriftliche Einordnung. Anfrage und Terminabstimmung laufen unkompliziert über WhatsApp.",
   },
   {
     q: "Was, wenn mein Hund sehr ängstlich ist?",
@@ -294,10 +294,6 @@ export const faqs = [
   {
     q: "Welche Qualifikation hat Selin Weikard?",
     a: "Selin ist in Ausbildung zur Tierheilpraktikerin mit Schwerpunkt Tierhomöopathie. Ihr eigentliches Wissen stammt aus drei Jahren intensiver Eigenrecherche parallel zur Krankheit ihres Hundes Morpheus – aus echten Ergebnissen am eigenen Tier. Für chiropraktische Fragen arbeitet sie mit einem erfahrenen Tier-Chiropraktiker zusammen.",
-  },
-  {
-    q: "Bekomme ich ein Heilversprechen?",
-    a: "Nein. Seriöse Begleitung im Bereich Tiergesundheit kommt ohne Heilversprechen aus. Was geteilt wird, sind Erfahrung, Wissen und ein ganzheitlicher Weg – ehrlich, nachvollziehbar und ohne unrealistische Versprechen.",
   },
   {
     q: "Funktioniert die Beratung auch außerhalb Deutschlands?",
