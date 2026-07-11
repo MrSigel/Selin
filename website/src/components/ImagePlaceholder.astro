@@ -1,0 +1,68 @@
+---
+/**
+ * Platzhalter für echte Fotos (aus dem Konzept sind Fotos vorhanden).
+ * Sobald die Bilder geliefert sind, dieses Element durch <img>/<Image> ersetzen –
+ * der `label`-Text beschreibt genau, welches Motiv hier vorgesehen ist.
+ *
+ * `fill`  → füllt die volle Höhe des Eltern-Containers (statt festem Seitenverhältnis).
+ */
+interface Props {
+  label: string;
+  ratio?: "square" | "portrait" | "landscape" | "wide" | "hero";
+  tone?: "petrol" | "clay" | "sand";
+  fill?: boolean;
+  class?: string;
+}
+const { label, ratio = "landscape", tone = "petrol", fill = false, class: extra = "" } =
+  Astro.props;
+
+const ratios = {
+  square: "aspect-square",
+  portrait: "aspect-[3/4]",
+  landscape: "aspect-[4/3]",
+  wide: "aspect-[16/9]",
+  hero: "aspect-[4/5] sm:aspect-[3/4]",
+};
+const tones = {
+  petrol: "from-petrol-100 to-petrol-200 text-petrol-700",
+  clay: "from-clay-100 to-clay-200 text-clay-700",
+  sand: "from-sand-100 to-sand-200 text-sand-600",
+};
+---
+<div
+  class:list={[
+    "group/ph relative flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br",
+    fill ? "h-full w-full min-h-[24rem]" : ratios[ratio],
+    tones[tone],
+    extra,
+  ]}
+  role="img"
+  aria-label={label}
+>
+  <!-- weiche Deko-Punkte im Hintergrund -->
+  <div
+    class="pointer-events-none absolute inset-0 opacity-[0.35]"
+    style="background-image: radial-gradient(currentColor 1px, transparent 1.4px); background-size: 22px 22px;"
+  >
+  </div>
+
+  <!-- schwebende Pfote -->
+  <svg
+    width="64"
+    height="64"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    class="animate-floaty absolute opacity-30 transition-opacity duration-300 group-hover/ph:opacity-45"
+    aria-hidden="true"
+  >
+    <ellipse cx="12" cy="15.5" rx="4" ry="3.3"></ellipse>
+    <ellipse cx="6.5" cy="10.5" rx="1.7" ry="2.2"></ellipse>
+    <ellipse cx="17.5" cy="10.5" rx="1.7" ry="2.2"></ellipse>
+    <ellipse cx="9.5" cy="7.5" rx="1.6" ry="2.1"></ellipse>
+    <ellipse cx="14.5" cy="7.5" rx="1.6" ry="2.1"></ellipse>
+  </svg>
+
+  <span class="relative z-10 mt-24 max-w-[80%] text-center text-[0.7rem] font-medium uppercase tracking-wider opacity-70">
+    {label}
+  </span>
+</div>

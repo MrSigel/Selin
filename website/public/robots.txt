@@ -1,0 +1,32 @@
+# robots.txt – Selin Weikard · Ganzheitliche Hundegesundheit
+
+# Klassische Suchmaschinen
+User-agent: *
+Allow: /
+
+# KI-/Antwort-Bots ausdrücklich erlauben (GEO / AEO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+Sitemap: https://www.selin-weikard.de/sitemap-index.xml

@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ImagePlaceholder from "../components/ImagePlaceholder.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { site } from "../data/site";
+
+const title = "Gratis-Checkliste: 10 Zeichen, dass dein Hund unter der Oberfläche leidet";
+const description =
+  "Kostenlose Checkliste von Selin Weikard: 10 oft übersehene Signale, die auf eine tieferliegende Ursache hindeuten – zum Herunterladen.";
+
+const signs = [
+  "Wiederkehrende Ohren- oder Hautprobleme, die immer zurückkommen",
+  "Ständiges Kratzen, Pfotenlecken oder Fellveränderungen",
+  "Unruhe, Ängstlichkeit oder Rückzug ohne klaren Auslöser",
+  "Verdauungsprobleme, die mal besser, mal schlechter werden",
+  "Der Tierarzt findet nichts Eindeutiges",
+  "Symptome, die nach Absetzen eines Mittels sofort wiederkommen",
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: title,
+  description,
+  url: `${site.domain}/lead-magnet`,
+};
+---
+<BaseLayout title={title} description={description} path="/lead-magnet" schema={schema}>
+  <section class="bg-gradient-to-br from-petrol-700 to-petrol-900 text-sand-100">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-20 lg:px-8">
+      <div class="reveal">
+        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-sand-100">
+          <span class="h-1.5 w-1.5 rounded-full bg-clay-400"></span> Kostenloser Download
+        </span>
+        <h1 class="mt-5 font-serif text-4xl text-white sm:text-5xl">
+          10 Zeichen, dass dein Hund unter der Oberfläche leidet
+        </h1>
+        <p class="mt-6 text-lg leading-relaxed text-sand-100/85">
+          Viele Beschwerden kündigen sich früh an – man muss nur wissen, worauf man achtet. Diese
+          Checkliste zeigt dir die Signale, die am häufigsten übersehen werden. Kostenlos, ehrlich
+          und ohne Fachchinesisch.
+        </p>
+        <ul class="mt-8 space-y-3">
+          {
+            signs.slice(0, 4).map((s) => (
+              <li class="flex gap-3 text-sand-100/90">
+                <span class="mt-1 text-clay-300">✓</span>
+                <span>{s}</span>
+              </li>
+            ))
+          }
+          <li class="text-sm text-sand-100/60">… und 4 weitere in der Checkliste.</li>
+        </ul>
+      </div>
+
+      <div class="reveal">
+        <div class="rounded-2xl bg-white p-7 shadow-xl sm:p-8">
+          <div class="mx-auto mb-6 max-w-[220px]">
+            <ImagePlaceholder label="Cover: Checkliste PDF" ratio="portrait" tone="clay" />
+          </div>
+          <h2 class="text-center font-serif text-2xl text-petrol-900">Jetzt gratis herunterladen</h2>
+          <p class="mt-2 text-center text-sm text-sand-600">
+            Trag dich ein und du bekommst die Checkliste direkt per E-Mail.
+          </p>
+
+          <!-- TODO: action auf E-Mail-Dienst (Brevo/MailerLite) mit Double-Opt-in setzen -->
+          <form action="#" method="post" class="mt-6 space-y-4">
+            <label class="block">
+              <span class="text-sm font-medium text-sand-700">Dein Vorname</span>
+              <input type="text" name="vorname" required autocomplete="given-name" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 text-sand-800 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-sand-700">Deine E-Mail</span>
+              <input type="email" name="email" required autocomplete="email" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 text-sand-800 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+            </label>
+            <label class="flex items-start gap-3 text-xs text-sand-600">
+              <input type="checkbox" name="datenschutz" required class="mt-0.5 h-4 w-4 rounded border-sand-300 text-petrol-600 focus:ring-petrol-500" />
+              <span>
+                Ich möchte die Checkliste erhalten und bin einverstanden, dass mich Selin Weikard per
+                E-Mail kontaktiert. Abmeldung jederzeit möglich. Details in der Datenschutzerklärung.
+              </span>
+            </label>
+            <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-700">
+              Checkliste anfordern
+            </button>
+          </form>
+          <p class="mt-3 text-center text-xs text-sand-500">100 % kostenlos · kein Spam</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="reveal">
+      <Disclaimer />
+    </div>
+  </section>
+</BaseLayout>

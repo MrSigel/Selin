@@ -1,0 +1,252 @@
+@import "tailwindcss";
+
+/* Selbstgehostete Schriften (DSGVO-konform, kein externer Font-CDN) */
+@import "@fontsource-variable/fraunces/index.css";
+@import "@fontsource-variable/inter/index.css";
+
+/* ------------------------------------------------------------------ */
+/*  Design-System – Selin Weikard · Ganzheitliche Hundegesundheit      */
+/*  Farbwelt aus dem Konzept: Petrol #2A6B7C, Hellblau #EAF4F7         */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Marken-Petrol (primär) */
+  --color-petrol-50: #f0f7f9;
+  --color-petrol-100: #eaf4f7;
+  --color-petrol-200: #c9e2e9;
+  --color-petrol-300: #9fccd7;
+  --color-petrol-400: #5fa3b4;
+  --color-petrol-500: #3d8496;
+  --color-petrol-600: #2a6b7c;
+  --color-petrol-700: #245a68;
+  --color-petrol-800: #214b57;
+  --color-petrol-900: #1f3f49;
+  --color-petrol-950: #0f272e;
+
+  /* Warmer Akzent (Terracotta) – für CTAs & Highlights */
+  --color-clay-50: #fbf5f1;
+  --color-clay-100: #f6e7dd;
+  --color-clay-200: #ecccb8;
+  --color-clay-300: #e0aa8b;
+  --color-clay-400: #d3835d;
+  --color-clay-500: #c9683f;
+  --color-clay-600: #bb5334;
+  --color-clay-700: #9c412c;
+  --color-clay-800: #7e3629;
+  --color-clay-900: #672f25;
+
+  /* Warmes Neutral (Sand/Creme) statt kaltem Grau */
+  --color-sand-50: #faf8f5;
+  --color-sand-100: #f4f0ea;
+  --color-sand-200: #e8e0d4;
+  --color-sand-300: #d5c8b6;
+  --color-sand-400: #b3a48d;
+  --color-sand-500: #8f8069;
+  --color-sand-600: #6f6350;
+  --color-sand-700: #574d3f;
+  --color-sand-800: #3d362c;
+  --color-sand-900: #241f19;
+
+  /* Schriften */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
+}
+
+/* Basis */
+/* Basis-Styles im base-Layer, damit Utility-Klassen (z. B. text-white) sie überschreiben */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-sand-800);
+    background-color: var(--color-sand-50);
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--color-petrol-900);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Fokus-Sichtbarkeit (Barrierefreiheit) */
+  :where(a, button, input, textarea, select):focus-visible {
+    outline: 2px solid var(--color-petrol-600);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* Sanftes Erscheinen beim Scrollen */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+    filter: blur(6px);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform, filter;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* Gestaffelte Reihenfolge – auf Grids/Listen anwenden */
+  .stagger > *:nth-child(1) { --reveal-delay: 60ms; }
+  .stagger > *:nth-child(2) { --reveal-delay: 140ms; }
+  .stagger > *:nth-child(3) { --reveal-delay: 220ms; }
+  .stagger > *:nth-child(4) { --reveal-delay: 300ms; }
+  .stagger > *:nth-child(5) { --reveal-delay: 380ms; }
+  .stagger > *:nth-child(6) { --reveal-delay: 460ms; }
+  .stagger > *:nth-child(7) { --reveal-delay: 540ms; }
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes paw-wag {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-9deg); }
+  75% { transform: rotate(9deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  70% { transform: scale(1.4); opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes bob-in {
+  0% { opacity: 0; transform: translateY(10px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes trot {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes kenburns {
+  from { transform: scale(1.015); }
+  to { transform: scale(1.13); }
+}
+@keyframes fillbar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-floaty { animation: floaty 5s ease-in-out infinite; }
+  .animate-marquee { animation: marquee var(--marquee-duration, 45s) linear infinite; }
+  .group:hover .group-hover\:wag,
+  .wag-hover:hover .wag { animation: paw-wag 0.6s ease-in-out; }
+  .animate-bob { animation: bob-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .group:hover .group-hover\:trot { animation: trot 0.5s ease-in-out infinite; }
+}
+
+/* ---------- Interaktions-Utilities ---------- */
+
+/* Sanftes Anheben bei Hover (Karten) */
+.lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.lift:hover {
+  transform: translateY(-6px);
+}
+
+/* Animierte Nav-Unterstreichung (wächst aus der Mitte) */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-clay-500);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-underline:hover::after,
+.nav-underline[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Icon-Chip mit weichem Hintergrund */
+.icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.9rem;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+.group:hover .icon-chip {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+/* Pulsierender Punkt (Live-/Online-Signal) */
+.ping-dot {
+  position: relative;
+}
+.ping-dot::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: pulse-ring 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Wiederverwendbare Utilities */
+.prose-lead {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--color-sand-700);
+}
+
+/* Fließtext im Blog */
+.rich-text {
+  color: var(--color-sand-800);
+  line-height: 1.8;
+}
+.rich-text > * + * { margin-top: 1.25rem; }
+.rich-text h2 { font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 0.5rem; }
+.rich-text h3 { font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.25rem; }
+.rich-text ul { list-style: disc; padding-left: 1.4rem; }
+.rich-text ol { list-style: decimal; padding-left: 1.4rem; }
+.rich-text li + li { margin-top: 0.4rem; }
+.rich-text a { color: var(--color-petrol-600); text-decoration: underline; text-underline-offset: 3px; }
+.rich-text strong { color: var(--color-petrol-900); font-weight: 600; }
+.rich-text blockquote {
+  border-left: 3px solid var(--color-clay-400);
+  padding-left: 1.25rem;
+  font-style: italic;
+  color: var(--color-sand-700);
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+}

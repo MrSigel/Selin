@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import { faqs, site } from "../data/site";
+
+const title = "Häufige Fragen zur ganzheitlichen Hundegesundheit";
+const description =
+  "Ersetzt das den Tierarzt? Wie läuft eine Sitzung ab? Antworten auf die wichtigsten Fragen zur ganzheitlichen Begleitung von Selin Weikard.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+---
+<BaseLayout title={title} description={description} path="/haeufige-fragen" schema={schema}>
+  <section class="bg-gradient-to-b from-petrol-50 to-sand-50">
+    <div class="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20 lg:px-8">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Häufige Fragen</p>
+      <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Ehrliche Antworten vorab</h1>
+      <p class="prose-lead mx-auto mt-6 max-w-2xl">
+        Bevor du anfragst, findest du hier die Antworten auf die Fragen, die mir am häufigsten
+        gestellt werden. Ist deine nicht dabei? Schreib mir einfach.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <FaqAccordion items={faqs} />
+  </section>
+
+  <div class="pb-24">
+    <CtaBanner
+      title="Noch eine Frage offen?"
+      text="Schreib mir über WhatsApp – ich melde mich persönlich und wir klären dein Anliegen."
+    />
+  </div>
+</BaseLayout>

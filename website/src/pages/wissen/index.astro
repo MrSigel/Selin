@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ImagePlaceholder from "../../components/ImagePlaceholder.astro";
+import CtaBanner from "../../components/CtaBanner.astro";
+import { getCollection } from "astro:content";
+import { site } from "../../data/site";
+
+const posts = (await getCollection("wissen")).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const title = "Wissen – Fachartikel zu ganzheitlicher Hundegesundheit";
+const description =
+  "Ehrliche Fachartikel zu Hundegesundheit, Ernährung, Darm, Allergien und Homöopathie – aus echter Erfahrung mit Rhodesian Ridgeback Morpheus.";
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString("de-DE", { day: "2-digit", month: "long", year: "numeric" });
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "Wissen – Selin Weikard",
+  description,
+  url: `${site.domain}/wissen`,
+  blogPost: posts.map((p) => ({
+    "@type": "BlogPosting",
+    headline: p.data.title,
+    datePublished: p.data.pubDate.toISOString(),
+    url: `${site.domain}/wissen/${p.id}`,
+  })),
+};
+---
+<BaseLayout title={title} description={description} path="/wissen" schema={schema}>
+  <section class="bg-gradient-to-b from-petrol-50 to-sand-50">
+    <div class="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20 lg:px-8">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Wissen</p>
+      <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Ehrliches Wissen, echte Erfahrung</h1>
+      <p class="prose-lead mx-auto mt-6 max-w-2xl">
+        Kein Marketing, keine Heilversprechen – sondern das, was ich in drei Jahren mit Morpheus und
+        in meiner Arbeit tatsächlich gelernt habe. Für Hundehalter, die die Ursache verstehen wollen.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="stagger grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {
+        posts.map((post) => (
+          <article class="reveal group flex flex-col overflow-hidden rounded-2xl border border-sand-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+            <a href={`/wissen/${post.id}`} class="block">
+              <ImagePlaceholder label={post.data.imageLabel ?? post.data.category} ratio="wide" tone="petrol" class="rounded-none" />
+            </a>
+            <div class="flex flex-1 flex-col p-6">
+              <div class="flex items-center gap-3 text-xs text-sand-500">
+                <span class="rounded-full bg-petrol-100 px-2.5 py-1 font-medium text-petrol-700">{post.data.category}</span>
+                {post.data.readingTime && <span>{post.data.readingTime}</span>}
+              </div>
+              <h2 class="mt-3 font-serif text-xl leading-snug text-petrol-900">
+                <a href={`/wissen/${post.id}`} class="transition-colors group-hover:text-petrol-700">{post.data.title}</a>
+              </h2>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-sand-600">{post.data.description}</p>
+              <div class="mt-4 flex items-center justify-between text-xs text-sand-500">
+                <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+                <span class="font-medium text-petrol-600 group-hover:text-clay-600">Weiterlesen →</span>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <div class="py-16">
+    <CtaBanner
+      title="Aus dem Lesen ins Handeln"
+      text="Fragen zu deinem Hund lassen sich am besten persönlich klären. Starte mit dem Erst-Check."
+    />
+  </div>
+</BaseLayout>

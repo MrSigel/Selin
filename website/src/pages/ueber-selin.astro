@@ -1,0 +1,150 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import ImagePlaceholder from "../components/ImagePlaceholder.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import { morpheusJourney, site } from "../data/site";
+
+const title = "Über Selin Weikard & die Geschichte von Morpheus";
+const description =
+  "Kein Diplom, aber drei Jahre echte Erfahrung: Wie aus der Krankheit von Rhodesian Ridgeback Morpheus die ganzheitliche Arbeit von Selin Weikard wurde.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Selin Weikard",
+  description:
+    "Ganzheitliche Hundegesundheits-Beraterin, in Ausbildung zur Tierheilpraktikerin mit Schwerpunkt Tierhomöopathie.",
+  jobTitle: "Ganzheitliche Hundegesundheits-Beraterin",
+  url: `${site.domain}/ueber-selin`,
+  knowsAbout: ["Tierhomöopathie", "Hundeernährung", "Naturheilkunde für Hunde"],
+  worksFor: { "@id": `${site.domain}/#organization` },
+};
+---
+<BaseLayout title={title} description={description} path="/ueber-selin" schema={schema}>
+  <!-- Hero -->
+  <section class="bg-gradient-to-b from-petrol-50 to-sand-50">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-20 lg:px-8">
+      <div class="reveal">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Über mich</p>
+        <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">
+          Vom Skeptiker zur Überzeugungstäterin
+        </h1>
+        <p class="prose-lead mt-6">
+          Ich gehörte selbst zu den Menschen, die über Homöopathie gelacht haben. Zuckerkügelchen,
+          Einbildung, Placebo – ich kannte alle Argumente, und ich habe sie selbst benutzt. Dann kam
+          Morpheus.
+        </p>
+      </div>
+      <div class="reveal">
+        <ImagePlaceholder label="Portrait: Selin Weikard mit Morpheus" ratio="portrait" tone="petrol" class="shadow-xl" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Fließtext-Geschichte -->
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="rich-text reveal">
+      <h2>Wie Morpheus zu mir kam</h2>
+      <p>
+        Ich habe mir meine Züchterin bewusst ausgesucht – ich wollte einen Welpen, der sozialisiert
+        mit anderen Tieren aufwächst. Pferde, Hunde, das ganze Leben. Kein Zwinger, kein isolierter
+        Welpe. Das war mein erster ganzheitlicher Gedanke, bevor ich wusste, dass ich ganzheitlich
+        denke.
+      </p>
+      <p>
+        Eigentlich war ein anderer Welpe aus dem Wurf vorgesehen. Doch den bekamen wir nicht: Sein
+        Ohr war beim Spielen eingerissen, wuchs nicht mehr zu und musste amputiert werden. Und da war
+        Morpheus – der Welpe, der zu mir gekommen war. Der sich mich ausgesucht hatte, nicht
+        andersherum.
+      </p>
+      <blockquote>„Tiere suchen sich ihren Menschen aus. Da bin ich mir inzwischen sicher.“</blockquote>
+
+      <h2>Drei Jahre, die alles verändert haben</h2>
+      <p>
+        Mit einem Jahr fingen Morpheus’ Ohrenprobleme an. Was harmlos aussah, wurde zu einem Kampf,
+        der drei Jahre dauern sollte. Antibiotika und Ohrenspülungen brachten keine dauerhafte
+        Besserung. Apoquel half nicht. Wir haben jede erdenkliche Futterumstellung probiert – Ente,
+        Wasserbüffel, eine Proteinquelle nach der anderen – mit bestenfalls minimaler, nie wirklicher
+        Besserung. Sein Immunsystem wurde dabei immer instabiler.
+      </p>
+      <p>
+        Irgendwann fand ich einen Tierarzt, der auch einen Tierheilpraktiker in der Praxis hatte. Die
+        Diagnose: Allergie. Die Lösung: Desensibilisierung und eine regelmäßige Spritze. Und bei jedem
+        Besuch derselbe Satz: „Allergien gehen nie weg. Er braucht immer die Spritze.“
+      </p>
+      <blockquote>
+        „Morpheus bekommt heute keine Spritze mehr. Seine Allergien sind weg. Nicht ‚gemanagt‘ – weg.
+        Wer Recht hatte, hat die Zeit entschieden.“
+      </blockquote>
+
+      <h2>Der Wendepunkt</h2>
+      <p>
+        Der Wendepunkt kam nicht vom nächsten Medikament, sondern von einem Perspektivwechsel: Ich
+        habe aufgehört, einzelne Symptome zu jagen, und angefangen, seinen ganzen Körper zu
+        betrachten. Der erste Schritt war eine Ausleitung – den Körper zuerst von aufgestauten
+        Belastungen befreien, bevor weitere Mittel greifen können. Parallel dazu Darmsanierung,
+        Rohfütterung beendet, selbst gekocht. Erst dann ging es wirklich bergauf.
+      </p>
+      <p>
+        Heute, kurz vor seinem 8. Geburtstag, ist Morpheus gesund. Ich koche bis heute für ihn – nicht
+        weil ich müsste, sondern weil mir seine Gesundheit das wert ist. Diese drei Jahre haben mich
+        nicht durch ein Diplom zur Expertin gemacht, sondern durch das, was tatsächlich funktioniert
+        hat, wenn nichts anderes mehr half.
+      </p>
+    </div>
+  </article>
+
+  <!-- Bildstrecke -->
+  <section class="bg-sand-100 py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-serif text-3xl text-petrol-900 sm:text-4xl">Der Weg von Morpheus</h2>
+        <p class="mt-4 text-lg text-sand-600">
+          Drei Jahre, drei Phasen. Was Ursachenarbeit wirklich bedeutet – am echten Hund.
+        </p>
+      </div>
+      <div class="mt-12 grid gap-8 md:grid-cols-3">
+        {
+          morpheusJourney.map((item, i) => (
+            <figure class="reveal">
+              <div class="relative">
+                <ImagePlaceholder label={item.alt} ratio="portrait" tone={i === 2 ? "petrol" : "sand"} />
+                <span class="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-petrol-800 shadow-sm">
+                  {i + 1}. {item.phase}
+                </span>
+              </div>
+              <figcaption class="mt-4 text-sm leading-relaxed text-sand-600">{item.caption}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Transparenz / Qualifikation -->
+  <section class="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="reveal rounded-2xl border border-sand-200 bg-white p-8 sm:p-10">
+      <h2 class="font-serif text-2xl text-petrol-900">Ehrlich zu meiner Qualifikation</h2>
+      <p class="mt-4 leading-relaxed text-sand-700">
+        Ich habe keine formale Ausbildung zur Tierheilpraktikerin abgeschlossen und stelle das offen
+        dar: Ich bin <strong class="text-petrol-800">in Ausbildung zur Tierheilpraktikerin mit
+        Schwerpunkt Tierhomöopathie</strong>. Mein eigentliches Wissen stammt aus drei Jahren
+        intensiver Eigenrecherche – jeden Abend, stundenlang, parallel zu Morpheus’ Krankheit. Für
+        chiropraktische Fragen arbeite ich mit einem erfahrenen Tier-Chiropraktiker zusammen.
+      </p>
+      <p class="mt-4 leading-relaxed text-sand-700">
+        Diese Ehrlichkeit ist Teil meiner Arbeit: Ich verkaufe keine Ideologie und keine
+        Heilversprechen. Ich teile, was ich selbst durchlebt und was tatsächlich funktioniert hat.
+      </p>
+      <blockquote class="mt-6 border-l-4 border-clay-400 pl-5 font-serif text-xl italic text-petrol-800">
+        „Kein Zertifikat, keine Ausbildung. Drei Jahre lang jeden Abend recherchiert, gelesen,
+        ausprobiert, beobachtet. Das ist mein Abschluss.“
+      </blockquote>
+    </div>
+  </section>
+
+  <div class="pb-24">
+    <CtaBanner title="Sollen wir uns kennenlernen?" text="Erzähl mir von deinem Hund – im Erst-Check schauen wir gemeinsam, wo die Ursache liegen könnte." />
+  </div>
+</BaseLayout>

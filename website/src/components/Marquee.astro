@@ -1,0 +1,39 @@
+---
+import Icon from "./Icon.astro";
+/**
+ * Dezenter, endlos laufender Icon-Balken (rechts → links).
+ * Minimal animiert, respektiert prefers-reduced-motion (dann statisch).
+ */
+// Eine Gruppe wird zweimal gerendert → nahtlose Endlosschleife (translateX -50%)
+const group = [
+  "paw",
+  "bone",
+  "heart",
+  "leaf",
+  "dog",
+  "sprout",
+  "paw",
+  "bone",
+  "heart",
+  "leaf",
+  "dog",
+  "sprout",
+] as const;
+const items = [...group, ...group];
+---
+<div
+  class="relative overflow-hidden border-y border-sand-200 bg-petrol-50/60 py-4"
+  aria-hidden="true"
+  style="mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);"
+>
+  <div class="animate-marquee flex w-max items-center gap-14 pr-14 text-petrol-300">
+    {
+      items.map((name, i) => (
+        <span class="flex shrink-0 items-center gap-14">
+          <Icon name={name} class={i % 3 === 0 ? "h-6 w-6 text-clay-300" : "h-5 w-5"} strokeWidth={1.6} />
+          <span class="h-1 w-1 rounded-full bg-sand-300" />
+        </span>
+      ))
+    }
+  </div>
+</div>

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"C:/Users/Enric/OneDrive/Desktop/Selin/Hundegesundheitscoach Konzept.docx\" k.zip)",
+      "Bash(unzip -o k.zip -d k)"
+    ]
+  }
+}

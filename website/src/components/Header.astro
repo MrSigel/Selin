@@ -1,0 +1,158 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import { nav, whatsappLink } from "../data/site";
+const current = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? current === "/" : current.startsWith(href);
+
+const topSignals = [
+  { icon: "compass", label: "Online · weltweit", href: "/angebot" },
+  { icon: "search", label: "Ursache statt Symptom", href: "/methode" },
+  { icon: "shield", label: "Ohne Heilversprechen", href: "/haeufige-fragen" },
+  { icon: "paw", label: "3 Jahre mit Morpheus", href: "/ueber-selin" },
+] as const;
+---
+<!-- Trust-Topbar -->
+<div class="hidden bg-petrol-900 text-sand-100 lg:block">
+  <div class="mx-auto grid max-w-7xl grid-cols-4 divide-x divide-petrol-700/50 text-xs">
+    {
+      topSignals.map((s) => (
+        <a
+          href={s.href}
+          class="group flex items-center justify-center gap-2 px-4 py-2 text-sand-100/75 transition-colors duration-200 hover:bg-petrol-800 hover:text-white"
+        >
+          <Icon
+            name={s.icon}
+            class="h-3.5 w-3.5 text-clay-300 transition-transform duration-200 group-hover:scale-125"
+            strokeWidth={2}
+          />
+          <span>{s.label}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<header
+  id="site-header"
+  class="sticky top-0 z-40 border-b border-sand-200/70 bg-sand-50/85 backdrop-blur-md transition-all duration-300"
+>
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <Logo />
+
+    <nav aria-label="Hauptnavigation" class="hidden items-center gap-0.5 lg:flex">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+            class:list={[
+              "nav-underline rounded-full px-3 py-2 text-sm font-medium transition-colors",
+              isActive(item.href)
+                ? "text-petrol-800"
+                : "text-sand-700 hover:text-petrol-800",
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden items-center lg:flex">
+      <a
+        href={whatsappLink()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="wag-hover group inline-flex items-center gap-2 rounded-full bg-clay-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-clay-700 hover:shadow-md hover:-translate-y-0.5"
+      >
+        <Icon name="paw" class="wag h-4 w-4" strokeWidth={0} />
+        Erst-Check anfragen
+      </a>
+    </div>
+
+    <!-- Mobile Toggle -->
+    <button
+      id="menu-toggle"
+      class="inline-flex items-center justify-center rounded-lg p-2 text-petrol-800 transition-colors hover:bg-sand-100 lg:hidden"
+      aria-label="Menü öffnen"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg id="menu-icon-open" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="4" y1="7" x2="20" y2="7"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="17" x2="20" y2="17"></line>
+      </svg>
+      <svg id="menu-icon-close" class="hidden" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+        <line x1="6" y1="18" x2="18" y2="6"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu (animiert ein-/ausklappbar) -->
+  <div
+    id="mobile-menu"
+    class="grid grid-rows-[0fr] overflow-hidden border-sand-200 transition-[grid-template-rows] duration-300 ease-out lg:hidden"
+  >
+    <div class="min-h-0 overflow-hidden">
+      <nav aria-label="Mobile Navigation" class="mx-auto flex max-w-7xl flex-col gap-1 border-t border-sand-200 px-4 py-4">
+        {
+          nav.map((item, i) => (
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
+              style={`--reveal-delay:${i * 40}ms`}
+              class:list={[
+                "menu-item flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-colors",
+                isActive(item.href)
+                  ? "bg-petrol-100 text-petrol-800"
+                  : "text-sand-700 hover:bg-sand-100",
+              ]}
+            >
+              {item.label}
+              <Icon name="arrowRight" class="h-4 w-4 text-sand-400" strokeWidth={2} />
+            </a>
+          ))
+        }
+        <a
+          href={whatsappLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-clay-600 px-4 py-3 text-center text-base font-medium text-white"
+        >
+          <Icon name="paw" class="h-5 w-5" strokeWidth={0} />
+          Erst-Check anfragen
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const openIcon = document.getElementById("menu-icon-open");
+  const closeIcon = document.getElementById("menu-icon-close");
+  let open = false;
+  toggle?.addEventListener("click", () => {
+    open = !open;
+    menu?.classList.toggle("grid-rows-[1fr]", open);
+    menu?.classList.toggle("grid-rows-[0fr]", !open);
+    openIcon?.classList.toggle("hidden", open);
+    closeIcon?.classList.toggle("hidden", !open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Menü schließen" : "Menü öffnen");
+  });
+
+  // Header verdichtet sich beim Scrollen
+  const header = document.getElementById("site-header");
+  const onScroll = () => {
+    if (window.scrollY > 8) header?.classList.add("shadow-md", "py-0");
+    else header?.classList.remove("shadow-md", "py-0");
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>

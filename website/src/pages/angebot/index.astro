@@ -1,0 +1,238 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+import PackageCard from "../../components/PackageCard.astro";
+import Button from "../../components/Button.astro";
+import Icon from "../../components/Icon.astro";
+import Disclaimer from "../../components/Disclaimer.astro";
+import FaqAccordion from "../../components/FaqAccordion.astro";
+import CtaBanner from "../../components/CtaBanner.astro";
+import { packages, faqs, whatsappLink, site } from "../../data/site";
+import heroImg from "../../assets/morpheus-7.jpeg";
+
+const title = "Angebot & Preise – ganzheitliche Hundegesundheits-Begleitung";
+const description =
+  "Transparente Pakete von der ersten Einschätzung bis zur langfristigen Begleitung. Erst-Check ab 99 €. Online, weltweit – Ursache statt Symptom.";
+
+const trustChips = [
+  { icon: "compass", t: "Online · weltweit" },
+  { icon: "search", t: "Transparente Preise" },
+  { icon: "heart", t: "Unverbindlich starten" },
+];
+
+const steps = [
+  { icon: "chat", t: "Anfrage", d: "Du meldest dich über WhatsApp – unkompliziert und ohne Verpflichtung." },
+  { icon: "compass", t: "Passendes Paket", d: "Wir klären dein Anliegen und finden gemeinsam das Paket, das wirklich passt." },
+  { icon: "calendar", t: "Termin & Zahlung", d: "Sichere Zahlung per Link, dein Termin ist online in wenigen Klicks gebucht." },
+  { icon: "play", t: "Sitzung online", d: "Wir sprechen per Videocall – danach bekommst du deine Einschätzung schriftlich." },
+];
+
+const included = [
+  { icon: "compass", t: "Online & weltweit", d: "Alle Sitzungen per Videocall – egal, wo du und dein Hund gerade seid." },
+  { icon: "book", t: "Schriftlich zum Nachlesen", d: "Deine Einschätzung bzw. dein Plan kommt im Anschluss schriftlich zu dir." },
+  { icon: "shield", t: "Ehrlich, ohne Heilversprechen", d: "Begleitung und Beratung – seriös, transparent und ohne leere Versprechen." },
+  { icon: "check", t: "Sichere Zahlung", d: "Bequem und sicher per Zahlungslink – Karte, PayPal, Klarna & mehr." },
+];
+
+const offerFaqs = faqs.filter((f) =>
+  ["Ersetzt", "Sitzung online", "außerhalb Deutschlands", "Für welche Hunde"].some((k) => f.q.includes(k))
+);
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    name: "Ganzheitliche Hundegesundheits-Begleitung",
+    itemListElement: packages.map((p) => ({
+      "@type": "Offer",
+      name: p.name,
+      price: p.priceValue,
+      priceCurrency: "EUR",
+      url: `${site.domain}/angebot/${p.slug}`,
+      description: p.content,
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: offerFaqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Startseite", item: site.domain },
+      { "@type": "ListItem", position: 2, name: "Angebot", item: `${site.domain}/angebot` },
+    ],
+  },
+];
+---
+<BaseLayout title={title} description={description} path="/angebot" schema={schema}>
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 via-sand-50 to-sand-50">
+    <div class="pointer-events-none absolute -right-24 top-0 h-96 w-96 rounded-full bg-petrol-100/60 blur-3xl"></div>
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24 lg:px-8">
+      <div class="reveal is-visible">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Angebot</p>
+        <h1 class="mt-3 font-serif text-4xl leading-[1.08] text-petrol-900 sm:text-5xl lg:text-[3.4rem]">
+          Begleitung, die zu euch passt
+        </h1>
+        <p class="prose-lead mt-6 max-w-xl">
+          Premium in der Qualität, ehrlich im Anspruch – abgestuft nach der Tiefe des Anliegens. Alle
+          Sitzungen finden online statt, weltweit. Unsicher, was passt? Starte mit dem Erst-Check.
+        </p>
+        <ul class="mt-7 flex flex-wrap gap-2.5">
+          {
+            trustChips.map((c) => (
+              <li class="inline-flex items-center gap-2 rounded-full border border-petrol-100 bg-white/70 px-3.5 py-1.5 text-sm font-medium text-petrol-800">
+                <Icon name={c.icon} class="h-4 w-4 text-clay-600" strokeWidth={2} />
+                {c.t}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Button href={whatsappLink()} variant="primary" size="lg" external class="wag-hover group">
+            <Icon name="paw" class="wag h-5 w-5" />
+            Erst-Check anfragen
+          </Button>
+          <Button href="#pakete" variant="ghost" size="lg" class="group">
+            Pakete ansehen
+            <Icon name="arrowRight" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2} />
+          </Button>
+        </div>
+      </div>
+      <div class="reveal is-visible">
+        <div class="relative">
+          <Image
+            src={heroImg}
+            alt="Morpheus sitzt aufmerksam hinter einem Laptop – Beratung online"
+            widths={[480, 768, 1024]}
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            loading="eager"
+            fetchpriority="high"
+            class="aspect-[4/3] w-full rounded-2xl object-cover shadow-xl"
+            style="object-position: center 30%;"
+          />
+          <div class="absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border border-sand-200 bg-white p-4 shadow-lg sm:flex">
+            <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-clay-100 text-clay-600">
+              <Icon name="compass" class="h-6 w-6" />
+            </span>
+            <span class="max-w-[10rem] text-sm text-sand-700">Online beraten – von überall auf der Welt.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAKETE ===================== -->
+  <section id="pakete" class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Die Pakete</p>
+      <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl">Vom ersten Blick bis zur vollen Begleitung</h2>
+      <p class="mt-4 text-lg leading-relaxed text-sand-600">
+        Fünf Wege, abgestuft nach der Tiefe deines Anliegens. Du musst dich nicht sofort entscheiden –
+        der Erst-Check ist immer ein guter Anfang.
+      </p>
+    </div>
+    <div class="stagger mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {packages.map((pkg) => <PackageCard pkg={pkg} />)}
+    </div>
+    <div class="reveal mx-auto mt-8 max-w-2xl text-center">
+      <p class="text-sm text-sand-500">Alle Preise transparent und einmalig.</p>
+      <Disclaimer variant="inline" class="mt-1 text-center" />
+    </div>
+  </section>
+
+  <!-- ===================== ABLAUF ===================== -->
+  <section class="relative overflow-hidden bg-petrol-900 py-24 text-sand-100">
+    <div class="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-petrol-700/30 blur-3xl"></div>
+    <Icon name="paw" class="pointer-events-none absolute bottom-8 right-8 h-40 w-40 text-white/[0.03]" />
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-300">So einfach geht's</p>
+        <h2 class="mt-3 font-serif text-3xl text-white sm:text-4xl">Vom Klick zum Termin</h2>
+        <p class="mt-4 text-lg leading-relaxed text-sand-100/75">
+          Kein kompliziertes Formular, kein Warten. In vier Schritten seid ihr startklar.
+        </p>
+      </div>
+      <ol class="stagger mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          steps.map((s, i) => (
+            <li class="reveal lift group rounded-2xl border border-petrol-700/50 bg-petrol-800/40 p-6 transition-colors hover:border-clay-400/40 hover:bg-petrol-800/70">
+              <div class="flex items-center justify-between">
+                <span class="icon-chip flex h-12 w-12 bg-clay-500/20 text-clay-200">
+                  <Icon name={s.icon} class="h-6 w-6" />
+                </span>
+                <span class="font-serif text-2xl text-white/25">0{i + 1}</span>
+              </div>
+              <h3 class="mt-4 font-serif text-lg text-white">{s.t}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-sand-100/70">{s.d}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== IN JEDEM PAKET ENTHALTEN ===================== -->
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Immer dabei</p>
+      <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl">Das steckt in jedem Paket</h2>
+    </div>
+    <div class="stagger mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        included.map((c) => (
+          <div class="reveal lift group rounded-2xl border border-sand-200 bg-white p-6 shadow-sm hover:border-petrol-200 hover:shadow-md">
+            <span class="icon-chip flex h-12 w-12 bg-petrol-100 text-petrol-600">
+              <Icon name={c.icon} class="h-6 w-6" />
+            </span>
+            <h3 class="mt-4 font-serif text-lg text-petrol-900">{c.t}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-sand-600">{c.d}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ===================== ACADEMY-HINWEIS ===================== -->
+  <section class="bg-petrol-50/60 py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal flex flex-col items-start justify-between gap-6 rounded-3xl border border-petrol-200 bg-white p-8 shadow-sm sm:flex-row sm:items-center sm:p-10">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Alternative</p>
+          <h2 class="mt-2 font-serif text-2xl text-petrol-900 sm:text-3xl">Lieber im eigenen Tempo lernen?</h2>
+          <p class="mt-2 max-w-xl text-sand-700">
+            Die Online-Academy macht mein Wissen strukturiert zugänglich – ab 29,99 € im Monat, ohne
+            feste Sitzungen. Ein guter Einstieg, wenn du selbst tiefer verstehen willst.
+          </p>
+        </div>
+        <Button href="/academy" variant="secondary" size="lg" class="shrink-0">Zur Academy</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FAQ ===================== -->
+  <section class="mx-auto max-w-3xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="reveal text-center">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Gut zu wissen</p>
+      <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl">Häufige Fragen zum Angebot</h2>
+    </div>
+    <div class="reveal mt-10">
+      <FaqAccordion items={offerFaqs} />
+    </div>
+    <div class="reveal mt-8 text-center">
+      <Button href="/haeufige-fragen" variant="ghost">Alle Fragen ansehen</Button>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <div class="pb-24">
+    <CtaBanner />
+  </div>
+</BaseLayout>

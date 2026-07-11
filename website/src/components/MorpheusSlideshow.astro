@@ -1,0 +1,196 @@
+---
+import { Image } from "astro:assets";
+import Icon from "./Icon.astro";
+import m1 from "../assets/morpheus-meer.jpeg";
+import m2 from "../assets/morpheus-2.jpeg";
+import m3 from "../assets/morpheus-3.jpeg";
+import m4 from "../assets/morpheus-4.jpeg";
+import m5 from "../assets/morpheus-5.jpeg";
+import m6 from "../assets/morpheus-6.jpeg";
+import m7 from "../assets/morpheus-7.jpeg";
+
+const interval = 3800;
+
+// Erzählt den Weg von der Leidenszeit bis heute – wie Untertitel in einem Video
+const slides = [
+  { src: m5, pos: "center 32%", cap: "Die Leidenszeit – die Hundemütze als Notlösung.", alt: "Morpheus mit Hundemütze blickt in die Kamera" },
+  { src: m4, pos: "center 42%", cap: "Drei Jahre Suche nach der Ursache.", alt: "Morpheus mit Hundemütze liegt auf dem Sofa" },
+  { src: m6, pos: "center 42%", cap: "Und trotz allem nie den Humor verloren.", alt: "Morpheus mit Mütze und Kopfhörern" },
+  { src: m3, pos: "center 38%", cap: "Der Wendepunkt: Darm, Ausleitung, Ernährung.", alt: "Nahaufnahme vom Gesicht von Morpheus" },
+  { src: m2, pos: "center 26%", cap: "Zurück im Leben – wach und lebensfroh.", alt: "Morpheus mit Fliege entspannt auf einem Stuhl" },
+  { src: m7, pos: "center 28%", cap: "Heute mein treuer Begleiter, jeden Tag.", alt: "Morpheus sitzt am Tisch hinter einem Laptop" },
+  { src: m1, pos: "62% center", cap: "Mit fast 8 Jahren: gesund und frei.", alt: "Morpheus am Meer im warmen Abendlicht" },
+];
+---
+<div
+  class="ms group relative h-full min-h-[26rem] w-full overflow-hidden rounded-2xl bg-petrol-900 shadow-xl"
+  data-slideshow
+  role="group"
+  aria-label="Bilderfolge: Der Weg von Morpheus"
+  style={`--iv:${interval}ms; --kb:${interval + 1500}ms`}
+>
+  {
+    slides.map((s, i) => (
+      <figure class:list={["slide", { "is-active": i === 0 }]} data-i={i}>
+        <Image
+          src={s.src}
+          alt={s.alt}
+          widths={[400, 640, 900]}
+          sizes="(max-width: 1024px) 100vw, 45vw"
+          loading={i === 0 ? "eager" : "lazy"}
+          class="slide-img"
+          style={`object-position:${s.pos}`}
+        />
+        <figcaption class="slide-cap">{s.cap}</figcaption>
+      </figure>
+    ))
+  }
+
+  <!-- Fortschrittsbalken oben (Story-/Video-Optik) -->
+  <div class="pointer-events-none absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-black/40 to-transparent p-3">
+    <div class="flex gap-1.5">
+      {slides.map((_, i) => (
+        <span class:list={["bar", { "is-active": i === 0 }]} data-i={i}>
+          <span class="bar-fill" />
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- Label unten rechts -->
+  <div class="pointer-events-none absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
+    <Icon name="paw" class="h-3.5 w-3.5 text-clay-300" />
+    Morpheus
+  </div>
+</div>
+
+<style>
+  .slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .slide.is-active {
+    opacity: 1;
+    z-index: 10;
+  }
+  .slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.015);
+  }
+  .slide-cap {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 3.5rem 1.25rem 1.1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
+    color: #fff;
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.4;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.8s ease 0.25s, transform 0.8s ease 0.25s;
+  }
+  .slide.is-active .slide-cap {
+    opacity: 1;
+    transform: none;
+  }
+
+  .bar {
+    position: relative;
+    display: block;
+    flex: 1 1 0;
+    height: 3px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.32);
+    overflow: hidden;
+  }
+  .bar-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    border-radius: 9999px;
+  }
+  .bar.is-done .bar-fill {
+    width: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .slide.is-active .slide-img {
+      animation: kenburns var(--kb, 5s) ease-out both;
+    }
+    .bar.is-active .bar-fill {
+      animation: fillbar var(--iv, 3800ms) linear forwards;
+    }
+  }
+
+  /* Reduced Motion: erstes Bild statisch, Balken voll */
+  @media (prefers-reduced-motion: reduce) {
+    .bar.is-active .bar-fill {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-slideshow]").forEach((root) => {
+    const slides = [...root.querySelectorAll<HTMLElement>(".slide")];
+    const bars = [...root.querySelectorAll<HTMLElement>(".bar")];
+    if (slides.length < 2) return;
+
+    const interval = parseInt(root.style.getPropertyValue("--iv")) || 3800;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let i = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    const show = (n: number) => {
+      slides.forEach((s, k) => s.classList.toggle("is-active", k === n));
+      bars.forEach((b, k) => {
+        b.classList.remove("is-active", "is-done");
+        if (k < n) b.classList.add("is-done");
+        else if (k === n) b.classList.add("is-active");
+      });
+    };
+
+    const next = () => {
+      i = (i + 1) % slides.length;
+      show(i);
+    };
+
+    show(0);
+    if (reduce) return;
+
+    const start = () => {
+      stop();
+      timer = setInterval(next, interval);
+    };
+    const stop = () => {
+      if (timer) clearInterval(timer);
+      timer = undefined;
+    };
+
+    // Erst starten, wenn sichtbar – und bei Tab-Wechsel pausieren
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting && !document.hidden) start();
+          else stop();
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(root);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else if (root.getBoundingClientRect().top < window.innerHeight) start();
+    });
+  });
+</script>

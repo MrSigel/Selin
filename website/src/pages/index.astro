@@ -1,0 +1,679 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+import morpheusHero from "../assets/morpheus-meer.jpeg";
+import morpheusPhase1 from "../assets/morpheus-5.jpeg";
+import morpheusPhase2 from "../assets/morpheus-3.jpeg";
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
+import Marquee from "../components/Marquee.astro";
+import MorpheusSlideshow from "../components/MorpheusSlideshow.astro";
+import SelinSlideshow from "../components/SelinSlideshow.astro";
+import PackageCard from "../components/PackageCard.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import {
+  site,
+  whatsappLink,
+  methodSteps,
+  packages,
+  faqs,
+} from "../data/site";
+
+const homeFaqs = faqs.slice(0, 5);
+
+const concerns = [
+  {
+    icon: "search",
+    t: "Chronische Beschwerden ohne Befund",
+    d: `Wiederkehrende Symptome bei Verdauung, Haut oder Unruhe, für die die Schulmedizin keine eindeutige Ursache findet.`,
+  },
+  {
+    icon: "heart",
+    t: "Verhalten mit körperlicher Wurzel",
+    d: `Ein Hund gilt als „schwierig“ oder „ängstlich“ – dahinter stecken oft Blockaden, Schmerzen oder Unverträglichkeiten, nicht „schlechte Erziehung“.`,
+  },
+  {
+    icon: "compass",
+    t: "Nach erfolglosen anderen Wegen",
+    d: `Schon beim Tierarzt gewesen, nur Symptombehandlung erlebt? In der Kombination aus Körper, Mittel und Ernährung liegt oft der fehlende Baustein.`,
+  },
+] as const;
+
+// „Ursache statt Symptom“ – Kontrast zweier Wege
+const usualWay = [
+  "Das Symptom wird unterdrückt – die Ursache bleibt.",
+  "Kurze Besserung, dann kommt alles zurück.",
+  "Ein Mittel nach dem anderen, ohne roten Faden.",
+  "Verhalten wird als „Erziehungsfehler“ abgetan.",
+];
+const myWay = [
+  "Wir schauen auf den ganzen Hund, nicht nur den Befund.",
+  "Die eigentliche Wurzel wird sichtbar gemacht.",
+  "Nachhaltige Veränderung statt kurzfristiger Dämpfung.",
+  "Körper und Verhalten werden zusammen gedacht.",
+];
+
+// Die vier Säulen des ganzheitlichen Blicks
+const pillars = [
+  {
+    icon: "bowl",
+    t: "Ernährung",
+    d: "Was täglich in den Napf kommt – und wie gut der Körper es wirklich verträgt.",
+  },
+  {
+    icon: "shield",
+    t: "Darm & Immunsystem",
+    d: "Der Großteil der Abwehr sitzt im Darm. Hier entscheidet sich vieles.",
+  },
+  {
+    icon: "bone",
+    t: "Körper & Gelenke",
+    d: "Blockaden, Verspannungen und Schmerzen, die der Hund nicht zeigen kann.",
+  },
+  {
+    icon: "activity",
+    t: "Nervensystem & Verhalten",
+    d: "Unruhe, Angst oder Rückzug als Signal – nicht als bloßes Erziehungsthema.",
+  },
+] as const;
+
+// Kompetenz-Chips für den „Über mich“-Abschnitt (ehrlich, aus dem Konzept)
+const aboutChips = [
+  { icon: "book", t: "In Ausbildung zur Tierheilpraktikerin" },
+  { icon: "search", t: "3 Jahre Eigenrecherche" },
+  { icon: "leaf", t: "Schwerpunkt Tierhomöopathie" },
+  { icon: "users", t: "Netzwerk aus echten Experten" },
+] as const;
+
+// Typische, wiederkehrende Halter-Aussagen (Abschnitt 3a: Muster, keine erfundenen Testimonials)
+const typicalQuotes = [
+  "Der Tierarzt findet einfach nichts.",
+  "Wir haben schon fünf Sorten Futter durch.",
+  "Er kratzt sich ständig – und nichts hilft.",
+  "Immer wieder Ohrenprobleme, seit Jahren.",
+  "Kaum abgesetzt, kommt alles zurück.",
+  "Sie ist so unruhig – aber warum nur?",
+] as const;
+
+// Der Weg von Morpheus – drei Phasen mit echten Fotos
+const journey = [
+  {
+    src: morpheusPhase1,
+    pos: "center 26%",
+    phase: "Die Leidenszeit",
+    punch: "Die Hundemütze als Notlösung.",
+    caption:
+      "Sie sollte verhindern, dass er sich beim Kopfschütteln die Ohren aufschlägt – aber sie war keine Antwort auf die eigentliche Frage: Warum ist sein Immunsystem so aus dem Gleichgewicht?",
+    alt: "Morpheus mit Hundemütze blickt in die Kamera",
+  },
+  {
+    src: morpheusPhase2,
+    pos: "center 38%",
+    phase: "Der Prozess",
+    punch: "Darm sanieren, Ursache angehen.",
+    caption:
+      "Mitten im Weg: Ernährung umgestellt, Belastungen ausgeleitet. Die alten Spuren sind noch da – aber er findet Schritt für Schritt zurück zu sich.",
+    alt: "Ruhige Nahaufnahme vom Gesicht von Morpheus",
+  },
+  {
+    src: morpheusHero,
+    pos: "66% center",
+    phase: "Heute",
+    punch: "Gesund, frei, mit wachem Blick.",
+    caption:
+      "Mit fast 8 Jahren: glänzendes Fell, klare Augen, keine Ohrenprobleme mehr. Ich koche bis heute für ihn – aus Überzeugung, nicht aus Notwendigkeit.",
+    alt: "Morpheus am Meer im warmen Abendlicht",
+  },
+] as const;
+---
+<BaseLayout
+  title={site.name}
+  description={site.description}
+  path="/"
+>
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 via-sand-50 to-sand-50">
+    <div class="pointer-events-none absolute -right-24 top-0 h-96 w-96 rounded-full bg-petrol-100/60 blur-3xl"></div>
+    <div class="pointer-events-none absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-clay-100/40 blur-3xl"></div>
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-stretch lg:py-24 lg:px-8">
+      <div class="reveal is-visible flex flex-col justify-center">
+        <h1 class="font-serif text-4xl leading-[1.08] text-petrol-900 sm:text-5xl lg:text-[3.6rem]">
+          Ich war da, wo du jetzt bist. Und ich weiß, wie es weitergeht.
+        </h1>
+        <p class="prose-lead mt-6 max-w-xl">
+          Wenn der Tierarzt nichts Eindeutiges findet oder immer nur Symptome behandelt werden:
+          Ich helfe dir, die eigentliche <strong class="text-petrol-800">Ursache</strong> hinter den
+          Beschwerden und dem Verhalten deines Hundes zu verstehen – ganzheitlich, ehrlich und aus
+          eigener Erfahrung.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Button href={whatsappLink()} variant="primary" size="lg" external class="wag-hover group">
+            <Icon name="paw" class="wag h-5 w-5" />
+            Erst-Check anfragen
+          </Button>
+          <Button href="/methode" variant="ghost" size="lg" class="group">
+            So funktioniert es
+            <Icon name="arrowRight" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2} />
+          </Button>
+        </div>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-sand-600">
+          {
+            ["Aus 3 Jahren echter Erfahrung", "Ursache statt Symptom", "Ohne Heilversprechen"].map((t) => (
+              <span class="flex items-center gap-2">
+                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-petrol-100">
+                  <Icon name="check" class="h-3 w-3 text-petrol-600" strokeWidth={2.5} />
+                </span>
+                {t}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="reveal is-visible flex">
+        <div class="relative h-full w-full">
+          <Image
+            src={morpheusHero}
+            alt="Morpheus, ein Rhodesian Ridgeback, sitzt gesund und wach am Meer im Abendlicht"
+            widths={[480, 768, 1024, 1280]}
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            loading="eager"
+            fetchpriority="high"
+            class="h-full min-h-[26rem] w-full rounded-2xl object-cover shadow-xl"
+            style="object-position: 62% center;"
+          />
+          <div class="absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border border-sand-200 bg-white p-4 shadow-lg sm:flex">
+            <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-clay-100 text-clay-600">
+              <Icon name="paw" class="h-6 w-6" />
+            </span>
+            <span>
+              <span class="block font-serif text-2xl leading-none text-petrol-800">8 Jahre</span>
+              <span class="text-xs text-sand-600">Morpheus – heute gesund &amp; beschwerdefrei</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LAUFENDER ICON-BALKEN ===================== -->
+  <Marquee />
+
+  <!-- ===================== VIDEO / GESCHICHTE ===================== -->
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="grid gap-12 lg:grid-cols-2 lg:items-stretch">
+      <!-- Links: Bilder-Slideshow von Morpheus (wirkt wie ein Video) -->
+      <div class="reveal flex">
+        <MorpheusSlideshow />
+      </div>
+
+      <!-- Rechts: Text & Erklärung -->
+      <div class="reveal flex flex-col justify-center">
+        <h2 class="font-serif text-3xl text-petrol-900 sm:text-4xl">
+          Wie aus einem kranken Hund diese Arbeit wurde
+        </h2>
+        <p class="mt-5 text-lg leading-relaxed text-sand-700">
+          In wenigen Minuten erzähle ich dir, was ich für Morpheus gefunden habe – und warum ich es
+          heute anderen Hundehaltern zeige. Ehrlich, ohne Schönfärberei.
+        </p>
+        <ul class="mt-7 space-y-4">
+          {
+            [
+              { icon: "search", t: "Der Ausgangspunkt", d: "Ohrenprobleme mit einem Jahr – und der Beginn einer drei Jahre langen Suche." },
+              { icon: "compass", t: "Die Sackgassen", d: "Antibiotika, Apoquel, eine Futterumstellung nach der anderen – ohne echte Besserung." },
+              { icon: "leaf", t: "Der Wendepunkt", d: "Darmsanierung, Ausleitung und selbst kochen statt weiter Symptome zu jagen." },
+              { icon: "heart", t: "Heute", d: "Mit fast 8 Jahren gesund und beschwerdefrei – aus Überzeugung, nicht aus Zufall." },
+            ].map((s) => (
+              <li class="flex items-start gap-4">
+                <span class="icon-chip flex h-10 w-10 shrink-0 bg-petrol-100 text-petrol-600">
+                  <Icon name={s.icon} class="h-5 w-5" />
+                </span>
+                <span>
+                  <span class="font-serif text-lg text-petrol-900">{s.t}</span>
+                  <span class="mt-0.5 block text-sm leading-relaxed text-sand-600">{s.d}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-8">
+          <Button href="/ueber-selin" variant="secondary" class="group">
+            Meine ganze Geschichte lesen
+            <Icon name="arrowRight" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2} />
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== URSACHE STATT SYMPTOM ===================== -->
+  <section class="relative overflow-hidden bg-petrol-900 py-24 text-sand-100">
+    <div class="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-petrol-700/40 blur-3xl"></div>
+    <div class="pointer-events-none absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-clay-500/10 blur-3xl"></div>
+    <Icon name="paw" class="pointer-events-none absolute bottom-8 right-8 h-44 w-44 text-white/[0.03]" />
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Kopf -->
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-serif text-3xl text-white sm:text-4xl lg:text-5xl">Ursache statt Symptom</h2>
+        <p class="mt-4 text-lg text-sand-100/80">
+          Häufig liegt die Antwort nicht in noch einem Medikament oder noch einer Trainingsmethode –
+          sondern im ganzheitlichen Blick auf Körper, Ernährung und Nervensystem deines Hundes.
+        </p>
+      </div>
+
+      <!-- Kontrast: zwei Wege -->
+      <div class="reveal relative mt-14 grid gap-6 lg:grid-cols-2">
+        <!-- üblicher Weg -->
+        <div class="rounded-3xl border border-petrol-700/60 bg-petrol-800/40 p-8">
+          <div class="flex items-center gap-3">
+            <span class="icon-chip flex h-11 w-11 bg-white/5 text-sand-100/50">
+              <Icon name="pill" class="h-6 w-6" />
+            </span>
+            <div>
+              <p class="text-xs uppercase tracking-wider text-sand-100/50">Der übliche Weg</p>
+              <h3 class="font-serif text-xl text-white">Symptome behandeln</h3>
+            </div>
+          </div>
+          <ul class="mt-6 space-y-3.5">
+            {
+              usualWay.map((t) => (
+                <li class="flex items-start gap-3 text-sand-100/65">
+                  <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/5 text-sand-100/40">
+                    <Icon name="x" class="h-3 w-3" strokeWidth={2.5} />
+                  </span>
+                  <span>{t}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- mein Weg (hervorgehoben) -->
+        <div class="relative rounded-3xl border border-clay-400/40 bg-gradient-to-br from-petrol-700/70 to-petrol-800/70 p-8 shadow-xl ring-1 ring-clay-400/20">
+          <div class="flex items-center gap-3">
+            <span class="icon-chip flex h-11 w-11 bg-clay-500/25 text-clay-200">
+              <Icon name="target" class="h-6 w-6" />
+            </span>
+            <div>
+              <p class="text-xs uppercase tracking-wider text-clay-200/80">Mein Weg</p>
+              <h3 class="font-serif text-xl text-white">Die Ursache finden</h3>
+            </div>
+          </div>
+          <ul class="mt-6 space-y-3.5">
+            {
+              myWay.map((t) => (
+                <li class="flex items-start gap-3 text-sand-100/90">
+                  <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-clay-500/30 text-clay-200">
+                    <Icon name="check" class="h-3 w-3" strokeWidth={3} />
+                  </span>
+                  <span>{t}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- vs-Badge -->
+        <span class="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:flex">
+          <span class="flex h-12 w-12 items-center justify-center rounded-full border border-petrol-600 bg-petrol-900 font-serif text-sm text-clay-200 shadow-lg">
+            vs
+          </span>
+        </span>
+      </div>
+
+      <!-- Vier Säulen -->
+      <div class="mt-20">
+        <div class="reveal mx-auto max-w-2xl text-center">
+          <h3 class="font-serif text-2xl text-white sm:text-3xl">
+            Der ganzheitliche Blick betrachtet alles zusammen
+          </h3>
+          <p class="mt-3 text-sand-100/75">
+            Weil ein Hund kein Baukasten aus Einzelteilen ist. Vier Bereiche, die ineinandergreifen:
+          </p>
+        </div>
+        <div class="stagger mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            pillars.map((p) => (
+              <div class="reveal lift group rounded-2xl border border-petrol-700/50 bg-petrol-800/40 p-6 transition-colors hover:border-clay-400/40 hover:bg-petrol-800/70">
+                <span class="icon-chip flex h-12 w-12 bg-clay-500/20 text-clay-200">
+                  <Icon name={p.icon} class="h-6 w-6" />
+                </span>
+                <h4 class="mt-4 font-serif text-lg text-white">{p.t}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-sand-100/70">{p.d}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Abschluss + CTA -->
+      <div class="reveal mt-16 flex flex-col items-center gap-6 text-center">
+        <p class="max-w-2xl font-serif text-xl italic text-sand-100/90 sm:text-2xl">
+          „Wer aufhört, Symptome zu jagen, und anfängt, Ursachen zu finden, verändert alles.“
+        </p>
+        <Button href="/methode" variant="primary" size="lg" class="group">
+          So arbeite ich
+          <Icon name="arrowRight" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2} />
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5 SCHRITTE ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-sand-50 to-petrol-50/40 py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">So läuft eine Begleitung ab</p>
+        <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl lg:text-[2.75rem]">
+          In fünf Schritten zur Ursache
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-sand-600">
+          Ein klarer, nachvollziehbarer Weg – vom ersten Gespräch bis zur langfristigen Stabilität
+          deines Hundes.
+        </p>
+      </div>
+
+      <div class="relative mt-16">
+        <!-- Verbindungslinie (Weg durch die Schritte, nur ab lg) -->
+        <div
+          class="absolute left-[10%] right-[10%] top-9 hidden h-0.5 bg-gradient-to-r from-petrol-200 via-petrol-300 to-clay-300 lg:block"
+          aria-hidden="true"
+        >
+        </div>
+
+        <ol class="stagger grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-5">
+          {
+            methodSteps.map((step, i) => (
+              <li class="reveal group flex flex-col items-center text-center">
+                <div class="relative">
+                  <span class="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-2 border-petrol-200 bg-white text-petrol-600 shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:border-petrol-600 group-hover:bg-petrol-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-petrol-200">
+                    <Icon name={step.icon} class="h-8 w-8" />
+                  </span>
+                  <span class="absolute -right-1.5 -top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-clay-500 font-serif text-sm font-medium text-white ring-4 ring-sand-50">
+                    {i + 1}
+                  </span>
+                </div>
+                <h3 class="mt-6 font-serif text-xl text-petrol-900">{step.title}</h3>
+                <p class="mt-2 max-w-xs text-sm leading-relaxed text-sand-600">{step.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ÜBER MICH ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-clay-50 via-sand-100 to-clay-100/60 py-24">
+    <Icon name="paw" class="pointer-events-none absolute -left-8 top-12 h-44 w-44 rotate-12 text-clay-300/25" />
+    <Icon name="paw" class="pointer-events-none absolute bottom-10 right-8 h-24 w-24 -rotate-12 text-clay-300/20" />
+
+    <div class="relative mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
+      <!-- Bild-Slideshow von Selin & Morpheus (wirkt wie ein Video) -->
+      <div class="reveal lg:col-span-5">
+        <div class="mx-auto max-w-sm overflow-hidden rounded-[1.75rem] border-[6px] border-white shadow-2xl lg:max-w-none">
+          <SelinSlideshow />
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="reveal lg:col-span-7">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Über mich</p>
+        <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl lg:text-[2.6rem]">
+          Ich habe alles hinterfragt – bis Morpheus wieder gesund war
+        </h2>
+        <p class="mt-5 leading-relaxed text-sand-700">
+          Drei Jahre lang habe ich für meinen Rhodesian Ridgeback Morpheus jede Tür geöffnet, die die
+          Schulmedizin mir angeboten hat – Antibiotika, Apoquel, eine Futterumstellung nach der
+          anderen. Nichts hat wirklich geholfen. Erst als ich aufgehört habe, nur Symptome zu
+          behandeln, und angefangen habe, seinen Darm und sein Immunsystem als Ganzes zu sehen, wurde
+          er gesund.
+        </p>
+
+        <ul class="mt-7 flex flex-wrap gap-2.5">
+          {
+            aboutChips.map((c) => (
+              <li class="inline-flex items-center gap-2 rounded-full border border-clay-200 bg-white/70 px-3.5 py-1.5 text-sm font-medium text-petrol-800">
+                <Icon name={c.icon} class="h-4 w-4 text-clay-600" strokeWidth={2} />
+                {c.t}
+              </li>
+            ))
+          }
+        </ul>
+
+        <figure class="mt-8 rounded-2xl bg-white/70 p-6 shadow-sm ring-1 ring-clay-100">
+          <Icon name="sparkle" class="h-6 w-6 text-clay-400" />
+          <blockquote class="mt-2 font-serif text-xl italic leading-relaxed text-petrol-800">
+            Kein Zertifikat, keine Ausbildung. Drei Jahre lang jeden Abend recherchiert, gelesen,
+            ausprobiert, beobachtet. Das ist mein Abschluss.
+          </blockquote>
+          <figcaption class="mt-3 text-sm font-medium text-clay-700">— Selin Weikard</figcaption>
+        </figure>
+
+        <div class="mt-8">
+          <Button href="/ueber-selin" variant="secondary" class="group">
+            Meine ganze Geschichte lesen
+            <Icon name="arrowRight" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2} />
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DER WEG VON MORPHEUS (Galerie) ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-900 to-petrol-950 py-24 text-sand-100">
+    <div class="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-petrol-700/30 blur-3xl"></div>
+    <div class="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-clay-500/10 blur-3xl"></div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-300">Der Weg von Morpheus</p>
+        <h2 class="mt-3 font-serif text-3xl text-white sm:text-4xl lg:text-[2.6rem]">Drei Jahre, drei Phasen</h2>
+        <p class="mt-4 text-lg leading-relaxed text-sand-100/75">
+          Kein Vorher-Nachher-Versprechen – sondern ein echter Weg. Von der Leidenszeit bis heute,
+          dokumentiert am eigenen Hund.
+        </p>
+      </div>
+
+      <div class="stagger mt-14 grid gap-6 md:grid-cols-3">
+        {
+          journey.map((item, i) => (
+            <figure class="reveal group">
+              <div class="relative overflow-hidden rounded-2xl shadow-xl ring-1 ring-white/10">
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  widths={[400, 640, 900]}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  loading="lazy"
+                  class="aspect-[3/4] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
+                  style={`object-position:${item.pos}`}
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-petrol-950/95 via-petrol-950/20 to-transparent" />
+                <span class="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-black/35 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-clay-500 text-[0.65rem] text-white">
+                    {i + 1}
+                  </span>
+                  {item.phase}
+                </span>
+                <figcaption class="absolute inset-x-0 bottom-0 p-5">
+                  <p class="font-serif text-xl leading-snug text-white">{item.punch}</p>
+                </figcaption>
+              </div>
+              <p class="mt-4 text-sm leading-relaxed text-sand-100/70">{item.caption}</p>
+            </figure>
+          ))
+        }
+      </div>
+
+      <figure class="reveal mx-auto mt-16 max-w-3xl text-center">
+        <blockquote class="font-serif text-2xl italic leading-relaxed text-white sm:text-[1.7rem]">
+          Was den Unterschied gemacht hat, war nicht ein einzelnes Wundermittel – sondern der Blick
+          auf das große Ganze.
+        </blockquote>
+        <figcaption class="mt-4 text-sm font-medium text-clay-300">
+          Genau diesen Blick bringe ich heute für deinen Hund mit.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== KOMMT DIR DAS BEKANNT VOR? ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-white to-petrol-50/50 py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Das höre ich immer wieder</p>
+        <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl lg:text-[2.6rem]">
+          Kommt dir das bekannt vor?
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-sand-600">
+          Viele Hundehalter kommen mit demselben Gefühl: schon vieles probiert – und trotzdem findet
+          niemand wirklich die Ursache.
+        </p>
+      </div>
+
+      <!-- Gedanken-Sprechblasen (typische Aussagen) -->
+      <div class="reveal mx-auto mt-12 flex max-w-4xl flex-wrap items-center justify-center gap-3">
+        {
+          typicalQuotes.map((q, i) => {
+            const tones = [
+              "bg-white text-petrol-800 border-sand-200",
+              "bg-petrol-50 text-petrol-800 border-petrol-100",
+              "bg-clay-50 text-clay-800 border-clay-100",
+            ];
+            return (
+              <span
+                class:list={[
+                  "inline-flex items-center gap-2 rounded-2xl rounded-bl-md border px-4 py-2.5 text-sm font-medium shadow-sm transition-transform duration-200 hover:-translate-y-0.5",
+                  tones[i % 3],
+                ]}
+              >
+                <Icon name="chat" class="h-4 w-4 opacity-50" strokeWidth={2} />
+                „{q}"
+              </span>
+            );
+          })
+        }
+      </div>
+
+      <!-- Ursachen-Karten: was oft wirklich dahintersteckt -->
+      <div class="mt-16">
+        <div class="reveal mx-auto max-w-2xl text-center">
+          <h3 class="font-serif text-2xl text-petrol-900 sm:text-3xl">Und was oft wirklich dahintersteckt</h3>
+          <p class="mt-3 text-sand-600">
+            Drei Muster, die im ganzheitlichen Blick immer wieder sichtbar werden.
+          </p>
+        </div>
+        <div class="stagger mt-10 grid gap-6 md:grid-cols-3">
+          {
+            concerns.map((c, i) => {
+              const accents = ["bg-clay-500", "bg-petrol-500", "bg-clay-500"];
+              const chips = [
+                "bg-clay-100 text-clay-600",
+                "bg-petrol-100 text-petrol-600",
+                "bg-clay-100 text-clay-600",
+              ];
+              return (
+                <article class="reveal lift group relative overflow-hidden rounded-2xl border border-sand-200 bg-white p-7 shadow-sm hover:border-petrol-200 hover:shadow-lg">
+                  <span class:list={["absolute inset-x-0 top-0 h-1", accents[i]]} />
+                  <div class="flex items-center justify-between">
+                    <span class:list={["icon-chip flex h-12 w-12", chips[i]]}>
+                      <Icon name={c.icon} class="h-6 w-6" />
+                    </span>
+                    <span class="font-serif text-3xl text-sand-200">0{i + 1}</span>
+                  </div>
+                  <h4 class="mt-5 font-serif text-xl text-petrol-900">{c.t}</h4>
+                  <p class="mt-3 leading-relaxed text-sand-600">{c.d}</p>
+                </article>
+              );
+            })
+          }
+        </div>
+      </div>
+
+      <!-- Zuspruch + CTA -->
+      <div class="reveal mx-auto mt-16 max-w-2xl text-center">
+        <p class="font-serif text-xl italic leading-relaxed text-petrol-800 sm:text-2xl">
+          Du bist damit nicht allein – und meistens liegt die Ursache tiefer, als bisher jemand
+          geschaut hat.
+        </p>
+        <div class="mt-7">
+          <Button href={whatsappLink()} variant="primary" size="lg" external class="wag-hover group">
+            <Icon name="paw" class="wag h-5 w-5" />
+            Erst-Check anfragen
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAKETE ===================== -->
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Angebot</p>
+      <h2 class="mt-2 font-serif text-3xl text-petrol-900 sm:text-4xl">Begleitung, die zu euch passt</h2>
+      <p class="mt-4 text-lg text-sand-600">
+        Vom ersten Blick bis zur langfristigen Begleitung – abgestuft nach der Tiefe des Anliegens.
+      </p>
+    </div>
+    <div class="stagger mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {packages.slice(0, 3).map((pkg) => <PackageCard pkg={pkg} />)}
+    </div>
+    <div class="reveal mt-10 text-center">
+      <Button href="/angebot" variant="ghost" size="lg">Alle Pakete &amp; Preise ansehen</Button>
+    </div>
+  </section>
+
+  <!-- ===================== ACADEMY TEASER ===================== -->
+  <section class="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+    <div class="reveal grid items-center gap-10 overflow-hidden rounded-3xl bg-gradient-to-br from-petrol-700 to-petrol-800 p-8 text-sand-100 sm:p-12 lg:grid-cols-2">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-300">Academy</p>
+        <h2 class="mt-2 font-serif text-3xl text-white sm:text-4xl">
+          Werde selbst zur Expertin für deinen Hund
+        </h2>
+        <p class="mt-4 leading-relaxed text-sand-100/85">
+          In der Online-Academy gebe ich mein Wissen strukturiert weiter – von Ernährung über
+          Nahrungsergänzung bis Homöopathie. Sieben Module, monatlicher Live-Call, Podcast und
+          Community. Für alle, die tiefer einsteigen wollen.
+        </p>
+        <div class="mt-7">
+          <Button href="/academy" variant="white">Academy entdecken</Button>
+        </div>
+      </div>
+      <div class="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+        <p class="font-serif text-4xl text-white">29,99 €<span class="text-lg text-sand-100/70"> / Monat</span></p>
+        <ul class="mt-5 space-y-3 text-sm text-sand-100/85">
+          <li class="flex gap-2"><span class="text-clay-300">✓</span> Lebenslanger Zugang zur Learning Suite</li>
+          <li class="flex gap-2"><span class="text-clay-300">✓</span> Monatlicher Kompetenz-Call live mit Selin</li>
+          <li class="flex gap-2"><span class="text-clay-300">✓</span> Podcast „Drei Perspektiven, ein Hund"</li>
+          <li class="flex gap-2"><span class="text-clay-300">✓</span> Wöchentliche WhatsApp-Austauschrunde</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FAQ ===================== -->
+  <section class="bg-petrol-50/60 py-24">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Gut zu wissen</p>
+        <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl">Häufige Fragen</h2>
+        <p class="mt-4 text-lg text-sand-600">Das Wichtigste vorab – ehrlich beantwortet.</p>
+      </div>
+      <div class="reveal mt-10">
+        <FaqAccordion items={homeFaqs} />
+      </div>
+      <div class="reveal mt-8 text-center">
+        <Button href="/haeufige-fragen" variant="ghost">Alle Fragen ansehen</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <div class="py-24">
+    <CtaBanner />
+  </div>
+</BaseLayout>

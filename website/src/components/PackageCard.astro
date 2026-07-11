@@ -1,0 +1,57 @@
+---
+import type { Pkg } from "../data/site";
+interface Props {
+  pkg: Pkg;
+  compact?: boolean;
+}
+const { pkg, compact = false } = Astro.props;
+---
+<article
+  class:list={[
+    "reveal relative flex flex-col rounded-2xl border bg-white p-6 transition-all duration-200 hover:-translate-y-1.5 hover:shadow-lg",
+    pkg.featured ? "border-clay-300 ring-1 ring-clay-200" : "border-sand-200 hover:border-petrol-200",
+  ]}
+>
+  {
+    pkg.featured && (
+      <span class="absolute -top-3 left-6 rounded-full bg-clay-600 px-3 py-1 text-xs font-semibold text-white">
+        Beliebteste Wahl
+      </span>
+    )
+  }
+  <h3 class="font-serif text-xl text-petrol-900">{pkg.name}</h3>
+  <p class="mt-1 text-sm text-sand-600">{pkg.tagline}</p>
+  <p class="mt-4 font-serif text-3xl text-petrol-800">{pkg.price}</p>
+
+  {
+    !compact && (
+      <ul class="mt-5 space-y-2.5 text-sm text-sand-700">
+        {pkg.features.map((f) => (
+          <li class="flex gap-2.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="mt-0.5 shrink-0 text-petrol-500" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <div class="mt-6 flex-grow"></div>
+  <a
+    href={`/angebot/${pkg.slug}`}
+    class:list={[
+      "mt-2 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-sm font-medium transition-colors",
+      pkg.featured
+        ? "bg-clay-600 text-white hover:bg-clay-700"
+        : "border border-petrol-300 text-petrol-800 hover:bg-petrol-50",
+    ]}
+  >
+    Details ansehen
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  </a>
+</article>

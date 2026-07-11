@@ -1,0 +1,70 @@
+---
+import Logo from "./Logo.astro";
+import { nav, whatsappLink, site } from "../data/site";
+const year = 2026;
+---
+<footer class="mt-24 border-t border-petrol-800 bg-petrol-900 text-sand-100">
+  <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div class="lg:col-span-2">
+        <Logo variant="light" />
+        <p class="mt-5 max-w-md text-sm leading-relaxed text-sand-200/80">
+          Ganzheitliche Begleitung für die Gesundheit deines Hundes – Ursache statt Symptom.
+          Aus eigener Erfahrung mit Rhodesian Ridgeback Morpheus. Online, weltweit.
+        </p>
+        <p class="mt-5 font-serif text-lg text-sand-100 italic">
+          „{site.claim}"
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-sand-100">Navigation</h2>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {
+            nav.map((item) => (
+              <li>
+                <a href={item.href} class="text-sand-200/80 transition-colors hover:text-white">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-sand-100">Kontakt</h2>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          <li>
+            <a href="/kontakt" class="text-sand-200/80 transition-colors hover:text-white">Kontakt & Terminbuchung</a>
+          </li>
+          <li>
+            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" class="text-sand-200/80 transition-colors hover:text-white">
+              Anfrage über WhatsApp
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${site.email}`} class="text-sand-200/80 transition-colors hover:text-white">{site.email}</a>
+          </li>
+          <li>
+            <a href="/lead-magnet" class="text-sand-200/80 transition-colors hover:text-white">Gratis-Checkliste</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 border-t border-petrol-800 pt-8">
+      <p class="text-xs leading-relaxed text-sand-200/60">
+        <strong class="font-semibold text-sand-100">Wichtiger Hinweis:</strong>
+        Diese ganzheitliche Begleitung ist Coaching und Beratung – kein Ersatz für tierärztliche
+        Diagnose, Behandlung oder Notfallversorgung. Bei akuten Notfällen, schweren Erkrankungen oder
+        unklaren Symptomen wende dich bitte umgehend an eine Tierärztin oder einen Tierarzt. Es werden
+        keine Heilversprechen gegeben.
+      </p>
+      <div class="mt-6 flex flex-col items-start justify-between gap-4 text-xs text-sand-200/60 sm:flex-row sm:items-center">
+        <p>© {year} Selin Weikard. Alle Rechte vorbehalten.</p>
+        <p class="text-sand-200/50">Impressum, Datenschutz &amp; AGB folgen vor dem Launch.</p>
+      </div>
+    </div>
+  </div>
+</footer>
