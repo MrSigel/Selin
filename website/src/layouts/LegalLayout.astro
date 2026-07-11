@@ -1,0 +1,39 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { legal, site } from "../data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+}
+const { title, description, path } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Startseite", item: site.domain },
+    { "@type": "ListItem", position: 2, name: title, item: `${site.domain}${path}` },
+  ],
+};
+---
+<BaseLayout title={title} description={description} path={path} schema={schema}>
+  <section class="bg-gradient-to-b from-petrol-50 to-sand-50">
+    <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
+      <nav aria-label="Brotkrümel" class="text-sm text-sand-500">
+        <a href="/" class="transition-colors hover:text-petrol-700">Startseite</a>
+        <span class="mx-2">/</span>
+        <span class="text-sand-700">{title}</span>
+      </nav>
+      <h1 class="mt-4 font-serif text-3xl text-petrol-900 sm:text-4xl">{title}</h1>
+      <p class="mt-3 text-sm text-sand-500">Stand: {legal.lastUpdated}</p>
+    </div>
+  </section>
+
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="rich-text">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

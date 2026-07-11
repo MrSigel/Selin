@@ -3,7 +3,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import Button from "../../components/Button.astro";
 import Icon from "../../components/Icon.astro";
-import Disclaimer from "../../components/Disclaimer.astro";
 import CtaBanner from "../../components/CtaBanner.astro";
 import { packages, whatsappLink, site } from "../../data/site";
 import boxImg from "../../assets/morpheus-meer.jpeg";
@@ -160,7 +159,6 @@ const schema = [
             <li class="flex items-center gap-2"><Icon name="check" class="h-4 w-4 text-petrol-500" strokeWidth={3} /> Persönliche Antwort von Selin</li>
             <li class="flex items-center gap-2"><Icon name="check" class="h-4 w-4 text-petrol-500" strokeWidth={3} /> Zusammenfassung im Anschluss</li>
           </ul>
-          <Disclaimer variant="inline" class="mt-5" />
         </div>
       </div>
     </aside>

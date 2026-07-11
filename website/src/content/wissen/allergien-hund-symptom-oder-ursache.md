@@ -27,6 +27,4 @@ Haut- und Allergiethemen sind fast nie ein isoliertes Hautproblem. Sie hängen e
 
 Ich bin keine Gegnerin der Schulmedizin. Es gibt Situationen, in denen schnelle Symptomkontrolle richtig und wichtig ist. Aber wenn ein Zustand mit „das bleibt eben für immer“ abgetan wird, lohnt sich oft eine zweite Perspektive und die Frage nach der Ursache.
 
-> **Zur Einordnung:** Dieser Artikel schildert meine persönliche Erfahrung und einen ganzheitlichen Denkansatz. Er ist kein Heilversprechen und kein Ersatz für tierärztliche Diagnose oder Behandlung. Jeder Hund ist anders – bei starkem Leidensdruck bitte immer tierärztlich abklären.
-
 Wenn du das Gefühl hast, bei den Allergien deines Hundes bisher nur an der Oberfläche gearbeitet zu haben, lass uns gemeinsam auf das Gesamtbild schauen. Der Einstieg ist der [Erst-Check](/angebot/erst-check).

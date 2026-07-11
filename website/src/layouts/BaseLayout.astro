@@ -4,7 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import WhatsAppFloat from "../components/WhatsAppFloat.astro";
 import SchemaOrg from "../components/SchemaOrg.astro";
-import { site } from "../data/site";
+import { site, legal } from "../data/site";
 
 interface Props {
   title: string;
@@ -37,8 +37,27 @@ const baseSchema = {
   description: site.description,
   url: site.domain,
   email: site.email,
+  telephone: site.phone,
+  image: new URL("/images/og-default.svg", site.domain).href,
+  logo: new URL("/favicon.svg", site.domain).href,
+  slogan: site.claim,
+  priceRange: "€€",
   areaServed: "Weltweit",
   availableLanguage: "de",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: legal.street,
+    postalCode: legal.postalCode,
+    addressLocality: legal.city,
+    addressCountry: "BG",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: site.email,
+    telephone: site.phone,
+    availableLanguage: "de",
+  },
   founder: {
     "@type": "Person",
     name: site.name,

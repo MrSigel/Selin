@@ -32,6 +32,4 @@ Wenn du das Gefühl kennst, schon vieles probiert zu haben, ohne dass jemand die
 
 Der erste Schritt ist immer eine ehrliche Bestandsaufnahme: Was wurde bisher versucht, was hat kurz gewirkt, was gar nicht? Genau damit beginnt ein [Erst-Check](/angebot/erst-check).
 
-> **Zur Einordnung:** Dieser Artikel beschreibt meine eigene Erfahrung und einen ganzheitlichen Denkansatz. Er ist keine tierärztliche Diagnose und kein Ersatz für die Untersuchung durch eine Tierärztin oder einen Tierarzt. Bei akuten oder schweren Beschwerden ist die Tiermedizin die erste Anlaufstelle.
-
 Morpheus ist heute, mit fast acht Jahren, gesund und beschwerdefrei. Nicht, weil ein Wundermittel kam – sondern weil wir aufgehört haben, Symptome zu jagen, und angefangen haben, seinen ganzen Körper zu sehen.

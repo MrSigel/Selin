@@ -10,13 +10,30 @@ export const site = {
   domain: "https://www.selin-weikard.de",
   description:
     "Ganzheitliche Begleitung für Hundegesundheit: Ursache statt Symptom. Homöopathie, Ernährung und Naturheilkunde – online, weltweit. Aus eigener Erfahrung mit Rhodesian Ridgeback Morpheus.",
-  email: "hallo@selin-weikard.de", // TODO: finale Adresse
+  email: "info@limit-breakers.eu",
+  phone: "+359 895 500 755",
   // WhatsApp: internationale Nummer ohne + und ohne Leerzeichen (TODO: echte Nummer eintragen)
   whatsappNumber: "491700000000",
   whatsappPrefill:
     "Hallo Selin, ich möchte mehr über den Erst-Check für meinen Hund erfahren.",
   // Terminbuchung (Cal.com / Calendly) – TODO: echten Link eintragen
   bookingUrl: "https://cal.com/selin-weikard/erst-check",
+} as const;
+
+/**
+ * Rechtliche Angaben für Impressum, Datenschutz & AGB.
+ * Kontaktdaten zunächst über die betreibende Gesellschaft; Name = Selin Weikard.
+ */
+export const legal = {
+  name: "Selin Weikard",
+  street: "Shipka 36",
+  postalCode: "1504",
+  city: "Sofia",
+  country: "Bulgarien",
+  vatId: "BG206546638",
+  email: "info@limit-breakers.eu",
+  phone: "+359 895 500 755",
+  lastUpdated: "Juli 2026",
 } as const;
 
 export function whatsappLink(message: string = site.whatsappPrefill): string {

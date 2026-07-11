@@ -4,7 +4,6 @@ import { Image } from "astro:assets";
 import PackageCard from "../../components/PackageCard.astro";
 import Button from "../../components/Button.astro";
 import Icon from "../../components/Icon.astro";
-import Disclaimer from "../../components/Disclaimer.astro";
 import FaqAccordion from "../../components/FaqAccordion.astro";
 import CtaBanner from "../../components/CtaBanner.astro";
 import { packages, faqs, whatsappLink, site } from "../../data/site";
@@ -142,10 +141,9 @@ const schema = [
     <div class="stagger mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {packages.map((pkg) => <PackageCard pkg={pkg} />)}
     </div>
-    <div class="reveal mx-auto mt-8 max-w-2xl text-center">
-      <p class="text-sm text-sand-500">Alle Preise transparent und einmalig.</p>
-      <Disclaimer variant="inline" class="mt-1 text-center" />
-    </div>
+    <p class="reveal mx-auto mt-8 max-w-2xl text-center text-sm text-sand-500">
+      Alle Preise transparent und einmalig · online · weltweit.
+    </p>
   </section>
 
   <!-- ===================== ABLAUF ===================== -->

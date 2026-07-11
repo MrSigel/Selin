@@ -84,7 +84,12 @@ const contact = [
       </p>
       <div class="mt-6 flex flex-col items-start justify-between gap-4 text-xs text-sand-200/60 sm:flex-row sm:items-center">
         <p>© {year} Selin Weikard. Alle Rechte vorbehalten.</p>
-        <p class="text-sand-200/50">Impressum, Datenschutz &amp; AGB folgen vor dem Launch.</p>
+        <nav aria-label="Rechtliches" class="flex flex-wrap gap-x-5 gap-y-2">
+          <a href="/impressum" class="transition-colors hover:text-white">Impressum</a>
+          <a href="/datenschutz" class="transition-colors hover:text-white">Datenschutz</a>
+          <a href="/agb" class="transition-colors hover:text-white">AGB</a>
+          <a href="/widerruf" class="transition-colors hover:text-white">Widerruf</a>
+        </nav>
       </div>
     </div>
   </div>

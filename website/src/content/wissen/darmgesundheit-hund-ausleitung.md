@@ -29,8 +29,6 @@ Erst danach, auf einem entlasteten Untergrund, konnten gezielte Folgemittel wirk
 
 Parallel zur Darmsanierung habe ich die Fütterung umgestellt und angefangen, selbst zu kochen. Nicht, weil Selbstkochen ein Dogma ist – sondern weil eine ruhige, verträgliche Basis dem Darm die Chance gibt, sich zu erholen. Eine einfache, gut verträgliche Grundlage ist dabei oft wirksamer als ein ständiger Wechsel zwischen exotischen Proteinquellen. Mehr dazu in meinem Artikel über [wann eine Ernährungsumstellung wirklich hilft](/wissen/ernaehrungsumstellung-hund-wann-hilft).
 
-> **Zur Einordnung:** Ausleitung und Darmsanierung sind erfahrungsbasierte, ganzheitliche Ansätze. Dieser Text ersetzt keine tierärztliche Diagnose. Bei akuten Verdauungsproblemen, Blut im Kot oder anhaltendem Durchfall bitte immer zuerst tierärztlich abklären lassen.
-
 ## Was du mitnehmen kannst
 
 Wenn bei deinem Hund „nichts richtig anschlägt“, lohnt sich die Frage, ob der Untergrund überhaupt bereit ist. Oft ist der Darm der übersehene Ausgangspunkt. Wie ein solcher Weg für deinen Hund aussehen könnte, schauen wir uns am besten gemeinsam an – im [Erst-Check](/angebot/erst-check).

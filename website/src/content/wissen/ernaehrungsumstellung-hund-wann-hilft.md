@@ -39,6 +39,4 @@ Eine Umstellung hilft dann, wenn sie **gezielt** und **schrittweise** passiert �
 
 Wichtig: immer schrittweise umstellen und dem Darm Zeit lassen, sich anzupassen – nicht von heute auf morgen.
 
-> **Zur Einordnung:** Dies ist ein erfahrungsbasierter, ganzheitlicher Ansatz und keine tierärztliche Ernährungsberatung. Bei ausgeprägten Allergien oder Grunderkrankungen sollte die Fütterung tierärztlich begleitet werden.
-
 Wenn du unsicher bist, welche Basis zu deinem Hund passt, schauen wir uns Ernährung, Verträglichkeit und Vorgeschichte gemeinsam an – im [Erst-Check](/angebot/erst-check).
