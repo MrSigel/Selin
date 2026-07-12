@@ -1,7 +1,41 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Social Media" active="social">
-  <CrmEmpty icon="share" />
+  <div id="crm-root"></div>
 </CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  mountResource({
+    table: "social_posts",
+    singular: "Beitrag",
+    order: "created_at",
+    asc: false,
+    defaults: { plattform: "instagram", status: "idee" },
+    emptyText: "Noch keine Social-Media-Beiträge geplant.",
+    columns: [
+      { key: "plattform", label: "Plattform", type: "badge" },
+      { key: "inhalt", label: "Inhalt", type: "truncate" },
+      { key: "status", label: "Status", type: "badge" },
+      { key: "geplant_am", label: "Geplant", type: "datetime" },
+    ],
+    fields: [
+      { key: "plattform", label: "Plattform", type: "select", options: [
+        { value: "instagram", label: "Instagram" },
+        { value: "facebook", label: "Facebook" },
+        { value: "tiktok", label: "TikTok" },
+        { value: "youtube", label: "YouTube" },
+        { value: "sonstige", label: "Sonstige" },
+      ] },
+      { key: "inhalt", label: "Inhalt / Idee", type: "textarea" },
+      { key: "link", label: "Link (optional)" },
+      { key: "status", label: "Status", type: "select", options: [
+        { value: "idee", label: "Idee" },
+        { value: "geplant", label: "Geplant" },
+        { value: "veroeffentlicht", label: "Veröffentlicht" },
+      ] },
+      { key: "geplant_am", label: "Geplant für", type: "datetime" },
+    ],
+  });
+</script>

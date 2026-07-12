@@ -94,8 +94,8 @@ const schema = {
       )
     }
 
-    <!-- Übrige Artikel -->
-    <div class="stagger mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Übrige Artikel (statische + aus dem CRM geladene) -->
+    <div id="wissen-grid" class="stagger mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {
         rest.map((post) => (
           <a
@@ -138,3 +138,53 @@ const schema = {
     />
   </div>
 </BaseLayout>
+
+<script>
+  // Im CRM veröffentlichte Artikel zusätzlich in die Wissen-Übersicht laden
+  import { listPublishedArtikel, fmtDate, escapeHtml } from "../../lib/db";
+
+  const grid = document.getElementById("wissen-grid");
+  const fallbackImg = "/galerie/morpheus-meer.jpeg";
+
+  function card(a: {
+    id: string; titel: string; beschreibung: string | null;
+    kategorie: string | null; lesezeit: string | null; bild_url: string | null; pub_date: string;
+  }) {
+    const cat = a.kategorie
+      ? `<span class="rounded-full bg-petrol-100 px-2.5 py-1 font-medium text-petrol-700">${escapeHtml(a.kategorie)}</span>`
+      : "";
+    const rt = a.lesezeit ? `<span>${escapeHtml(a.lesezeit)}</span>` : "";
+    const el = document.createElement("a");
+    el.href = `/wissen/beitrag?id=${encodeURIComponent(a.id)}`;
+    el.className =
+      "reveal is-visible group flex flex-col overflow-hidden rounded-2xl border border-sand-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-lg";
+    el.innerHTML = `
+      <div class="relative block overflow-hidden">
+        <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="${escapeHtml(a.titel)}"
+             class="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+      </div>
+      <div class="flex flex-1 flex-col p-6">
+        <div class="flex items-center gap-3 text-xs text-sand-500">${cat}${rt}</div>
+        <h2 class="mt-3 font-serif text-xl leading-snug text-petrol-900 transition-colors group-hover:text-petrol-700">${escapeHtml(a.titel)}</h2>
+        <p class="mt-2 flex-1 text-sm leading-relaxed text-sand-600">${escapeHtml(a.beschreibung || "")}</p>
+        <div class="mt-4 flex items-center justify-between text-xs text-sand-500">
+          <time>${escapeHtml(fmtDate(a.pub_date))}</time>
+          <span class="font-medium text-petrol-600 group-hover:text-clay-600">Weiterlesen →</span>
+        </div>
+      </div>`;
+    return el;
+  }
+
+  (async () => {
+    if (!grid) return;
+    try {
+      const artikel = await listPublishedArtikel();
+      // Neueste CRM-Artikel vorne einfügen
+      for (let i = artikel.length - 1; i >= 0; i--) {
+        grid.insertBefore(card(artikel[i]), grid.firstChild);
+      }
+    } catch (e) {
+      console.error("CRM-Artikel konnten nicht geladen werden:", e);
+    }
+  })();
+</script>

@@ -1,7 +1,39 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Newsletter" active="newsletter">
-  <CrmEmpty icon="mail" />
+  <p class="mb-5 max-w-2xl text-sm text-sand-500">
+    Verwaltung der Newsletter-Kontakte. Der <strong>Versand</strong> von E-Mails wird in einem
+    späteren Schritt angebunden.
+  </p>
+  <div id="crm-root"></div>
 </CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  mountResource({
+    table: "newsletter_subscribers",
+    singular: "Kontakt",
+    order: "created_at",
+    asc: false,
+    defaults: { status: "aktiv", confirmed: false, consent: false },
+    emptyText: "Noch keine Newsletter-Kontakte.",
+    columns: [
+      { key: "email", label: "E-Mail" },
+      { key: "name", label: "Name" },
+      { key: "status", label: "Status", type: "badge" },
+      { key: "confirmed", label: "Bestätigt", type: "bool" },
+      { key: "created_at", label: "Eingetragen", type: "date" },
+    ],
+    fields: [
+      { key: "email", label: "E-Mail", type: "email", required: true },
+      { key: "name", label: "Name" },
+      { key: "status", label: "Status", type: "select", options: [
+        { value: "aktiv", label: "Aktiv" },
+        { value: "abgemeldet", label: "Abgemeldet" },
+      ] },
+      { key: "confirmed", label: "Double-Opt-in bestätigt", type: "checkbox", placeholder: "bestätigt" },
+      { key: "consent", label: "Einwilligung erteilt", type: "checkbox", placeholder: "Einwilligung liegt vor" },
+    ],
+  });
+</script>

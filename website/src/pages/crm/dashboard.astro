@@ -1,7 +1,62 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Dashboard" active="dashboard">
-  <CrmEmpty icon="grid" />
+  <div id="dash-cards" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"></div>
+
+  <div class="mt-8 grid gap-6 lg:grid-cols-2">
+    <div class="rounded-2xl border border-sand-200 bg-white p-6">
+      <h2 class="font-serif text-lg text-petrol-900">Neueste Anfragen</h2>
+      <div id="dash-anfragen" class="mt-4 text-sm text-sand-600">Wird geladen …</div>
+    </div>
+    <div class="rounded-2xl border border-sand-200 bg-white p-6">
+      <h2 class="font-serif text-lg text-petrol-900">Neueste Leads</h2>
+      <div id="dash-leads" class="mt-4 text-sm text-sand-600">Wird geladen …</div>
+    </div>
+  </div>
 </CrmLayout>
+
+<script>
+  import { countRows, listRows, fmtDate, escapeHtml } from "../../lib/db";
+
+  const cards: { label: string; table: string; href: string }[] = [
+    { label: "Anfragen", table: "anfragen", href: "/crm/anfragen" },
+    { label: "Leads", table: "leads", href: "/crm/leads" },
+    { label: "Erst-Check Leads", table: "erst_check_leads", href: "/crm/leads" },
+    { label: "Termine", table: "termine", href: "/crm/kalender" },
+    { label: "Wissen-Artikel", table: "wissen_artikel", href: "/crm/wissen" },
+    { label: "Galerie-Bilder", table: "galerie", href: "/crm/galerie" },
+    { label: "Dokumente", table: "dokumente", href: "/crm/dokumente" },
+    { label: "Newsletter", table: "newsletter_subscribers", href: "/crm/newsletter" },
+  ];
+
+  const host = document.getElementById("dash-cards")!;
+  host.innerHTML = cards.map((c) => `
+    <a href="${c.href}" class="rounded-2xl border border-sand-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-md">
+      <p class="text-xs uppercase tracking-wide text-sand-500">${escapeHtml(c.label)}</p>
+      <p class="mt-1 font-serif text-3xl text-petrol-900" data-count="${c.table}">…</p>
+    </a>`).join("");
+
+  cards.forEach(async (c) => {
+    const el = host.querySelector(`[data-count="${c.table}"]`)!;
+    try { el.textContent = String(await countRows(c.table)); }
+    catch { el.textContent = "–"; }
+  });
+
+  async function recent(table: string, into: string, render: (r: any) => string) {
+    const box = document.getElementById(into)!;
+    try {
+      const rows = await listRows(table, "created_at", false);
+      box.innerHTML = rows.length
+        ? `<ul class="divide-y divide-sand-100">${rows.slice(0, 5).map((r) => `<li class="py-2.5">${render(r)}</li>`).join("")}</ul>`
+        : `<p class="text-sand-500">Noch keine Einträge.</p>`;
+    } catch {
+      box.innerHTML = `<p class="text-rust-600">Datenbank-Schema noch nicht eingerichtet.</p>`;
+    }
+  }
+
+  recent("anfragen", "dash-anfragen", (r) =>
+    `<div class="flex items-center justify-between gap-3"><span class="truncate"><strong>${escapeHtml(r.name || "Unbekannt")}</strong> ${r.paket ? "· " + escapeHtml(r.paket) : ""}</span><span class="shrink-0 text-xs text-sand-400">${escapeHtml(fmtDate(r.created_at))}</span></div>`);
+  recent("leads", "dash-leads", (r) =>
+    `<div class="flex items-center justify-between gap-3"><span class="truncate"><strong>${escapeHtml(r.name || r.email || "Lead")}</strong> ${r.source ? "· " + escapeHtml(r.source) : ""}</span><span class="shrink-0 text-xs text-sand-400">${escapeHtml(fmtDate(r.created_at))}</span></div>`);
+</script>

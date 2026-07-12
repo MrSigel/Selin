@@ -1,0 +1,322 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../data/site";
+
+const title = "Hunde-Gesundheits-Check – finde den Fokus für deinen Hund";
+const description =
+  "Beantworte 6 kurze Fragen und erhalte sofort eine erste Einordnung, wo bei deinem Hund die Ursache liegen könnte – kostenlos und in 2 Minuten. Von Selin Weikard.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Hunde-Gesundheits-Check",
+  applicationCategory: "HealthApplication",
+  operatingSystem: "Web",
+  description,
+  url: `${site.domain}/hunde-check`,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+};
+---
+<BaseLayout title={title} description={description} path="/hunde-check" schema={schema}>
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 to-sand-50">
+    <Icon name="paw" class="paw-deco pointer-events-none absolute -right-6 top-8 h-32 w-32 text-clay-300/20" />
+    <div class="relative mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 lg:py-16 lg:px-8">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Der Hunde-Gesundheits-Check</p>
+      <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Wo liegt die Ursache bei deinem Hund?</h1>
+      <p class="prose-lead mx-auto mt-6 max-w-2xl">
+        6 kurze Fragen, 2 Minuten – am Ende bekommst du eine erste, ehrliche Einordnung, in welche
+        Richtung du bei deinem Hund schauen solltest. Ohne Anmeldung, das Ergebnis siehst du sofort.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-2xl px-4 pb-20 sm:px-6 lg:px-8">
+    <div class="rounded-3xl border border-sand-200 bg-white p-6 shadow-sm sm:p-9">
+      <!-- Fortschritt -->
+      <div id="hc-progresswrap" class="mb-8">
+        <div class="flex items-center justify-between text-xs font-medium text-sand-500">
+          <span id="hc-step-label">Frage 1</span>
+          <span id="hc-step-count"></span>
+        </div>
+        <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-sand-200">
+          <div id="hc-progress" class="h-full rounded-full bg-clay-500 transition-all duration-300" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Fragen -->
+      <div id="hc-quiz">
+        <h2 id="hc-question" class="font-serif text-2xl leading-snug text-petrol-900"></h2>
+        <div id="hc-options" class="mt-6 grid gap-3"></div>
+        <button id="hc-back" class="mt-6 hidden text-sm font-medium text-sand-500 hover:text-petrol-700">← zurück</button>
+      </div>
+
+      <!-- Ergebnis -->
+      <div id="hc-result" class="hidden"></div>
+    </div>
+    <p class="mt-4 text-center text-xs text-sand-500">
+      Hinweis: Dieser Check ersetzt keine tierärztliche Diagnose. Er gibt dir eine erste Orientierung.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { saveErstCheckLead, escapeHtml } from "../lib/db";
+  import { whatsappLink } from "../data/site";
+
+  type Cat = "darm" | "haut" | "nerven" | "ursache";
+  interface Opt { label: string; cat: Cat }
+  interface Q { q: string; opts: Opt[] }
+
+  const QUESTIONS: Q[] = [
+    {
+      q: "Was macht dir bei deinem Hund aktuell am meisten Sorgen?",
+      opts: [
+        { label: "Haut, Fell, Juckreiz oder Ohren", cat: "haut" },
+        { label: "Verdauung, Kot, Blähungen oder Futter", cat: "darm" },
+        { label: "Unruhe, Angst oder auffälliges Verhalten", cat: "nerven" },
+        { label: "Mehreres gleichzeitig – ich blicke nicht durch", cat: "ursache" },
+      ],
+    },
+    {
+      q: "Wie ernährst du deinen Hund im Moment?",
+      opts: [
+        { label: "Trockenfutter", cat: "darm" },
+        { label: "Nassfutter oder gemischt", cat: "darm" },
+        { label: "BARF / roh oder selbst gekocht", cat: "haut" },
+        { label: "Ich bin mir unsicher, ob es das Richtige ist", cat: "ursache" },
+      ],
+    },
+    {
+      q: "Warst du damit schon beim Tierarzt?",
+      opts: [
+        { label: "Ja – es wurde nichts Eindeutiges gefunden", cat: "ursache" },
+        { label: "Ja – Behandlung half nur kurz", cat: "ursache" },
+        { label: "Ja – klare Diagnose, aber es bleibt", cat: "haut" },
+        { label: "Noch nicht", cat: "darm" },
+      ],
+    },
+    {
+      q: "Wie lange besteht das Thema schon?",
+      opts: [
+        { label: "Seit wenigen Wochen", cat: "darm" },
+        { label: "Seit mehreren Monaten", cat: "haut" },
+        { label: "Länger als ein Jahr", cat: "ursache" },
+        { label: "Es kommt immer wieder", cat: "ursache" },
+      ],
+    },
+    {
+      q: "Wie wirkt dein Hund in stressigen Momenten?",
+      opts: [
+        { label: "Ruhig und ausgeglichen", cat: "darm" },
+        { label: "Leicht unruhig", cat: "nerven" },
+        { label: "Sehr nervös oder ängstlich", cat: "nerven" },
+        { label: "Reaktiv, gereizt oder aggressiv", cat: "nerven" },
+      ],
+    },
+    {
+      q: "Was ist dir am wichtigsten?",
+      opts: [
+        { label: "Endlich die Ursache verstehen", cat: "ursache" },
+        { label: "Haut & Fell zur Ruhe bringen", cat: "haut" },
+        { label: "Verdauung & Ernährung stabilisieren", cat: "darm" },
+        { label: "Meinen Hund innerlich ausgeglichener sehen", cat: "nerven" },
+      ],
+    },
+  ];
+
+  const RESULTS: Record<Cat, { titel: string; text: string; tipps: string[] }> = {
+    darm: {
+      titel: "Der Ernährungs- & Darm-Typ",
+      text: "Vieles deutet darauf hin, dass bei deinem Hund der Darm und die Ernährung im Mittelpunkt stehen. Der Darm ist die Wurzel eines großen Teils des Immunsystems – ist er im Ungleichgewicht, zeigt sich das oft an ganz anderen Stellen. Genau hier lohnt sich der erste Blick.",
+      tipps: [
+        "Ernährung ehrlich unter die Lupe nehmen: Was kommt täglich in den Napf?",
+        "Darm als Ausgangspunkt betrachten, nicht als Nebenschauplatz",
+        "Veränderungen Schritt für Schritt, nicht alles auf einmal",
+      ],
+    },
+    haut: {
+      titel: "Der Haut- & Immun-Typ",
+      text: "Haut, Fell und Ohren sind bei deinem Hund das lauteste Signal – und meistens ein Spiegel dessen, was innen passiert. Statt nur die Symptome an der Oberfläche zu beruhigen, lohnt sich der Blick auf Immunsystem, Ernährung und mögliche Belastungen dahinter.",
+      tipps: [
+        "Haut-Themen als Signal verstehen, nicht nur äußerlich behandeln",
+        "Zusammenhang von Fütterung, Darm und Fell betrachten",
+        "Geduld: Haut & Fell brauchen Zeit, um sich zu erholen",
+      ],
+    },
+    nerven: {
+      titel: "Der Nervensystem- & Verhaltens-Typ",
+      text: "Bei deinem Hund stehen Unruhe, Anspannung oder Verhalten im Vordergrund. Sehr oft hat das eine körperliche Wurzel – Schmerzen, Blockaden oder Unverträglichkeiten, die der Hund nicht anders zeigen kann. Körper und Verhalten gehören deshalb zusammen betrachtet.",
+      tipps: [
+        "Verhalten nicht nur als Erziehungsthema sehen",
+        "Mögliche körperliche Ursachen mitdenken",
+        "Ruhe und Stabilität im Alltag als Basis schaffen",
+      ],
+    },
+    ursache: {
+      titel: "Der Ursachen-Sucher-Typ",
+      text: "Ihr habt schon einiges probiert, aber niemand hat wirklich die Ursache gefunden. Genau das ist der Ausgangspunkt meiner Arbeit: das Zusammenspiel von Ernährung, Darm, Immunsystem und Nervensystem sichtbar machen – dort, wo einzelne Befunde nichts zeigen.",
+      tipps: [
+        "Symptome zusammen denken statt einzeln behandeln",
+        "Die Verbindung hinter den Beschwerden suchen",
+        "Ehrliche Bestandsaufnahme als erster Schritt",
+      ],
+    },
+  };
+
+  const PRIORITY: Cat[] = ["ursache", "darm", "haut", "nerven"];
+
+  // Elemente
+  const qEl = document.getElementById("hc-question")!;
+  const optsEl = document.getElementById("hc-options")!;
+  const backBtn = document.getElementById("hc-back")!;
+  const quizEl = document.getElementById("hc-quiz")!;
+  const resultEl = document.getElementById("hc-result")!;
+  const progressEl = document.getElementById("hc-progress")!;
+  const stepLabel = document.getElementById("hc-step-label")!;
+  const stepCount = document.getElementById("hc-step-count")!;
+
+  const answers: (Cat | null)[] = new Array(QUESTIONS.length).fill(null);
+  let step = 0;
+
+  function render() {
+    const q = QUESTIONS[step];
+    qEl.textContent = q.q;
+    stepLabel.textContent = `Frage ${step + 1}`;
+    stepCount.textContent = `${step + 1} / ${QUESTIONS.length}`;
+    progressEl.setAttribute("style", `width:${(step / QUESTIONS.length) * 100}%`);
+    backBtn.classList.toggle("hidden", step === 0);
+    optsEl.innerHTML = "";
+    q.opts.forEach((o, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className =
+        "w-full rounded-xl border border-sand-200 bg-sand-50 px-5 py-4 text-left text-sand-800 transition-all hover:-translate-y-0.5 hover:border-petrol-300 hover:bg-white hover:shadow-sm" +
+        (answers[step] === o.cat ? " border-petrol-400 bg-white shadow-sm" : "");
+      b.innerHTML = `<span class="font-medium">${escapeHtml(o.label)}</span>`;
+      b.addEventListener("click", () => {
+        answers[step] = o.cat;
+        if (step < QUESTIONS.length - 1) { step++; render(); }
+        else finish();
+      });
+      optsEl.appendChild(b);
+    });
+  }
+
+  backBtn.addEventListener("click", () => { if (step > 0) { step--; render(); } });
+
+  function tally() {
+    const counts: Record<Cat, number> = { darm: 0, haut: 0, nerven: 0, ursache: 0 };
+    answers.forEach((a) => { if (a) counts[a]++; });
+    let winner: Cat = PRIORITY[0];
+    let best = -1;
+    for (const c of PRIORITY) {
+      if (counts[c] > best) { best = counts[c]; winner = c; }
+    }
+    return { counts, winner };
+  }
+
+  function finish() {
+    progressEl.setAttribute("style", "width:100%");
+    const { counts, winner } = tally();
+    const r = RESULTS[winner];
+    const total = QUESTIONS.length;
+    const bars = (["ursache", "darm", "haut", "nerven"] as Cat[])
+      .map((c) => {
+        const pct = Math.round((counts[c] / total) * 100);
+        const name = { ursache: "Ursache", darm: "Darm & Ernährung", haut: "Haut & Immun", nerven: "Nervensystem" }[c];
+        return `<div><div class="flex justify-between text-xs text-sand-500"><span>${name}</span><span>${pct}%</span></div>
+          <div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-sand-200"><div class="h-full rounded-full bg-petrol-500" style="width:${pct}%"></div></div></div>`;
+      })
+      .join("");
+
+    quizEl.classList.add("hidden");
+    document.getElementById("hc-progresswrap")?.classList.add("hidden");
+    resultEl.classList.remove("hidden");
+    resultEl.innerHTML = `
+      <div class="text-center">
+        <span class="inline-flex items-center gap-2 rounded-full bg-clay-100 px-3 py-1 text-xs font-semibold text-clay-700">Dein Ergebnis</span>
+        <h2 class="mt-4 font-serif text-3xl text-petrol-900">${escapeHtml(r.titel)}</h2>
+        <p class="mx-auto mt-4 max-w-xl leading-relaxed text-sand-700">${escapeHtml(r.text)}</p>
+      </div>
+      <div class="mt-8 space-y-3">${bars}</div>
+      <div class="mt-8 rounded-2xl border border-sand-200 bg-sand-50 p-5">
+        <p class="font-serif text-lg text-petrol-900">Deine ersten Ansatzpunkte</p>
+        <ul class="mt-3 space-y-2 text-sm text-sand-700">
+          ${r.tipps.map((t) => `<li class="flex items-start gap-2"><span class="mt-1 text-clay-600">•</span><span>${escapeHtml(t)}</span></li>`).join("")}
+        </ul>
+      </div>
+
+      <div class="mt-8 rounded-2xl border border-petrol-200 bg-petrol-50/70 p-6 text-center">
+        <p class="font-serif text-xl text-petrol-900">Willst du das gemeinsam vertiefen?</p>
+        <p class="mx-auto mt-2 max-w-md text-sm text-sand-700">
+          Im Erst-Check schauen wir persönlich auf deinen Hund und finden heraus, welcher Weg wirklich passt.
+        </p>
+        <a href="${whatsappLink(`Hallo Selin, mein Hunde-Check-Ergebnis war „${r.titel}“. Können wir den Erst-Check durchführen?`)}"
+           target="_blank" rel="noopener noreferrer"
+           class="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-clay-600 px-6 py-3 font-medium text-white transition-colors hover:bg-clay-700">
+          Termin anfragen
+        </a>
+      </div>
+
+      <!-- Optionale Kontaktdaten -->
+      <div id="hc-leadwrap" class="mt-8 border-t border-sand-100 pt-8">
+        <p class="text-center font-serif text-lg text-petrol-900">Ergebnis & Tipps zusenden lassen?</p>
+        <p class="mx-auto mt-1 max-w-md text-center text-sm text-sand-500">Optional – nur wenn du möchtest, dass Selin sich bei dir meldet.</p>
+        <form id="hc-lead" class="mx-auto mt-5 max-w-md space-y-3">
+          <input name="name" type="text" placeholder="Dein Name" class="w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+          <input name="email" type="email" placeholder="E-Mail (optional)" class="w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+          <input name="phone" type="tel" placeholder="Telefon (optional)" class="w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+          <label class="flex items-start gap-2.5 text-xs text-sand-600">
+            <input type="checkbox" name="consent" required class="mt-0.5 h-4 w-4 rounded border-sand-300 text-petrol-600 focus:ring-petrol-500" />
+            <span>Ich bin einverstanden, dass Selin Weikard mich zu meinem Ergebnis kontaktieren darf. Hinweise in der <a href="/datenschutz" class="underline">Datenschutzerklärung</a>.</span>
+          </label>
+          <button type="submit" class="w-full rounded-full bg-petrol-700 px-6 py-3 font-medium text-white transition-colors hover:bg-petrol-800">Ergebnis sichern</button>
+        </form>
+        <p id="hc-lead-msg" class="mt-3 hidden text-center text-sm"></p>
+      </div>
+
+      <div class="mt-6 text-center">
+        <button id="hc-restart" type="button" class="text-sm font-medium text-sand-500 hover:text-petrol-700">↻ Check neu starten</button>
+      </div>
+    `;
+
+    document.getElementById("hc-restart")?.addEventListener("click", () => {
+      answers.fill(null); step = 0;
+      resultEl.classList.add("hidden"); resultEl.innerHTML = "";
+      quizEl.classList.remove("hidden");
+      document.getElementById("hc-progresswrap")?.classList.remove("hidden");
+      render();
+    });
+
+    const leadForm = document.getElementById("hc-lead") as HTMLFormElement | null;
+    const msg = document.getElementById("hc-lead-msg")!;
+    leadForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(leadForm);
+      const btn = leadForm.querySelector("button[type=submit]") as HTMLButtonElement;
+      btn.disabled = true; btn.textContent = "Wird gesendet …";
+      try {
+        await saveErstCheckLead({
+          name: String(fd.get("name") || "") || undefined,
+          email: String(fd.get("email") || "") || undefined,
+          phone: String(fd.get("phone") || "") || undefined,
+          ergebnis_typ: r.titel,
+          antworten: answers,
+          consent: true,
+        });
+        document.getElementById("hc-leadwrap")!.innerHTML =
+          `<p class="text-center font-serif text-lg text-petrol-900">Danke! 🐾</p>
+           <p class="mx-auto mt-2 max-w-md text-center text-sm text-sand-600">Deine Angaben sind angekommen – Selin meldet sich bei dir.</p>`;
+      } catch (err) {
+        msg.textContent = "Das hat gerade nicht geklappt. Am schnellsten erreichst du Selin direkt über WhatsApp.";
+        msg.className = "mt-3 text-center text-sm text-rust-600";
+        msg.classList.remove("hidden");
+        btn.disabled = false; btn.textContent = "Ergebnis sichern";
+        console.error(err);
+      }
+    });
+  }
+
+  render();
+</script>

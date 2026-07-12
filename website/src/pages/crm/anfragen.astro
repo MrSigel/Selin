@@ -1,7 +1,43 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Anfragen" active="anfragen">
-  <CrmEmpty icon="chat" />
+  <div id="crm-root"></div>
 </CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  mountResource({
+    table: "anfragen",
+    singular: "Anfrage",
+    order: "created_at",
+    asc: false,
+    defaults: { channel: "whatsapp", status: "offen" },
+    emptyText: "Noch keine Anfragen.",
+    columns: [
+      { key: "name", label: "Name" },
+      { key: "email", label: "E-Mail" },
+      { key: "channel", label: "Kanal", type: "badge" },
+      { key: "paket", label: "Paket" },
+      { key: "status", label: "Status", type: "badge" },
+      { key: "created_at", label: "Erstellt", type: "date" },
+    ],
+    fields: [
+      { key: "name", label: "Name" },
+      { key: "email", label: "E-Mail", type: "email" },
+      { key: "phone", label: "Telefon", type: "tel" },
+      { key: "channel", label: "Kanal", type: "select", options: [
+        { value: "whatsapp", label: "WhatsApp" },
+        { value: "email", label: "E-Mail" },
+      ] },
+      { key: "paket", label: "Interessiertes Paket" },
+      { key: "message", label: "Nachricht", type: "textarea" },
+      { key: "status", label: "Status", type: "select", options: [
+        { value: "offen", label: "Offen" },
+        { value: "in_bearbeitung", label: "In Bearbeitung" },
+        { value: "beantwortet", label: "Beantwortet" },
+        { value: "geschlossen", label: "Geschlossen" },
+      ] },
+    ],
+  });
+</script>

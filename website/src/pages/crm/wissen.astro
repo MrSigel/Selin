@@ -1,7 +1,43 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Wissen" active="wissen">
-  <CrmEmpty icon="book" />
+  <p class="mb-5 max-w-2xl text-sm text-sand-500">
+    Neue Artikel erscheinen nach dem Veröffentlichen automatisch auf der öffentlichen
+    <a href="/wissen" target="_blank" class="font-medium text-petrol-700 underline">Wissen-Seite</a>
+    – mit Titel, Bild und Beschreibung, genau wie die bestehenden Beiträge.
+  </p>
+  <div id="crm-root"></div>
 </CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  const today = new Date().toISOString().slice(0, 10);
+  mountResource({
+    table: "wissen_artikel",
+    singular: "Artikel",
+    order: "pub_date",
+    asc: false,
+    defaults: { published: false, pub_date: today },
+    emptyText: "Noch keine Artikel. Lege deinen ersten Beitrag an.",
+    columns: [
+      { key: "bild_url", label: "Bild", type: "image" },
+      { key: "titel", label: "Titel", type: "truncate" },
+      { key: "kategorie", label: "Kategorie", type: "badge" },
+      { key: "published", label: "Öffentlich", type: "bool" },
+      { key: "pub_date", label: "Datum", type: "date" },
+      { key: "id", label: "", type: "link", hrefTemplate: (r) => `/wissen/beitrag?id=${r.id}`, linkLabel: "ansehen" },
+    ],
+    fields: [
+      { key: "titel", label: "Titel", required: true, maxlength: 160 },
+      { key: "beschreibung", label: "Beschreibung / Teaser", type: "textarea", maxlength: 400, help: "Kurzer Anrisstext für die Übersicht." },
+      { key: "kategorie", label: "Kategorie", placeholder: "z. B. Darm & Immunsystem" },
+      { key: "lesezeit", label: "Lesezeit", placeholder: "z. B. 7 Min" },
+      { key: "bild_url", label: "Titelbild", type: "image", folder: "wissen" },
+      { key: "image_label", label: "Bildunterschrift (optional)" },
+      { key: "pub_date", label: "Veröffentlichungsdatum", type: "date", required: true },
+      { key: "inhalt", label: "Inhalt", type: "textarea", help: "Absätze mit Leerzeile trennen. „## Überschrift“ und „- Liste“ werden formatiert, **fett** ist möglich." },
+      { key: "published", label: "Öffentlich sichtbar", type: "checkbox", placeholder: "auf der Website anzeigen" },
+    ],
+  });
+</script>

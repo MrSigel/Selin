@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import { site } from "../data/site";
+
+const title = "Galerie – Momente aus der Begleitung";
+const description =
+  "Bilder und kleine Geschichten aus der ganzheitlichen Hundegesundheits-Begleitung von Selin Weikard – echte Wege, echte Hunde, echte Veränderung.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ImageGallery",
+  name: "Galerie – Selin Weikard",
+  description,
+  url: `${site.domain}/galerie`,
+};
+---
+<BaseLayout title={title} description={description} path="/galerie" schema={schema}>
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 to-sand-50">
+    <Icon name="paw" class="paw-deco pointer-events-none absolute -right-6 top-8 h-32 w-32 text-clay-300/20" />
+    <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20 lg:px-8">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Galerie</p>
+      <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Momente, die den Weg erzählen</h1>
+      <p class="prose-lead mx-auto mt-6 max-w-2xl">
+        Kleine Einblicke in echte Begleitungen – jedes Bild mit einer kurzen Geschichte dahinter.
+        Weil Veränderung nicht in Zahlen sichtbar wird, sondern in Momenten.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Ladezustand -->
+    <div id="galerie-loading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 6 }).map(() => (
+        <div class="animate-pulse overflow-hidden rounded-2xl border border-sand-200 bg-white">
+          <div class="aspect-[4/3] w-full bg-sand-200/60"></div>
+          <div class="space-y-2 p-5"><div class="h-3 w-3/4 rounded bg-sand-200/60"></div><div class="h-3 w-1/2 rounded bg-sand-200/60"></div></div>
+        </div>
+      ))}
+    </div>
+
+    <div id="galerie-grid" class="hidden grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+    <div id="galerie-empty" class="hidden rounded-2xl border border-dashed border-sand-300 bg-white/60 p-12 text-center">
+      <p class="font-serif text-xl text-petrol-900">Die Galerie wird gerade gefüllt</p>
+      <p class="mt-2 text-sm text-sand-600">Schau bald wieder vorbei – hier entstehen echte Einblicke.</p>
+    </div>
+  </section>
+
+  <div class="py-16">
+    <CtaBanner
+      title="Auch dein Hund hat eine Geschichte"
+      text="Wenn du spürst, dass mehr dahintersteckt, lass uns gemeinsam auf die Ursache schauen."
+    />
+  </div>
+</BaseLayout>
+
+<script>
+  import { listPublicGalerie, escapeHtml } from "../lib/db";
+
+  const loading = document.getElementById("galerie-loading");
+  const grid = document.getElementById("galerie-grid");
+  const empty = document.getElementById("galerie-empty");
+
+  function card(item: { bild_url: string; geschichte: string | null }) {
+    const story = item.geschichte
+      ? `<p class="mt-0 p-5 text-sm leading-relaxed text-sand-600">${escapeHtml(item.geschichte)}</p>`
+      : "";
+    return `
+      <figure class="reveal is-visible group overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+        <div class="aspect-[4/3] w-full overflow-hidden">
+          <img src="${escapeHtml(item.bild_url)}" alt="" loading="lazy"
+               class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        </div>
+        ${story}
+      </figure>`;
+  }
+
+  (async () => {
+    try {
+      const items = await listPublicGalerie();
+      loading?.classList.add("hidden");
+      if (!items.length) {
+        empty?.classList.remove("hidden");
+        return;
+      }
+      if (grid) {
+        grid.innerHTML = items.map(card).join("");
+        grid.classList.remove("hidden");
+      }
+    } catch (e) {
+      loading?.classList.add("hidden");
+      empty?.classList.remove("hidden");
+      console.error("Galerie konnte nicht geladen werden:", e);
+    }
+  })();
+</script>

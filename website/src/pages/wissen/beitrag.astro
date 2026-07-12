@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CtaBanner from "../../components/CtaBanner.astro";
+
+const title = "Beitrag – Wissen";
+const description = "Fachartikel zu ganzheitlicher Hundegesundheit von Selin Weikard.";
+---
+<BaseLayout title={title} description={description} path="/wissen/beitrag">
+  <article>
+    <div id="beitrag-loading" class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="animate-pulse space-y-6">
+        <div class="h-4 w-40 rounded bg-sand-200/70"></div>
+        <div class="h-8 w-3/4 rounded bg-sand-200/70"></div>
+        <div class="aspect-[16/9] w-full rounded-2xl bg-sand-200/60"></div>
+        <div class="h-4 w-full rounded bg-sand-200/60"></div>
+        <div class="h-4 w-5/6 rounded bg-sand-200/60"></div>
+      </div>
+    </div>
+
+    <div id="beitrag-notfound" class="mx-auto hidden max-w-3xl px-4 py-24 text-center sm:px-6 lg:px-8">
+      <p class="font-serif text-2xl text-petrol-900">Beitrag nicht gefunden</p>
+      <p class="mt-3 text-sand-600">Dieser Artikel existiert nicht oder ist nicht mehr verfügbar.</p>
+      <a href="/wissen" class="mt-6 inline-block rounded-full bg-clay-600 px-6 py-3 font-medium text-white hover:bg-clay-700">Zurück zum Wissen</a>
+    </div>
+
+    <div id="beitrag-content" class="hidden"></div>
+  </article>
+
+  <div class="pb-24">
+    <CtaBanner />
+  </div>
+</BaseLayout>
+
+<script>
+  import { getArtikel, renderInhalt, fmtDate, escapeHtml } from "../../lib/db";
+
+  const loading = document.getElementById("beitrag-loading")!;
+  const notfound = document.getElementById("beitrag-notfound")!;
+  const content = document.getElementById("beitrag-content")!;
+  const fallbackImg = "/galerie/morpheus-meer.jpeg";
+
+  (async () => {
+    const id = new URLSearchParams(location.search).get("id");
+    if (!id) { loading.classList.add("hidden"); notfound.classList.remove("hidden"); return; }
+
+    const a = await getArtikel(id);
+    loading.classList.add("hidden");
+    if (!a || !a.published) { notfound.classList.remove("hidden"); return; }
+
+    document.title = `${a.titel} | Selin Weikard`;
+    const cat = a.kategorie ? escapeHtml(a.kategorie) : "Wissen";
+    const meta = [
+      a.pub_date ? `<time>${escapeHtml(fmtDate(a.pub_date))}</time>` : "",
+      a.lesezeit ? `<span>·</span><span>${escapeHtml(a.lesezeit)}</span>` : "",
+    ].join(" ");
+
+    content.innerHTML = `
+      <header class="relative overflow-hidden bg-gradient-to-b from-petrol-50 to-sand-50">
+        <div class="relative mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
+          <nav aria-label="Brotkrümel" class="text-sm text-sand-500">
+            <a href="/wissen" class="transition-colors hover:text-petrol-700">Wissen</a>
+            <span class="mx-2">/</span><span class="text-sand-700">${cat}</span>
+          </nav>
+          <h1 class="mt-4 font-serif text-3xl leading-tight text-petrol-900 sm:text-4xl">${escapeHtml(a.titel)}</h1>
+          ${a.beschreibung ? `<p class="prose-lead mt-4">${escapeHtml(a.beschreibung)}</p>` : ""}
+          <div class="mt-5 flex items-center gap-3 text-sm text-sand-500">
+            <span class="rounded-full bg-petrol-100 px-2.5 py-1 text-xs font-medium text-petrol-700">${cat}</span>
+            ${meta}
+          </div>
+        </div>
+      </header>
+      <div class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+        <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="${escapeHtml(a.titel)}"
+             class="mb-10 aspect-[16/9] w-full rounded-2xl object-cover shadow-lg" />
+        <div class="rich-text">${renderInhalt(a.inhalt || "")}</div>
+        <div class="mt-12 rounded-2xl border border-sand-200 bg-sand-100 p-6 text-center sm:p-8">
+          <p class="font-serif text-xl text-petrol-900">Fragen zu deinem Hund?</p>
+          <p class="mt-2 text-sand-700">Im Erst-Check schauen wir gemeinsam auf die eigentliche Ursache.</p>
+          <a href="/angebot/erst-check" class="mt-5 inline-block rounded-full bg-clay-600 px-6 py-3 font-medium text-white hover:bg-clay-700">Erst-Check ansehen</a>
+        </div>
+      </div>`;
+    content.classList.remove("hidden");
+  })();
+</script>

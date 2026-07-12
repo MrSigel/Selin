@@ -1,0 +1,35 @@
+---
+import CrmLayout from "../../layouts/CrmLayout.astro";
+---
+<CrmLayout title="Galerie" active="galerie">
+  <p class="mb-5 max-w-2xl text-sm text-sand-500">
+    Lade ein Bild hoch und schreibe eine kurze Geschichte dazu (max. 250 Zeichen). Veröffentlichte
+    Einträge erscheinen sofort auf der öffentlichen
+    <a href="/galerie" target="_blank" class="font-medium text-petrol-700 underline">Galerie-Seite</a>.
+  </p>
+  <div id="crm-root"></div>
+</CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  mountResource({
+    table: "galerie",
+    singular: "Bild",
+    order: "sort",
+    asc: true,
+    defaults: { published: true, sort: 0 },
+    emptyText: "Noch keine Bilder. Lade dein erstes Galerie-Bild hoch.",
+    columns: [
+      { key: "bild_url", label: "Bild", type: "image" },
+      { key: "geschichte", label: "Geschichte", type: "truncate" },
+      { key: "sort", label: "Reihenfolge" },
+      { key: "published", label: "Öffentlich", type: "bool" },
+    ],
+    fields: [
+      { key: "bild_url", label: "Bild", type: "image", folder: "galerie", required: true },
+      { key: "geschichte", label: "Kurze Geschichte", type: "textarea", maxlength: 250, help: "Maximal 250 Zeichen." },
+      { key: "sort", label: "Reihenfolge (kleiner = weiter vorne)", type: "number" },
+      { key: "published", label: "Öffentlich sichtbar", type: "checkbox", placeholder: "in der Galerie anzeigen" },
+    ],
+  });
+</script>

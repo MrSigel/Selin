@@ -1,7 +1,57 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Finanzen" active="finanzen">
-  <CrmEmpty icon="euro" />
+  <div id="crm-root"></div>
 </CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  import { euro } from "../../lib/db";
+
+  function stat(label: string, value: string, tone: string) {
+    return `<div class="rounded-2xl border border-sand-200 bg-white p-5">
+      <p class="text-xs uppercase tracking-wide text-sand-500">${label}</p>
+      <p class="mt-1 font-serif text-2xl ${tone}">${value}</p></div>`;
+  }
+
+  mountResource({
+    table: "transaktionen",
+    singular: "Buchung",
+    order: "created_at",
+    asc: false,
+    defaults: { typ: "einnahme", status: "offen", waehrung: "EUR" },
+    emptyText: "Noch keine Buchungen.",
+    summary: (rows) => {
+      const einBezahlt = rows.filter((r) => r.typ === "einnahme" && r.status === "bezahlt").reduce((s, r) => s + Number(r.betrag || 0), 0);
+      const ausBezahlt = rows.filter((r) => r.typ === "ausgabe" && r.status === "bezahlt").reduce((s, r) => s + Number(r.betrag || 0), 0);
+      const offen = rows.filter((r) => r.typ === "einnahme" && r.status === "offen").reduce((s, r) => s + Number(r.betrag || 0), 0);
+      return `<div class="mb-6 grid gap-4 sm:grid-cols-3">
+        ${stat("Einnahmen (bezahlt)", euro(einBezahlt), "text-petrol-800")}
+        ${stat("Ausgaben (bezahlt)", euro(ausBezahlt), "text-rust-600")}
+        ${stat("Saldo", euro(einBezahlt - ausBezahlt), "text-petrol-900")}
+      </div>${offen ? `<p class="mb-4 text-sm text-sand-500">Offene Einnahmen: <strong>${euro(offen)}</strong></p>` : ""}`;
+    },
+    columns: [
+      { key: "beschreibung", label: "Beschreibung", type: "truncate" },
+      { key: "typ", label: "Typ", type: "badge" },
+      { key: "betrag", label: "Betrag", type: "euro" },
+      { key: "status", label: "Status", type: "badge" },
+      { key: "created_at", label: "Datum", type: "date" },
+    ],
+    fields: [
+      { key: "beschreibung", label: "Beschreibung" },
+      { key: "betrag", label: "Betrag (€)", type: "number", required: true },
+      { key: "typ", label: "Typ", type: "select", options: [
+        { value: "einnahme", label: "Einnahme" },
+        { value: "ausgabe", label: "Ausgabe" },
+      ] },
+      { key: "status", label: "Status", type: "select", options: [
+        { value: "offen", label: "Offen" },
+        { value: "bezahlt", label: "Bezahlt" },
+        { value: "storniert", label: "Storniert" },
+      ] },
+      { key: "bezahlt_am", label: "Bezahlt am", type: "datetime" },
+    ],
+  });
+</script>

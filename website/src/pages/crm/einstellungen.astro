@@ -1,7 +1,54 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Einstellungen" active="einstellungen">
-  <CrmEmpty icon="settings" />
+  <div class="max-w-lg space-y-6">
+    <div class="rounded-2xl border border-sand-200 bg-white p-6">
+      <h2 class="font-serif text-lg text-petrol-900">Konto</h2>
+      <p class="mt-2 text-sm text-sand-600">Angemeldet als <strong id="acc-email">…</strong></p>
+    </div>
+
+    <div class="rounded-2xl border border-sand-200 bg-white p-6">
+      <h2 class="font-serif text-lg text-petrol-900">Passwort ändern</h2>
+      <form id="pw-form" class="mt-4 space-y-4">
+        <label class="block">
+          <span class="text-sm font-medium text-sand-700">Neues Passwort</span>
+          <input type="password" name="pw" required minlength="6" autocomplete="new-password" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+        </label>
+        <label class="block">
+          <span class="text-sm font-medium text-sand-700">Wiederholen</span>
+          <input type="password" name="pw2" required minlength="6" autocomplete="new-password" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+        </label>
+        <p id="pw-msg" class="hidden text-sm"></p>
+        <button type="submit" class="rounded-full bg-petrol-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-petrol-800">Passwort speichern</button>
+      </form>
+    </div>
+  </div>
 </CrmLayout>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+
+  supabase.auth.getUser().then(({ data }) => {
+    const el = document.getElementById("acc-email");
+    if (el) el.textContent = data.user?.email ?? "—";
+  });
+
+  const form = document.getElementById("pw-form") as HTMLFormElement;
+  const msg = document.getElementById("pw-msg") as HTMLElement;
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const pw = String(fd.get("pw") || "");
+    const pw2 = String(fd.get("pw2") || "");
+    msg.className = "text-sm";
+    if (pw !== pw2) { msg.textContent = "Die Passwörter stimmen nicht überein."; msg.classList.add("text-rust-600"); msg.classList.remove("hidden"); return; }
+    const btn = form.querySelector("button[type=submit]") as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = "Speichert …";
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    if (error) { msg.textContent = "Fehler: " + error.message; msg.classList.add("text-rust-600"); }
+    else { msg.textContent = "Passwort erfolgreich geändert."; msg.classList.add("text-petrol-700"); form.reset(); }
+    msg.classList.remove("hidden");
+    btn.disabled = false; btn.textContent = "Passwort speichern";
+  });
+</script>

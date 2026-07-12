@@ -8,8 +8,8 @@ export default defineConfig({
   site: 'https://www.selin-weikard.de',
   integrations: [
     sitemap({
-      // Interner Bereich & Login niemals in die Sitemap
-      filter: (page) => !/\/(crm|login)(\/|$)/.test(page),
+      // Interner Bereich, Login & die clientseitige Beitrag-Hülle nicht in die Sitemap
+      filter: (page) => !/\/(crm|login)(\/|$)/.test(page) && !/\/wissen\/beitrag/.test(page),
     }),
   ],
   vite: {

@@ -45,6 +45,8 @@ export const nav = [
   { label: "Methode", href: "/methode" },
   { label: "Angebot", href: "/angebot" },
   { label: "Über Selin", href: "/ueber-selin" },
+  { label: "Galerie", href: "/galerie" },
+  { label: "Hunde-Check", href: "/hunde-check" },
   { label: "Academy", href: "/academy" },
   { label: "Podcast", href: "/podcast" },
   { label: "Wissen", href: "/wissen" },

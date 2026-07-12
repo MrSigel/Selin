@@ -1,7 +1,40 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Leads" active="leads">
-  <CrmEmpty icon="users" />
+  <div id="crm-root"></div>
 </CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  mountResource({
+    table: "leads",
+    singular: "Lead",
+    order: "created_at",
+    asc: false,
+    defaults: { status: "neu", consent: false },
+    emptyText: "Noch keine Leads.",
+    columns: [
+      { key: "name", label: "Name" },
+      { key: "email", label: "E-Mail" },
+      { key: "phone", label: "Telefon" },
+      { key: "source", label: "Quelle", type: "badge" },
+      { key: "status", label: "Status", type: "badge" },
+      { key: "created_at", label: "Erstellt", type: "date" },
+    ],
+    fields: [
+      { key: "name", label: "Name" },
+      { key: "email", label: "E-Mail", type: "email" },
+      { key: "phone", label: "Telefon", type: "tel" },
+      { key: "source", label: "Quelle", placeholder: "z. B. hunde-check, kontakt" },
+      { key: "status", label: "Status", type: "select", options: [
+        { value: "neu", label: "Neu" },
+        { value: "kontaktiert", label: "Kontaktiert" },
+        { value: "qualifiziert", label: "Qualifiziert" },
+        { value: "kunde", label: "Kunde" },
+        { value: "archiviert", label: "Archiviert" },
+      ] },
+      { key: "notes", label: "Notizen", type: "textarea" },
+    ],
+  });
+</script>

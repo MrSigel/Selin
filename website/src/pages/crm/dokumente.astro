@@ -1,7 +1,28 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Dokumente" active="dokumente">
-  <CrmEmpty icon="folder" />
+  <div id="crm-root"></div>
 </CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  mountResource({
+    table: "dokumente",
+    singular: "Dokument",
+    order: "created_at",
+    asc: false,
+    emptyText: "Noch keine Dokumente.",
+    columns: [
+      { key: "name", label: "Name" },
+      { key: "type", label: "Typ" },
+      { key: "created_at", label: "Hochgeladen", type: "date" },
+      { key: "url", label: "", type: "link", hrefTemplate: (r) => r.url, linkLabel: "öffnen" },
+    ],
+    fields: [
+      { key: "url", label: "Datei", type: "file", folder: "dokumente", metaKeys: { name: "name", type: "type" } },
+      { key: "name", label: "Anzeigename", required: true },
+      { key: "type", label: "Dateityp" },
+    ],
+  });
+</script>

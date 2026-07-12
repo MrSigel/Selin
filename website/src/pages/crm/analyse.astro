@@ -1,7 +1,45 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Analyse" active="analyse">
-  <CrmEmpty icon="barChart" />
+  <div id="analyse-root" class="grid gap-6 lg:grid-cols-2">Wird geladen …</div>
 </CrmLayout>
+
+<script>
+  import { listRows, escapeHtml } from "../../lib/db";
+
+  function group(rows: any[], key: string): Record<string, number> {
+    const out: Record<string, number> = {};
+    rows.forEach((r) => { const k = r[key] || "–"; out[k] = (out[k] || 0) + 1; });
+    return out;
+  }
+
+  function chart(title: string, data: Record<string, number>): string {
+    const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
+    const max = Math.max(1, ...entries.map((e) => e[1]));
+    const bars = entries.length
+      ? entries.map(([k, v]) => `
+        <div>
+          <div class="flex justify-between text-xs text-sand-600"><span>${escapeHtml(k)}</span><span>${v}</span></div>
+          <div class="mt-1 h-2.5 w-full overflow-hidden rounded-full bg-sand-200"><div class="h-full rounded-full bg-petrol-500" style="width:${Math.round((v / max) * 100)}%"></div></div>
+        </div>`).join("")
+      : `<p class="text-sm text-sand-500">Keine Daten.</p>`;
+    return `<div class="rounded-2xl border border-sand-200 bg-white p-6">
+      <h2 class="mb-4 font-serif text-lg text-petrol-900">${escapeHtml(title)}</h2>
+      <div class="space-y-3">${bars}</div></div>`;
+  }
+
+  (async () => {
+    const root = document.getElementById("analyse-root")!;
+    const parts: string[] = [];
+    async function add(table: string, title: string, key: string) {
+      try { parts.push(chart(title, group(await listRows(table), key))); }
+      catch { /* Tabelle evtl. noch nicht angelegt */ }
+    }
+    await add("anfragen", "Anfragen nach Status", "status");
+    await add("leads", "Leads nach Quelle", "source");
+    await add("erst_check_leads", "Hunde-Check nach Ergebnis-Typ", "ergebnis_typ");
+    await add("termine", "Termine nach Status", "status");
+    root.innerHTML = parts.length ? parts.join("") : `<p class="text-rust-600">Datenbank-Schema noch nicht eingerichtet.</p>`;
+  })();
+</script>
