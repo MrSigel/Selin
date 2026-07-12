@@ -1,0 +1,113 @@
+---
+import "../styles/global.css";
+import { Image } from "astro:assets";
+import mark from "../assets/mark.png";
+import { site } from "../data/site";
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | {site.name} CRM</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#172d24" />
+  </head>
+  <body class="min-h-screen bg-petrol-950">
+    <main class="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-b from-petrol-900 to-petrol-950 px-4 py-12">
+      <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-clay-500/10 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-petrol-700/40 blur-3xl"></div>
+
+      <div class="relative w-full max-w-sm">
+        <div class="mb-8 flex flex-col items-center text-center">
+          <Image src={mark} alt="" loading="eager" class="h-14 w-auto" />
+          <p class="mt-4 font-serif text-2xl text-white">Selin Weikard CRM</p>
+          <p class="mt-1 text-sm text-sand-200/70">Interner Bereich – bitte anmelden</p>
+        </div>
+
+        <form id="login-form" class="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur sm:p-7" novalidate>
+          <label class="block">
+            <span class="text-sm font-medium text-sand-100">E-Mail</span>
+            <input
+              type="email"
+              name="email"
+              autocomplete="username"
+              required
+              class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 text-white placeholder-sand-200/40 focus:border-clay-400 focus:bg-white/10 focus:outline-none"
+              placeholder="admin@selin-weikard.de"
+            />
+          </label>
+          <label class="mt-4 block">
+            <span class="text-sm font-medium text-sand-100">Passwort</span>
+            <input
+              type="password"
+              name="password"
+              autocomplete="current-password"
+              required
+              class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 text-white placeholder-sand-200/40 focus:border-clay-400 focus:bg-white/10 focus:outline-none"
+              placeholder="••••••••"
+            />
+          </label>
+
+          <p id="login-error" class="mt-4 hidden rounded-lg border border-rust-500/50 bg-rust-500/15 px-3 py-2 text-sm text-white" role="alert"></p>
+
+          <button
+            id="login-submit"
+            type="submit"
+            class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-clay-600 px-6 py-3 font-medium text-white transition-colors hover:bg-clay-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Anmelden
+          </button>
+        </form>
+
+        <p class="mt-6 text-center text-xs text-sand-200/50">
+          <a href="/" class="underline underline-offset-2 hover:text-sand-100">← Zurück zur Website</a>
+        </p>
+      </div>
+    </main>
+
+    <script>
+      import { supabase } from "../lib/supabase";
+
+      const form = document.getElementById("login-form") as HTMLFormElement;
+      const errorEl = document.getElementById("login-error") as HTMLParagraphElement;
+      const submit = document.getElementById("login-submit") as HTMLButtonElement;
+      const REDIRECT = "/crm/dashboard";
+
+      // Bereits eingeloggt? Direkt weiter.
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session) window.location.href = REDIRECT;
+      });
+
+      function showError(msg: string) {
+        errorEl.textContent = msg;
+        errorEl.classList.remove("hidden");
+      }
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorEl.classList.add("hidden");
+        const fd = new FormData(form);
+        const email = String(fd.get("email") || "").trim();
+        const password = String(fd.get("password") || "");
+        if (!email || !password) {
+          showError("Bitte E-Mail und Passwort eingeben.");
+          return;
+        }
+        submit.disabled = true;
+        submit.textContent = "Anmelden …";
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          showError("Anmeldung fehlgeschlagen. Bitte prüfe deine Zugangsdaten.");
+          submit.disabled = false;
+          submit.textContent = "Anmelden";
+          return;
+        }
+        window.location.href = REDIRECT;
+      });
+    </script>
+  </body>
+</html>

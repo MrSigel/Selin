@@ -1,0 +1,154 @@
+---
+import "../styles/global.css";
+import { Image } from "astro:assets";
+import Icon from "../components/Icon.astro";
+import mark from "../assets/mark.png";
+
+interface Props {
+  title: string;
+  active: string;
+}
+const { title, active } = Astro.props;
+
+const nav = [
+  { key: "dashboard", label: "Dashboard", icon: "grid", href: "/crm/dashboard" },
+  { key: "postfach", label: "Postfach", icon: "inbox", href: "/crm/postfach" },
+  { key: "anfragen", label: "Anfragen", icon: "chat", href: "/crm/anfragen" },
+  { key: "leads", label: "Leads", icon: "users", href: "/crm/leads" },
+  { key: "kalender", label: "Kalender", icon: "calendar", href: "/crm/kalender" },
+  { key: "dokumente", label: "Dokumente", icon: "folder", href: "/crm/dokumente" },
+  { key: "social", label: "Social Media", icon: "share", href: "/crm/social-media" },
+  { key: "newsletter", label: "Newsletter", icon: "mail", href: "/crm/newsletter" },
+  { key: "analyse", label: "Analyse", icon: "barChart", href: "/crm/analyse" },
+  { key: "einstellungen", label: "Einstellungen", icon: "settings", href: "/crm/einstellungen" },
+  { key: "finanzen", label: "Finanzen", icon: "euro", href: "/crm/finanzen" },
+  { key: "wissen", label: "Wissen", icon: "book", href: "/crm/wissen" },
+] as const;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Selin Weikard CRM</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#172d24" />
+  </head>
+  <body class="bg-sand-50">
+    <!-- Guard: bis die Session geprüft ist, Inhalt verbergen -->
+    <div id="crm-shell" class="hidden min-h-screen lg:flex">
+      <!-- Sidebar -->
+      <aside
+        id="crm-sidebar"
+        class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-gradient-to-b from-petrol-900 to-petrol-950 text-sand-100 transition-transform duration-200 lg:translate-x-0"
+      >
+        <div class="flex items-center gap-3 border-b border-white/10 px-5 py-5">
+          <Image src={mark} alt="" loading="eager" class="h-9 w-auto" />
+          <span class="flex flex-col leading-none">
+            <span class="font-serif text-base font-medium text-white">Selin Weikard</span>
+            <span class="mt-1 text-[0.6rem] uppercase tracking-[0.18em] text-sand-200/60">CRM</span>
+          </span>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto px-3 py-4" aria-label="CRM-Navigation">
+          <ul class="space-y-1">
+            {
+              nav.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={active === item.key ? "page" : undefined}
+                    class={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                      active === item.key
+                        ? "bg-clay-600 text-white shadow-sm"
+                        : "text-sand-200/75 hover:bg-white/5 hover:text-white"
+                    }`}
+                  >
+                    <Icon name={item.icon} class="h-5 w-5 shrink-0" strokeWidth={1.8} />
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div class="border-t border-white/10 p-3">
+          <button
+            id="crm-logout"
+            type="button"
+            class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sand-200/75 transition-colors hover:bg-white/5 hover:text-white"
+          >
+            <Icon name="logout" class="h-5 w-5 shrink-0" strokeWidth={1.8} />
+            Abmelden
+          </button>
+        </div>
+      </aside>
+
+      <!-- Overlay für Mobile -->
+      <div id="crm-overlay" class="fixed inset-0 z-30 hidden bg-petrol-950/50 lg:hidden"></div>
+
+      <!-- Hauptbereich -->
+      <div class="flex min-h-screen w-full flex-col lg:pl-64">
+        <header class="sticky top-0 z-20 flex items-center gap-4 border-b border-sand-200 bg-white/90 px-4 py-3.5 backdrop-blur sm:px-6">
+          <button
+            id="crm-menu"
+            type="button"
+            class="rounded-lg p-2 text-petrol-700 hover:bg-sand-100 lg:hidden"
+            aria-label="Menü öffnen"
+          >
+            <Icon name="menu" class="h-5 w-5" strokeWidth={2} />
+          </button>
+          <h1 class="font-serif text-xl text-petrol-900">{title}</h1>
+          <div class="ml-auto flex items-center gap-3">
+            <span id="crm-user" class="hidden text-sm text-sand-500 sm:inline"></span>
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-petrol-100 font-serif text-sm text-petrol-700">SW</span>
+          </div>
+        </header>
+
+        <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+          <slot />
+        </main>
+      </div>
+    </div>
+
+    <script>
+      import { supabase } from "../lib/supabase";
+
+      const shell = document.getElementById("crm-shell");
+      const userEl = document.getElementById("crm-user");
+
+      // Session-Guard
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        window.location.replace("/login");
+      } else {
+        if (userEl) userEl.textContent = data.session.user.email ?? "";
+        shell?.classList.remove("hidden");
+      }
+
+      // Logout
+      document.getElementById("crm-logout")?.addEventListener("click", async () => {
+        await supabase.auth.signOut();
+        window.location.replace("/login");
+      });
+
+      // Mobile-Sidebar
+      const sidebar = document.getElementById("crm-sidebar");
+      const overlay = document.getElementById("crm-overlay");
+      function openSidebar() {
+        sidebar?.classList.remove("-translate-x-full");
+        overlay?.classList.remove("hidden");
+      }
+      function closeSidebar() {
+        sidebar?.classList.add("-translate-x-full");
+        overlay?.classList.add("hidden");
+      }
+      document.getElementById("crm-menu")?.addEventListener("click", openSidebar);
+      overlay?.addEventListener("click", closeSidebar);
+    </script>
+  </body>
+</html>

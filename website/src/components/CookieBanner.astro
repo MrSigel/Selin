@@ -1,0 +1,95 @@
+---
+/**
+ * DSGVO-/TTDSG-konformer Consent-Banner.
+ * - Standardmäßig werden NUR technisch notwendige Mittel genutzt.
+ * - Statistik (Vercel Analytics) wird erst nach aktiver Zustimmung geladen.
+ * - Auswahl wird lokal gespeichert; jederzeit über den Footer-Link änderbar.
+ */
+---
+<div
+  id="cookie-banner"
+  class="fixed inset-x-0 bottom-0 z-[60] hidden px-4 pb-4 sm:px-6"
+  role="dialog"
+  aria-modal="false"
+  aria-label="Cookie-Einstellungen"
+>
+  <div class="mx-auto max-w-3xl rounded-2xl border border-sand-200 bg-white/95 p-5 shadow-2xl backdrop-blur sm:p-6">
+    <div class="sm:flex sm:items-start sm:gap-5">
+      <div class="flex-1">
+        <h2 class="font-serif text-lg text-petrol-900">Datenschutz &amp; Cookies</h2>
+        <p class="mt-2 text-sm leading-relaxed text-sand-600">
+          Wir verwenden technisch notwendige Mittel, damit die Website funktioniert. Zusätzlich
+          möchten wir – nur mit deiner Zustimmung – eine anonyme, cookiefreie Reichweitenmessung
+          (Vercel Analytics) einsetzen, um die Seite zu verbessern. Mehr dazu in der
+          <a href="/datenschutz" class="font-medium text-petrol-700 underline underline-offset-2 hover:text-clay-600">Datenschutzerklärung</a>.
+        </p>
+      </div>
+      <div class="mt-4 flex shrink-0 flex-col gap-2 sm:mt-0 sm:w-48">
+        <button
+          type="button"
+          data-consent="all"
+          class="inline-flex w-full items-center justify-center rounded-full bg-clay-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-clay-700"
+        >
+          Alle akzeptieren
+        </button>
+        <button
+          type="button"
+          data-consent="essential"
+          class="inline-flex w-full items-center justify-center rounded-full border border-sand-300 bg-white px-5 py-2.5 text-sm font-medium text-petrol-800 transition-colors hover:border-petrol-300 hover:bg-sand-50"
+        >
+          Nur notwendige
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { inject } from "@vercel/analytics";
+
+  const KEY = "selin-cookie-consent";
+  const banner = document.getElementById("cookie-banner");
+
+  let analyticsLoaded = false;
+  function loadAnalytics() {
+    if (analyticsLoaded) return;
+    analyticsLoaded = true;
+    inject();
+  }
+
+  function apply(consent: string | null) {
+    if (consent === "all") loadAnalytics();
+  }
+
+  function setConsent(value: string) {
+    try {
+      localStorage.setItem(KEY, value);
+    } catch {}
+    banner?.classList.add("hidden");
+    apply(value);
+  }
+
+  let current: string | null = null;
+  try {
+    current = localStorage.getItem(KEY);
+  } catch {}
+
+  if (current) {
+    apply(current);
+  } else {
+    banner?.classList.remove("hidden");
+  }
+
+  banner?.querySelectorAll<HTMLButtonElement>("[data-consent]").forEach((btn) => {
+    btn.addEventListener("click", () => setConsent(btn.dataset.consent || "essential"));
+  });
+
+  // Über Footer-Link erneut öffnen (Einwilligung ändern/widerrufen)
+  document.addEventListener("click", (e) => {
+    const t = (e.target as HTMLElement)?.closest("[data-open-cookie-settings]");
+    if (t) {
+      e.preventDefault();
+      banner?.classList.remove("hidden");
+    }
+  });
+</script>

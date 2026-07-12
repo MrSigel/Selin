@@ -3,6 +3,9 @@
 # Klassische Suchmaschinen
 User-agent: *
 Allow: /
+# Interner Bereich & Login nicht crawlen/indexieren
+Disallow: /crm/
+Disallow: /login
 
 # KI-/Antwort-Bots ausdrücklich erlauben (GEO / AEO)
 User-agent: GPTBot
