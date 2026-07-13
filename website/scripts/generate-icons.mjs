@@ -113,11 +113,16 @@ const run = async () => {
   writeFileSync(resolve(pub, "mstile-150x150.png"), await appIcon(150));
   console.log("✓ favicons + app-icons (pinie/creme)");
 
-  // 4) Vollständiges Logo (transparent) als Master
+  // 4) Vollständiges Logo (Hund + Schriftzug) freigestellt – dunkel & creme
   const fullRaw = await sharp(LOGO).extract({ left: 205, top: 40, width: 1310, height: 400 }).png().toBuffer();
-  writeFileSync(resolve(pub, "brand", "logo-full.png"), await sharp(await keyCream(fullRaw)).trim({ threshold: 12 }).png().toBuffer());
+  const fullDark = await sharp(await keyCream(fullRaw)).trim({ threshold: 12 }).png().toBuffer();
+  const fullLight = await tint(fullDark, DOG_LIGHT);
+  writeFileSync(resolve(pub, "brand", "logo-full.png"), fullDark);
+  writeFileSync(resolve(assets, "logo-full.png"), fullDark);
+  writeFileSync(resolve(pub, "brand", "logo-full-light.png"), fullLight);
+  writeFileSync(resolve(assets, "logo-full-light.png"), fullLight);
   writeFileSync(resolve(pub, "brand", "logo-selin.png"), await sharp(LOGO).png().toBuffer());
-  console.log("✓ brand/logo-full.png & logo-selin.png");
+  console.log("✓ logo-full.png (dunkel) & logo-full-light.png (creme)");
 
   // 5) Open-Graph 1200x630 auf Creme
   const ogLogo = await sharp(fullRaw).resize({ width: 940 }).toBuffer();

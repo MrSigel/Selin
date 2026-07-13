@@ -19,8 +19,10 @@ Ton: ehrlich, warm, fundiert — nie marktschreierisch.
 Quelle: das gelieferte Marken-Logo `public/New_logo.jpeg` (sitzender Hund als Linienzeichnung
 + Wortmarke „Selin Weikard", auf Creme). Marken-Farben = Website-Tokens: Grün `#2a5740`, Ocker `#9c6015`.
 
-Komponente für die Website: `src/components/Logo.astro` — Marken-Icon + live gesetzte Wortmarke;
-`variant="dark"` (heller Grund → brauner Hund), `variant="light"` (dunkler Grund → cremefarbener Hund).
+Komponente für die Website: `src/components/Logo.astro` — nutzt das **vollständige Logo-Bild**
+(Hund + Schriftzug „Selin Weikard" + Untertitel), `variant="dark"` (heller Grund → dunkles Logo
+`logo-full.png`), `variant="light"` (dunkler Grund → cremefarbenes `logo-full-light.png`).
+Die reinen Hund-Marken (`mark.png`/`mark-light.png`) dienen Login/CRM & Favicons.
 
 Assets in `public/brand/`:
 
