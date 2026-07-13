@@ -12,11 +12,11 @@ export const site = {
     "Ganzheitliche Begleitung für Hundegesundheit: Ursache statt Symptom. Homöopathie, Ernährung und Naturheilkunde – online, weltweit. Aus eigener Erfahrung mit Rhodesian Ridgeback Morpheus.",
   email: "info@limit-breakers.eu",
   phone: "+359 895 500 755",
-  // WhatsApp: internationale Nummer ohne + und ohne Leerzeichen (TODO: echte Nummer eintragen)
+  // WhatsApp: internationale Nummer ohne + und ohne Leerzeichen (+49 170 7277779)
   // Alle Anfragen laufen ausschließlich über WhatsApp.
-  whatsappNumber: "491700000000",
+  whatsappNumber: "491707277779",
   whatsappPrefill:
-    "Können wir den Erst-Check durchführen damit ich weiß welches Paket das richtige ist?",
+    "Hallo Selin, ich interessiere mich für den Erst-Check und würde gerne herausfinden, welches Paket für meinen Hund das richtige ist.",
 } as const;
 
 /**
