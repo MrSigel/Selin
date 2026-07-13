@@ -254,8 +254,8 @@ export const morpheusJourney = [
   {
     phase: "Leidenszeit",
     caption:
-      "Die Hundemütze sollte verhindern, dass er sich beim Kopfschütteln die Ohren aufschlägt. Sie war eine Notlösung – keine Antwort auf die eigentliche Frage: Warum ist sein Immunsystem so aus dem Gleichgewicht?",
-    alt: "Morpheus mit Hundemütze, Blick in die Kamera",
+      "Der Halskragen sollte verhindern, dass er sich beim Kopfschütteln weiter verletzt. Er war eine Notlösung – keine Antwort auf die eigentliche Frage: Warum ist sein Immunsystem so aus dem Gleichgewicht?",
+    alt: "Morpheus mit Halskragen, Blick in die Kamera",
   },
   {
     phase: "Während der Ausleitung",
@@ -267,7 +267,7 @@ export const morpheusJourney = [
     phase: "Heute",
     caption:
       "Heute, mit fast 8 Jahren: glänzendes Fell, wache Augen, keine Ohrenprobleme mehr. Ich koche bis heute für ihn – aus Überzeugung, nicht aus Notwendigkeit.",
-    alt: "Morpheus am Meer, glänzendes Fell, wacher Blick",
+    alt: "Morpheus heute – glänzendes Fell, wacher Blick",
   },
 ];
 

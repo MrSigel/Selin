@@ -101,12 +101,12 @@ const typicalQuotes = [
 const journey = [
   {
     src: morpheusPhase1,
-    pos: "center 26%",
+    pos: "center 40%",
     phase: "Die Leidenszeit",
-    punch: "Die Hundemütze als Notlösung.",
+    punch: "Der Halskragen als Notlösung.",
     caption:
-      "Sie sollte verhindern, dass er sich beim Kopfschütteln die Ohren aufschlägt – aber sie war keine Antwort auf die eigentliche Frage: Warum ist sein Immunsystem so aus dem Gleichgewicht?",
-    alt: "Morpheus mit Hundemütze blickt in die Kamera",
+      "Er sollte verhindern, dass er sich beim Kopfschütteln weiter verletzt – aber er war keine Antwort auf die eigentliche Frage: Warum ist sein Immunsystem so aus dem Gleichgewicht?",
+    alt: "Morpheus mit Halskragen blickt in die Kamera",
   },
   {
     src: morpheusPhase2,
@@ -119,12 +119,12 @@ const journey = [
   },
   {
     src: morpheusHero,
-    pos: "66% center",
+    pos: "center center",
     phase: "Heute",
     punch: "Gesund, frei, mit wachem Blick.",
     caption:
       "Mit fast 8 Jahren: glänzendes Fell, klare Augen, keine Ohrenprobleme mehr. Ich koche bis heute für ihn – aus Überzeugung, nicht aus Notwendigkeit.",
-    alt: "Morpheus am Meer im warmen Abendlicht",
+    alt: "Morpheus heute – gesund mit glänzendem Fell",
   },
 ] as const;
 ---
@@ -178,13 +178,13 @@ const journey = [
         <div class="relative h-full w-full">
           <Image
             src={morpheusHero}
-            alt="Morpheus, ein Rhodesian Ridgeback, sitzt gesund und wach am Meer im Abendlicht"
+            alt="Morpheus, ein Rhodesian Ridgeback, gesund und wach mit glänzendem Fell"
             widths={[480, 768, 1024, 1280]}
             sizes="(max-width: 1024px) 100vw, 45vw"
             loading="eager"
             fetchpriority="high"
             class="h-full min-h-[26rem] w-full rounded-2xl object-cover shadow-xl"
-            style="object-position: 62% center;"
+            style="object-position: center center;"
           />
           <div class="absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border border-sand-200 bg-white p-4 shadow-lg sm:flex">
             <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-clay-100 text-clay-600">

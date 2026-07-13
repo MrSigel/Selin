@@ -1,0 +1,45 @@
+/** Statische Galerie-Fotos mit kurzen Geschichten. Öffentlich unter /galerie. */
+export interface GaleriePhoto {
+  src: string;
+  text: string;
+}
+
+export const galeriePhotos: GaleriePhoto[] = [
+  { src: "/fotos/foto-01.jpeg", text: "Gemeinsame Wege: Vertrauen entsteht Schritt für Schritt." },
+  { src: "/fotos/foto-02.jpeg", text: "Nähe, die trägt – ein Moment voller Verbundenheit in der Sonne." },
+  { src: "/fotos/foto-03.jpeg", text: "Von klein auf begleitet: neugierig ins Leben geblickt." },
+  { src: "/fotos/foto-04.jpeg", text: "Die ersten Wochen – der Beginn einer besonderen Bindung." },
+  { src: "/fotos/foto-05.jpeg", text: "Ein wacher Blick, der mehr sagt als tausend Worte." },
+  { src: "/fotos/foto-06.jpeg", text: "Kraftvoll unterwegs in der winterlichen Bergnatur." },
+  { src: "/fotos/foto-07.jpeg", text: "Leidenszeit: der Halskragen als Notlösung – nicht als Antwort." },
+  { src: "/fotos/foto-08.jpeg", text: "Zusammenhalten – gerade an den schweren Tagen." },
+  { src: "/fotos/foto-09.jpeg", text: "Mitten im Prozess, auf der Suche nach der eigentlichen Ursache." },
+  { src: "/fotos/foto-10.jpeg", text: "Endlich zur Ruhe kommen – ein wichtiger Wendepunkt." },
+  { src: "/fotos/foto-11.jpeg", text: "Goldene Stunde: gesund, frei und ganz bei sich." },
+  { src: "/fotos/foto-12.jpeg", text: "Dankbar für jeden gemeinsamen Sonnentag." },
+  { src: "/fotos/foto-13.jpeg", text: "Tiefe Entspannung, wenn Körper und Kopf zur Ruhe kommen." },
+  { src: "/fotos/foto-14.jpeg", text: "Genesung braucht Geduld – und ein weiches Plätzchen." },
+  { src: "/fotos/foto-15.jpeg", text: "Würde und Ausstrahlung, die mit den Jahren wachsen." },
+  { src: "/fotos/foto-16.jpeg", text: "Zwischen blühenden Feldern – Gesundheit beginnt im Alltag." },
+  { src: "/fotos/foto-17.jpeg", text: "Standhaft und ausgeglichen mitten in der Natur." },
+  { src: "/fotos/foto-18.jpeg", text: "Weite und Freiheit am Wasser – einfach durchatmen." },
+  { src: "/fotos/foto-19.jpeg", text: "Auch der Humor darf auf dem Weg nie zu kurz kommen." },
+  { src: "/fotos/foto-20.jpeg", text: "Glänzendes Fell, wacher Blick – der Beweis, dass sich der Weg lohnt." },
+  { src: "/fotos/foto-21.jpeg", text: "Manchmal sind es die kleinen, ganz ruhigen Momente." },
+  { src: "/fotos/foto-22.jpeg", text: "Wach, lebensfroh und mittendrin im Leben." },
+  { src: "/fotos/foto-23.jpeg", text: "Vertrauen heißt: sich fallen lassen dürfen." },
+  { src: "/fotos/foto-24.jpeg", text: "Gut eingepackt und rundum umsorgt." },
+  { src: "/fotos/foto-25.jpeg", text: "Freundschaften, die über Artgrenzen hinausgehen." },
+  { src: "/fotos/foto-26.jpeg", text: "Geborgenheit im gemeinsamen Körbchen." },
+  { src: "/fotos/foto-27.jpeg", text: "Dieser Blick – neugierig und voller Vertrauen." },
+  { src: "/fotos/foto-28.jpeg", text: "Zärtliche Nähe nach einem langen, gemeinsamen Weg." },
+  { src: "/fotos/foto-29.jpeg", text: "Angekommen: entspannt, satt und einfach zuhause." },
+  { src: "/fotos/foto-30.jpeg", text: "Ruhe tanken für das nächste Abenteuer." },
+  { src: "/fotos/foto-31.jpeg", text: "Bereit für den nächsten Spaziergang." },
+  { src: "/galerie/selin-1.jpeg", text: "Gemeinsame Zeit ist der Anfang jeder Begleitung." },
+  { src: "/galerie/morpheus-4.jpeg", text: "Morpheus während der Ausleitung – der Weg zurück zur Ruhe." },
+  { src: "/galerie/selin-3.jpeg", text: "Vertrauen wächst langsam und trägt echte Veränderung." },
+  { src: "/galerie/morpheus-6.jpeg", text: "Heute: glänzendes Fell und wache Augen." },
+  { src: "/galerie/selin-5.jpeg", text: "Draußen unterwegs – Bewegung und frische Luft." },
+  { src: "/galerie/morpheus-meer.jpeg", text: "Am Meer – ich koche bis heute für ihn, aus Überzeugung." },
+];

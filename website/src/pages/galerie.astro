@@ -30,25 +30,13 @@ const schema = {
   </section>
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <!-- Ladezustand -->
-    <div id="galerie-loading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map(() => (
-        <div class="animate-pulse overflow-hidden rounded-2xl border border-sand-200 bg-white">
-          <div class="aspect-[4/3] w-full bg-sand-200/60"></div>
-          <div class="space-y-2 p-5"><div class="h-3 w-3/4 rounded bg-sand-200/60"></div><div class="h-3 w-1/2 rounded bg-sand-200/60"></div></div>
-        </div>
-      ))}
-    </div>
+    <div id="galerie-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
 
-    <div id="galerie-grid" class="hidden grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
-
-    <div id="galerie-empty" class="hidden rounded-2xl border border-dashed border-sand-300 bg-white/60 p-12 text-center">
-      <p class="font-serif text-xl text-petrol-900">Die Galerie wird gerade gefüllt</p>
-      <p class="mt-2 text-sm text-sand-600">Schau bald wieder vorbei – hier entstehen echte Einblicke.</p>
-    </div>
+    <!-- Seitensteuerung -->
+    <nav id="galerie-pager" class="mt-12 hidden flex-wrap items-center justify-center gap-2" aria-label="Galerie-Seiten"></nav>
   </section>
 
-  <div class="py-16">
+  <div class="pb-4">
     <CtaBanner
       title="Auch dein Hund hat eine Geschichte"
       text="Wenn du spürst, dass mehr dahintersteckt, lass uns gemeinsam auf die Ursache schauen."
@@ -57,42 +45,76 @@ const schema = {
 </BaseLayout>
 
 <script>
+  import { galeriePhotos } from "../data/galerie";
   import { listPublicGalerie, escapeHtml } from "../lib/db";
 
-  const loading = document.getElementById("galerie-loading");
-  const grid = document.getElementById("galerie-grid");
-  const empty = document.getElementById("galerie-empty");
+  const PER_PAGE = 12;
+  const grid = document.getElementById("galerie-grid")!;
+  const pager = document.getElementById("galerie-pager")!;
 
-  function card(item: { bild_url: string; geschichte: string | null }) {
-    const story = item.geschichte
-      ? `<p class="mt-0 p-5 text-sm leading-relaxed text-sand-600">${escapeHtml(item.geschichte)}</p>`
+  type Item = { src: string; text: string };
+
+  function card(item: Item) {
+    const story = item.text
+      ? `<figcaption class="p-5 text-sm leading-relaxed text-sand-600">${escapeHtml(item.text)}</figcaption>`
       : "";
     return `
-      <figure class="reveal is-visible group overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <figure class="group overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
         <div class="aspect-[4/3] w-full overflow-hidden">
-          <img src="${escapeHtml(item.bild_url)}" alt="" loading="lazy"
+          <img src="${escapeHtml(item.src)}" alt="" loading="lazy"
                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
         ${story}
       </figure>`;
   }
 
+  let items: Item[] = [];
+  let page = 1;
+
+  function pages() { return Math.max(1, Math.ceil(items.length / PER_PAGE)); }
+
+  function renderPage() {
+    const total = pages();
+    page = Math.min(Math.max(1, page), total);
+    const start = (page - 1) * PER_PAGE;
+    grid.innerHTML = items.slice(start, start + PER_PAGE).map(card).join("");
+
+    if (total <= 1) { pager.classList.add("hidden"); return; }
+    pager.classList.remove("hidden");
+    pager.classList.add("flex");
+    const btn = (label: string, target: number, disabled: boolean, active = false) =>
+      `<button data-page="${target}" ${disabled ? "disabled" : ""}
+        class="min-w-10 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+          active ? "bg-clay-600 text-white"
+          : disabled ? "cursor-not-allowed text-sand-400"
+          : "border border-sand-300 text-petrol-800 hover:border-petrol-300 hover:bg-white"}">${label}</button>`;
+    let html = btn("←", page - 1, page === 1);
+    for (let p = 1; p <= total; p++) html += btn(String(p), p, false, p === page);
+    html += btn("→", page + 1, page === total);
+    pager.innerHTML = html;
+    pager.querySelectorAll<HTMLButtonElement>("button[data-page]").forEach((b) => {
+      b.addEventListener("click", () => {
+        page = Number(b.dataset.page);
+        renderPage();
+        document.getElementById("galerie-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+  }
+
   (async () => {
+    // Statische Fotos als Basis
+    items = [...galeriePhotos];
+    renderPage();
+    // Vom CRM hinzugefügte Bilder vorne anfügen (Duplikate der festen Auswahl ausschließen)
     try {
-      const items = await listPublicGalerie();
-      loading?.classList.add("hidden");
-      if (!items.length) {
-        empty?.classList.remove("hidden");
-        return;
+      const staticSrcs = new Set(galeriePhotos.map((p) => p.src));
+      const crm = (await listPublicGalerie())
+        .map((c) => ({ src: c.bild_url, text: c.geschichte || "" }))
+        .filter((c) => c.src && !staticSrcs.has(c.src));
+      if (crm.length) {
+        items = [...crm, ...galeriePhotos];
+        renderPage();
       }
-      if (grid) {
-        grid.innerHTML = items.map(card).join("");
-        grid.classList.remove("hidden");
-      }
-    } catch (e) {
-      loading?.classList.add("hidden");
-      empty?.classList.remove("hidden");
-      console.error("Galerie konnte nicht geladen werden:", e);
-    }
+    } catch { /* Tabelle evtl. noch nicht angelegt – statische Fotos genügen */ }
   })();
 </script>

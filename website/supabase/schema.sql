@@ -218,14 +218,6 @@ create policy media_auth_update on storage.objects for update to authenticated u
 drop policy if exists media_auth_delete on storage.objects;
 create policy media_auth_delete on storage.objects for delete to authenticated using (bucket_id = 'media');
 
--- ============================================================
--- Seed: Beispiel-Galerie (Bilder liegen unter /galerie/… im public-Ordner)
--- ============================================================
-insert into public.galerie (bild_url, geschichte, sort, published) values
-  ('/galerie/selin-1.jpeg', 'Gemeinsame Zeit ist der Anfang jeder Begleitung – hier bei einem ruhigen Moment mit einem meiner Herzenshunde.', 1, true),
-  ('/galerie/morpheus-4.jpeg', 'Morpheus während der Ausleitung: Man sah die Spuren der alten Belastung – aber er fand Schritt für Schritt zurück zur Ruhe.', 2, true),
-  ('/galerie/selin-3.jpeg', 'Vertrauen wächst langsam. Genau dieses Vertrauen ist die Grundlage für echte Veränderung.', 3, true),
-  ('/galerie/morpheus-6.jpeg', 'Heute: glänzendes Fell, wache Augen, keine Ohrenprobleme mehr. Der lebende Beweis, dass sich der Weg lohnt.', 4, true),
-  ('/galerie/selin-5.jpeg', 'Draußen unterwegs – Bewegung, frische Luft und ein ausgeglichener Hund gehören für mich zusammen.', 5, true),
-  ('/galerie/morpheus-meer.jpeg', 'Am Meer mit fast acht Jahren. Ich koche bis heute für ihn – aus Überzeugung, nicht aus Notwendigkeit.', 6, true)
-on conflict do nothing;
+-- Hinweis: Die öffentliche Galerie zeigt bereits eine feste Foto-Auswahl
+-- (src/data/galerie.ts). Über das CRM hinzugefügte Bilder werden dort zusätzlich
+-- vorangestellt – ein Seed ist daher nicht nötig.
