@@ -3,5 +3,11 @@
   "framework": null,
   "installCommand": "cd website && npm install",
   "buildCommand": "cd website && npm run build",
-  "outputDirectory": "website/dist"
+  "outputDirectory": "website/dist",
+  "redirects": [
+    { "source": "/wissen/hund-trotz-tierarzt-nicht-gesund", "destination": "/wissen/beitrag?slug=hund-trotz-tierarzt-nicht-gesund", "permanent": true },
+    { "source": "/wissen/darmgesundheit-hund-ausleitung", "destination": "/wissen/beitrag?slug=darmgesundheit-hund-ausleitung", "permanent": true },
+    { "source": "/wissen/ernaehrungsumstellung-hund-wann-hilft", "destination": "/wissen/beitrag?slug=ernaehrungsumstellung-hund-wann-hilft", "permanent": true },
+    { "source": "/wissen/allergien-hund-symptom-oder-ursache", "destination": "/wissen/beitrag?slug=allergien-hund-symptom-oder-ursache", "permanent": true }
+  ]
 }

@@ -32,7 +32,7 @@ const description = "Fachartikel zu ganzheitlicher Hundegesundheit von Selin Wei
 </BaseLayout>
 
 <script>
-  import { getArtikel, renderInhalt, fmtDate, escapeHtml } from "../../lib/db";
+  import { getArtikel, getArtikelBySlug, renderInhalt, fmtDate, escapeHtml } from "../../lib/db";
 
   const loading = document.getElementById("beitrag-loading")!;
   const notfound = document.getElementById("beitrag-notfound")!;
@@ -40,10 +40,12 @@ const description = "Fachartikel zu ganzheitlicher Hundegesundheit von Selin Wei
   const fallbackImg = "/galerie/morpheus-meer.jpeg";
 
   (async () => {
-    const id = new URLSearchParams(location.search).get("id");
-    if (!id) { loading.classList.add("hidden"); notfound.classList.remove("hidden"); return; }
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    const slug = params.get("slug");
+    if (!id && !slug) { loading.classList.add("hidden"); notfound.classList.remove("hidden"); return; }
 
-    const a = await getArtikel(id);
+    const a = id ? await getArtikel(id) : await getArtikelBySlug(slug!);
     loading.classList.add("hidden");
     if (!a || !a.published) { notfound.classList.remove("hidden"); return; }
 

@@ -57,7 +57,14 @@ export function renderInhalt(src: string): string {
   let html = "";
   let inList = false;
   const inline = (t: string) =>
-    escapeHtml(t).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    escapeHtml(t)
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, text, href) => {
+        // Interne Wissen-Artikel-Links auf die DB-Detailseite umschreiben
+        const mm = String(href).match(/^\/wissen\/([a-z0-9-]+)\/?$/i);
+        if (mm && mm[1] !== "beitrag") href = `/wissen/beitrag?slug=${mm[1]}`;
+        return `<a href="${href}" class="font-medium text-petrol-700 underline underline-offset-2 hover:text-clay-600">${text}</a>`;
+      });
   for (const raw of lines) {
     const line = raw.trim();
     if (line.startsWith("## ")) {
@@ -111,6 +118,12 @@ export async function listAllArtikel(): Promise<Artikel[]> {
 
 export async function getArtikel(id: string): Promise<Artikel | null> {
   const { data, error } = await supabase.from("wissen_artikel").select("*").eq("id", id).single();
+  if (error) return null;
+  return data as Artikel;
+}
+
+export async function getArtikelBySlug(slug: string): Promise<Artikel | null> {
+  const { data, error } = await supabase.from("wissen_artikel").select("*").eq("slug", slug).single();
   if (error) return null;
   return data as Artikel;
 }
