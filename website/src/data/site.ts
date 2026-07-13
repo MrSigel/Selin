@@ -51,6 +51,7 @@ export const nav = [
   { label: "Podcast", href: "/podcast" },
   { label: "Wissen", href: "/wissen" },
   { label: "FAQ", href: "/haeufige-fragen" },
+  { label: "Kontakt", href: "/kontakt" },
 ] as const;
 
 /** Die 5-Schritte-Methode (Abschnitt 1 des Konzepts) */
