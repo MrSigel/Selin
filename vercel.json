@@ -5,6 +5,7 @@
   "buildCommand": "cd website && npm run build",
   "outputDirectory": "website/dist",
   "redirects": [
+    { "source": "/anfrage", "destination": "/kontakt", "permanent": true },
     { "source": "/wissen/hund-trotz-tierarzt-nicht-gesund", "destination": "/wissen/beitrag?slug=hund-trotz-tierarzt-nicht-gesund", "permanent": true },
     { "source": "/wissen/darmgesundheit-hund-ausleitung", "destination": "/wissen/beitrag?slug=darmgesundheit-hund-ausleitung", "permanent": true },
     { "source": "/wissen/ernaehrungsumstellung-hund-wann-hilft", "destination": "/wissen/beitrag?slug=ernaehrungsumstellung-hund-wann-hilft", "permanent": true },
