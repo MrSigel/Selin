@@ -36,6 +36,15 @@ const schema = {
     <nav id="galerie-pager" class="mt-12 hidden flex-wrap items-center justify-center gap-2" aria-label="Galerie-Seiten"></nav>
   </section>
 
+  <!-- Lightbox / Modal -->
+  <div id="galerie-modal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-petrol-950/85 p-4 backdrop-blur-sm sm:p-8" role="dialog" aria-modal="true" aria-label="Bildansicht">
+    <button id="galerie-modal-close" class="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-xl text-white transition-colors hover:bg-white/20" aria-label="Schließen">✕</button>
+    <figure class="mx-auto flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <img id="galerie-modal-img" src="" alt="" class="max-h-[74vh] w-full bg-sand-100 object-contain" />
+      <figcaption id="galerie-modal-text" class="p-5 text-center leading-relaxed text-sand-700"></figcaption>
+    </figure>
+  </div>
+
   <div class="pb-4">
     <CtaBanner
       title="Auch dein Hund hat eine Geschichte"
@@ -52,6 +61,38 @@ const schema = {
   const grid = document.getElementById("galerie-grid")!;
   const pager = document.getElementById("galerie-pager")!;
 
+  // --- Lightbox / Modal ---
+  const modal = document.getElementById("galerie-modal")!;
+  const modalImg = document.getElementById("galerie-modal-img") as HTMLImageElement;
+  const modalText = document.getElementById("galerie-modal-text")!;
+  function openModal(src: string, text: string) {
+    modalImg.src = src;
+    modalText.textContent = text;
+    modalText.classList.toggle("hidden", !text);
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    document.body.style.overflow = "hidden";
+  }
+  function closeModal() {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+    modalImg.src = "";
+    document.body.style.overflow = "";
+  }
+  grid.addEventListener("click", (e) => {
+    const fig = (e.target as HTMLElement).closest<HTMLElement>("[data-full]");
+    if (fig) openModal(fig.dataset.full || "", fig.dataset.text || "");
+  });
+  grid.addEventListener("keydown", (e) => {
+    const ke = e as KeyboardEvent;
+    if (ke.key !== "Enter" && ke.key !== " ") return;
+    const fig = (e.target as HTMLElement).closest<HTMLElement>("[data-full]");
+    if (fig) { e.preventDefault(); openModal(fig.dataset.full || "", fig.dataset.text || ""); }
+  });
+  document.getElementById("galerie-modal-close")?.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
   type Item = { src: string; text: string };
 
   function card(item: Item) {
@@ -59,9 +100,11 @@ const schema = {
       ? `<figcaption class="p-5 text-sm leading-relaxed text-sand-600">${escapeHtml(item.text)}</figcaption>`
       : "";
     return `
-      <figure class="group overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <figure data-full="${escapeHtml(item.src)}" data-text="${escapeHtml(item.text)}" role="button" tabindex="0"
+        aria-label="Bild vergrößern"
+        class="group cursor-pointer overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-clay-500">
         <div class="aspect-[4/3] w-full overflow-hidden">
-          <img src="${escapeHtml(item.src)}" alt="" loading="lazy"
+          <img src="${escapeHtml(item.src)}" alt="" loading="lazy" style="object-position:center 28%"
                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
         ${story}
