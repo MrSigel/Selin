@@ -28,25 +28,33 @@ const schema = {
   </section>
 
   <section class="mx-auto max-w-2xl px-4 pb-20 pt-14 sm:px-6 lg:px-8">
-    <!-- ===================== KONTAKTFORMULAR (Bitrix24) ===================== -->
-    <div class="rounded-3xl border border-sand-200 bg-white p-6 shadow-sm sm:p-9">
-      <h2 class="font-serif text-2xl text-petrol-900">Schreib mir</h2>
-      <p class="mt-2 text-sm text-sand-600">Fülle das Formular aus – gern mit Fotos deines Hundes. Ich melde mich persönlich zurück.</p>
-      <div class="mt-6 min-h-[3rem]">
-        <script is:inline data-b24-form="click/111/mli06s" data-skip-moving="true">
-          (function(w,d,u){
-            var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);
-            var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
-          })(window,document,'https://cdn.bitrix24.de/b33934811/crm/form/loader_111.js');
-        </script>
-        <noscript>
-          <a href="https://limit-breakers.bitrix24.site/crm_form_f60i0/" target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center justify-center rounded-full bg-clay-600 px-6 py-3 font-medium text-white hover:bg-clay-700">
-            Zum Kontaktformular
-          </a>
-        </noscript>
-      </div>
+    <!-- ===================== KONTAKTFORMULAR (Bitrix24, eingebettet & offen) ===================== -->
+    <div class="rounded-3xl border border-sand-200 bg-white p-4 shadow-sm sm:p-6">
+      <h2 class="px-2 font-serif text-2xl text-petrol-900">Schreib mir</h2>
+      <p class="mt-2 px-2 text-sm text-sand-600">Fülle das Formular aus – gern mit Fotos deines Hundes. Ich melde mich persönlich zurück.</p>
+      <iframe
+        id="b24-iframe"
+        src="https://limit-breakers.bitrix24.site/crm_form_f60i0/"
+        title="Kontaktformular"
+        loading="lazy"
+        class="mt-4 h-[1100px] w-full rounded-xl border-0 md:h-[860px]"
+      ></iframe>
+      <p class="px-2 pb-1 text-center text-xs text-sand-400">
+        Formular lädt nicht?
+        <a href="https://limit-breakers.bitrix24.site/crm_form_f60i0/" target="_blank" rel="noopener noreferrer" class="underline hover:text-petrol-700">In neuem Tab öffnen</a>.
+      </p>
     </div>
+
+    <script is:inline>
+      // Bitrix24 sendet ggf. die Formularhöhe – iframe entsprechend anpassen
+      window.addEventListener("message", function (e) {
+        if (!/bitrix24/.test(e.origin || "")) return;
+        var d = e.data || {};
+        var h = d.height || (d.data && d.data.height) || (typeof d === "number" ? d : null);
+        var f = document.getElementById("b24-iframe");
+        if (f && h && !isNaN(parseInt(h))) f.style.height = parseInt(h) + 40 + "px";
+      });
+    </script>
 
     <!-- ===================== WHATSAPP (darunter) ===================== -->
     <div class="mt-8 rounded-2xl border border-sand-200 bg-white p-6 shadow-sm sm:p-7">
