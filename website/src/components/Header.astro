@@ -38,8 +38,8 @@ const topSignals = [
   id="site-header"
   class="sticky top-0 z-40 border-b border-sand-200/70 bg-sand-50/85 backdrop-blur-md transition-all duration-300"
 >
-  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-    <Logo />
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+    <Logo class="h-11 sm:h-14" />
 
     <nav aria-label="Hauptnavigation" class="hidden items-center gap-0.5 lg:flex">
       {
@@ -48,7 +48,7 @@ const topSignals = [
             href={item.href}
             aria-current={isActive(item.href) ? "page" : undefined}
             class:list={[
-              "nav-underline rounded-full px-3 py-2 text-sm font-medium transition-colors",
+              "nav-underline rounded-full px-2.5 py-2 text-sm font-medium transition-colors",
               isActive(item.href)
                 ? "text-petrol-800"
                 : "text-sand-700 hover:text-petrol-800",

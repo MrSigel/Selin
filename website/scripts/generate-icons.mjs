@@ -15,7 +15,8 @@ const assets = resolve(__dirname, "..", "src", "assets");
 mkdirSync(resolve(pub, "images"), { recursive: true });
 mkdirSync(resolve(pub, "brand"), { recursive: true });
 
-const LOGO = resolve(pub, "brand", "New_logo.jpeg");
+const LOGO = resolve(pub, "brand", "New_logo.jpeg");       // Quelle für Hund/Favicons
+const TITLE = resolve(pub, "brand", "logo-title.png");    // vollständiges Titel-Logo (Hund + Schriftzug)
 const PINE = "#172d24";
 const CREAM = "#efe7df"; // entspricht dem Logo-Hintergrund
 const DOG_LIGHT = "#ece0cc"; // warmes Creme für dunkle Flächen
@@ -113,19 +114,18 @@ const run = async () => {
   writeFileSync(resolve(pub, "mstile-150x150.png"), await appIcon(150));
   console.log("✓ favicons + app-icons (pinie/creme)");
 
-  // 4) Vollständiges Logo (Hund + Schriftzug) freigestellt – dunkel & creme
-  const fullRaw = await sharp(LOGO).extract({ left: 205, top: 40, width: 1310, height: 400 }).png().toBuffer();
-  const fullDark = await sharp(await keyCream(fullRaw)).trim({ threshold: 12 }).png().toBuffer();
+  // 4) Vollständiges Logo (Hund + Schriftzug) aus dem Titel-Logo – freigestellt, dunkel & creme
+  const fullDark = await sharp(await keyCream(await sharp(TITLE).png().toBuffer())).trim({ threshold: 10 }).png().toBuffer();
   const fullLight = await tint(fullDark, DOG_LIGHT);
   writeFileSync(resolve(pub, "brand", "logo-full.png"), fullDark);
   writeFileSync(resolve(assets, "logo-full.png"), fullDark);
   writeFileSync(resolve(pub, "brand", "logo-full-light.png"), fullLight);
   writeFileSync(resolve(assets, "logo-full-light.png"), fullLight);
-  writeFileSync(resolve(pub, "brand", "logo-selin.png"), await sharp(LOGO).png().toBuffer());
+  writeFileSync(resolve(pub, "brand", "logo-selin.png"), await sharp(TITLE).png().toBuffer());
   console.log("✓ logo-full.png (dunkel) & logo-full-light.png (creme)");
 
   // 5) Open-Graph 1200x630 auf Creme
-  const ogLogo = await sharp(fullRaw).resize({ width: 940 }).toBuffer();
+  const ogLogo = await sharp(fullDark).resize({ width: 980 }).toBuffer();
   const textSvg = Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
       <text x="600" y="470" text-anchor="middle" font-family="Georgia, serif" font-size="40" font-style="italic" fill="#2a5740">„Ursache statt Symptom."</text>
@@ -134,7 +134,7 @@ const run = async () => {
   );
   const og = await sharp({ create: { width: 1200, height: 630, channels: 4, background: CREAM } })
     .composite([
-      { input: ogLogo, top: 70, left: Math.round((1200 - 940) / 2) },
+      { input: ogLogo, top: 80, left: Math.round((1200 - 980) / 2) },
       { input: textSvg, top: 0, left: 0 },
     ])
     .png()
