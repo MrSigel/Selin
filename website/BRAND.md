@@ -7,35 +7,36 @@ Markenidentität **„Unter der Oberfläche"**. Alles ist tokenbasiert in
 
 ## 1. Markenidee
 
-**Ursache statt Symptom** — mit Herz. Das Logo zeigt einen fröhlich springenden Hund, der
-aus einem grünen Rahmen heraus ins Leben springt: Gesundheit, Lebensfreude, Vertrauen.
-Grün (`#2a5740`) steht für Natur & Ruhe, Ocker (`#9c6015`) für Wärme & Naturheilkunde.
-Ton: ehrlich, warm, fundiert — nie marktschreierisch, keine Heilversprechen.
+**Ursache statt Symptom** — mit Herz. Das Logo zeigt einen ruhig sitzenden Hund als feine
+Linienzeichnung neben der Wortmarke „Selin Weikard": elegant, warm, vertrauensvoll.
+Grün (`#2a5740`) steht für Natur & Ruhe, Ocker/Braun (`#9c6015`) für Wärme & Naturheilkunde.
+Ton: ehrlich, warm, fundiert — nie marktschreierisch.
 
 ---
 
 ## 2. Logo-System
 
-Quelle: das gelieferte Marken-Logo (springender Hund + Wortmarke „Selin Weikard").
-Marken-Farben sind identisch mit den Website-Tokens: Grün `#2a5740`, Ocker `#9c6015`.
+Quelle: das gelieferte Marken-Logo `public/New_logo.jpeg` (sitzender Hund als Linienzeichnung
++ Wortmarke „Selin Weikard", auf Creme). Marken-Farben = Website-Tokens: Grün `#2a5740`, Ocker `#9c6015`.
 
-Komponente für die Website: `src/components/Logo.astro` — Marken-Icon (Chip) + Wortmarke
-live gesetzt; `variant="dark"` für helle, `variant="light"` für dunkle Hintergründe.
+Komponente für die Website: `src/components/Logo.astro` — Marken-Icon + live gesetzte Wortmarke;
+`variant="dark"` (heller Grund → brauner Hund), `variant="light"` (dunkler Grund → cremefarbener Hund).
 
 Assets in `public/brand/`:
 
 | Datei | Verwendung |
 |---|---|
-| `logo-selin.png` | Vollständiges Logo (Icon + Wortmarke) — Master |
-| `mark.png` | Nur Marken-Icon (Hund + Rahmen) auf Mint — für Chip/Header |
+| `logo-selin.png` | Vollständiges Master-Logo (beide Varianten) |
+| `logo-full.png` | Horizontales Lockup (Hund + Wortmarke) freigestellt |
+| `mark.png` | Hund-Linienzeichnung braun (transparent) — helle Hintergründe |
+| `mark-light.png` | Hund-Linienzeichnung creme (transparent) — dunkle Hintergründe |
 
-Aus diesen werden alle Favicons/App-Icons und das OG-Bild generiert
-(`node scripts/generate-icons.mjs`).
+Favicons/App-Icons (creme-Hund auf pinie-grünem, abgerundetem Grund) und das OG-Bild werden
+generiert aus `New_logo.jpeg`: `node scripts/generate-icons.mjs`.
 
 **Regeln:** Logo nie verzerren, Farben nicht verändern, ausreichend Schutzraum lassen.
-Das vollständige Logo bevorzugt auf hellem/Mint-Grund; das Icon funktioniert als Chip auch
-auf dunklem Grund. Empfehlung: für gestochen scharfe große Darstellungen eine höher
-aufgelöste Fassung (≥ 1024 px) oder SVG des Logos nachliefern (Quelle ist 200 px).
+Auf dunklen Flächen die creme Variante nutzen. Empfehlung: für gestochen scharfe große
+Darstellungen eine vektorbasierte (SVG) Fassung nachliefern.
 
 ---
 

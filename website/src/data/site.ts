@@ -295,7 +295,7 @@ export const faqs = [
   },
   {
     q: "Welche Qualifikation hat Selin Weikard?",
-    a: "Selin ist in Ausbildung zur Tierheilpraktikerin mit Schwerpunkt Tierhomöopathie. Ihr eigentliches Wissen stammt aus drei Jahren intensiver Eigenrecherche parallel zur Krankheit ihres Hundes Morpheus – aus echten Ergebnissen am eigenen Tier. Für chiropraktische Fragen arbeitet sie mit einem erfahrenen Tier-Chiropraktiker zusammen.",
+    a: "Selin bildet sich fortlaufend im Bereich Tierhomöopathie weiter und besucht dazu regelmäßig Kurse. Ihr eigentliches Wissen stammt aus drei Jahren intensiver Eigenrecherche parallel zur Krankheit ihres Hundes Morpheus – aus echten Ergebnissen am eigenen Tier. Sie ist keine Tierärztin; für chiropraktische Fragen arbeitet sie mit einem erfahrenen Tier-Chiropraktiker zusammen.",
   },
   {
     q: "Funktioniert die Beratung auch außerhalb Deutschlands?",

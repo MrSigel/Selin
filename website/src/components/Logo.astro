@@ -1,12 +1,15 @@
 ---
 import { Image } from "astro:assets";
-import mark from "../assets/mark.png";
+import markDark from "../assets/mark.png";
+import markLight from "../assets/mark-light.png";
 
 interface Props {
   class?: string;
   variant?: "dark" | "light";
 }
 const { class: extra = "", variant = "dark" } = Astro.props;
+// variant "light" = auf dunklem Grund (Footer) → cremefarbene Marke
+const mark = variant === "light" ? markLight : markDark;
 const wordColor = variant === "light" ? "text-white" : "text-petrol-900";
 const subColor = variant === "light" ? "text-white/70" : "text-petrol-600";
 ---
@@ -19,7 +22,7 @@ const subColor = variant === "light" ? "text-white/70" : "text-petrol-600";
     src={mark}
     alt=""
     loading="eager"
-    class="h-11 w-auto shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5"
+    class="h-12 w-auto shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5"
   />
   <span class="flex flex-col leading-none">
     <span class={`font-serif text-lg font-medium tracking-tight ${wordColor}`}>Selin Weikard</span>
