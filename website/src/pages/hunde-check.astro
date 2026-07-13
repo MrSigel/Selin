@@ -5,7 +5,7 @@ import { site } from "../data/site";
 
 const title = "Hunde-Gesundheits-Check – finde den Fokus für deinen Hund";
 const description =
-  "Beantworte 6 kurze Fragen und erhalte sofort eine erste Einordnung, wo bei deinem Hund die Ursache liegen könnte – kostenlos und in 2 Minuten. Von Selin Weikard.";
+  "Beantworte 6 kurze Fragen und erhalte sofort eine erste Einordnung, wo bei deinem Hund die Ursache liegen könnte – in nur 2 Minuten. Von Selin Weikard.";
 
 const schema = {
   "@context": "https://schema.org",
@@ -15,7 +15,6 @@ const schema = {
   operatingSystem: "Web",
   description,
   url: `${site.domain}/hunde-check`,
-  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
 };
 ---
 <BaseLayout title={title} description={description} path="/hunde-check" schema={schema}>
