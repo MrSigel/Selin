@@ -124,17 +124,6 @@ const run = async () => {
   writeFileSync(resolve(pub, "brand", "logo-selin.png"), await sharp(LOGO).png().toBuffer());
   console.log("✓ logo-full.png (dunkel) & logo-full-light.png (creme)");
 
-  // 4b) Schriftzug "Selin Weikard" ohne eingebrannten Untertitel (für Header/Footer
-  //     mit separatem, gut lesbarem Untertitel-Text)
-  const wordRaw = await sharp(LOGO).extract({ left: 485, top: 205, width: 900, height: 150 }).png().toBuffer();
-  const wordDark = await sharp(await keyCream(wordRaw)).trim({ threshold: 10 }).png().toBuffer();
-  const wordLight = await tint(wordDark, DOG_LIGHT);
-  writeFileSync(resolve(pub, "brand", "logo-word.png"), wordDark);
-  writeFileSync(resolve(assets, "logo-word.png"), wordDark);
-  writeFileSync(resolve(pub, "brand", "logo-word-light.png"), wordLight);
-  writeFileSync(resolve(assets, "logo-word-light.png"), wordLight);
-  console.log("✓ logo-word.png & logo-word-light.png (Schriftzug)");
-
   // 5) Open-Graph 1200x630 auf Creme
   const ogLogo = await sharp(fullRaw).resize({ width: 940 }).toBuffer();
   const textSvg = Buffer.from(
