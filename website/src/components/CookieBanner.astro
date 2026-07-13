@@ -19,8 +19,9 @@
         <h2 class="font-serif text-lg text-petrol-900">Datenschutz &amp; Cookies</h2>
         <p class="mt-2 text-sm leading-relaxed text-sand-600">
           Wir verwenden technisch notwendige Mittel, damit die Website funktioniert. Zusätzlich
-          möchten wir – nur mit deiner Zustimmung – eine anonyme, cookiefreie Reichweitenmessung
-          (Vercel Analytics) einsetzen, um die Seite zu verbessern. Mehr dazu in der
+          möchten wir – nur mit deiner Zustimmung – Statistik- und Marketing-Dienste einsetzen
+          (Reichweitenmessung sowie Google/Meta zur Conversion-Messung unserer Werbung). Mehr dazu
+          in der
           <a href="/datenschutz" class="font-medium text-petrol-700 underline underline-offset-2 hover:text-clay-600">Datenschutzerklärung</a>.
         </p>
       </div>
@@ -58,7 +59,13 @@
   }
 
   function apply(consent: string | null) {
-    if (consent === "all") loadAnalytics();
+    if (consent === "all") {
+      loadAnalytics();
+      // Marketing-/Ads-Tracking (GTM/Meta) freigeben
+      try {
+        window.dispatchEvent(new Event("selin-consent-all"));
+      } catch {}
+    }
   }
 
   function setConsent(value: string) {

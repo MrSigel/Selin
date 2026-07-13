@@ -40,6 +40,20 @@ export function whatsappLink(message: string = site.whatsappPrefill): string {
   return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
+/**
+ * Tracking-/Ads-IDs für Werbekampagnen. Leer = kein Tracking (Standard).
+ * Wird ausschließlich NACH Cookie-Einwilligung ("Alle akzeptieren") geladen.
+ * - gtmId:       Google-Tag-Manager-Container, z. B. "GTM-XXXXXXX" (empfohlen; darüber lassen
+ *                sich Google-Ads-Conversions, Meta-Pixel usw. zentral verwalten).
+ * - metaPixelId: Meta-(Facebook-)Pixel-ID, z. B. "1234567890123456" (optional).
+ * WhatsApp-Klicks lösen das dataLayer-Event "whatsapp_click" (GTM) bzw. "Lead" (Meta) aus –
+ * direkt als Conversion nutzbar.
+ */
+export const tracking = {
+  gtmId: "",
+  metaPixelId: "",
+} as const;
+
 /** Hauptnavigation */
 export const nav = [
   { label: "Methode", href: "/methode" },

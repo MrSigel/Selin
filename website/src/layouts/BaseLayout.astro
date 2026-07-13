@@ -5,6 +5,7 @@ import Footer from "../components/Footer.astro";
 import WhatsAppFloat from "../components/WhatsAppFloat.astro";
 import SchemaOrg from "../components/SchemaOrg.astro";
 import CookieBanner from "../components/CookieBanner.astro";
+import Tracking from "../components/Tracking.astro";
 import { site, legal } from "../data/site";
 
 interface Props {
@@ -137,6 +138,7 @@ const baseSchema = {
     <Footer />
     <WhatsAppFloat />
     <CookieBanner />
+    <Tracking />
 
     <script>
       // Sanftes Einblenden beim Scrollen (respektiert prefers-reduced-motion)
