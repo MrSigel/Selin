@@ -21,7 +21,7 @@ export interface Field {
   help?: string;
 }
 
-type ColType = "text" | "date" | "datetime" | "euro" | "badge" | "image" | "bool" | "link" | "truncate";
+type ColType = "text" | "date" | "datetime" | "euro" | "badge" | "image" | "images" | "bool" | "link" | "truncate";
 
 export interface Column {
   key: string;
@@ -76,6 +76,15 @@ function cell(row: any, col: Column): string {
       return v ? `<span class="rounded-full bg-clay-100 px-2 py-0.5 text-xs font-medium text-clay-700">${escapeHtml(String(v))}</span>` : "–";
     case "image":
       return v ? `<img src="${escapeHtml(String(v))}" alt="" class="h-10 w-14 rounded object-cover" />` : "–";
+    case "images": {
+      const arr = Array.isArray(v) ? v : [];
+      if (!arr.length) return "–";
+      return (
+        arr.slice(0, 5).map((u: string) =>
+          `<a href="${escapeHtml(u)}" target="_blank" rel="noopener" class="mr-1 inline-block"><img src="${escapeHtml(u)}" alt="" class="h-10 w-10 rounded object-cover" /></a>`
+        ).join("") + (arr.length > 5 ? `<span class="text-xs text-sand-500">+${arr.length - 5}</span>` : "")
+      );
+    }
     case "link":
       return col.hrefTemplate
         ? `<a href="${escapeHtml(col.hrefTemplate(row))}" target="_blank" rel="noopener" class="font-medium text-petrol-600 underline underline-offset-2 hover:text-clay-600">${escapeHtml(col.linkLabel || "öffnen")}</a>`

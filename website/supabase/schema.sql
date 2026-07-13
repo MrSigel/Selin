@@ -218,6 +218,17 @@ create policy media_auth_update on storage.objects for update to authenticated u
 drop policy if exists media_auth_delete on storage.objects;
 create policy media_auth_delete on storage.objects for delete to authenticated using (bucket_id = 'media');
 
+-- ============================================================
+-- Öffentliches Foto-Kontaktformular (/anfrage)
+-- ============================================================
+-- Bild-URLs an den Anfragen speichern
+alter table public.anfragen add column if not exists bild_urls jsonb not null default '[]'::jsonb;
+
+-- Anonyme Besucher dürfen NUR in den Unterordner media/anfragen/ hochladen
+drop policy if exists media_public_insert_anfragen on storage.objects;
+create policy media_public_insert_anfragen on storage.objects for insert to anon
+  with check (bucket_id = 'media' and (storage.foldername(name))[1] = 'anfragen');
+
 -- Hinweis: Die öffentliche Galerie zeigt bereits eine feste Foto-Auswahl
 -- (src/data/galerie.ts). Über das CRM hinzugefügte Bilder werden dort zusätzlich
 -- vorangestellt – ein Seed ist daher nicht nötig.

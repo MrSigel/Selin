@@ -1,0 +1,183 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../data/site";
+
+const title = "Anfrage mit Fotos senden";
+const description =
+  "Schick Selin Weikard deine Beschreibung und Fotos deines Hundes – z. B. von Haut, Fell oder Auffälligkeiten. Persönliche Antwort, alles vertraulich.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Anfrage mit Fotos – Selin Weikard",
+  url: `${site.domain}/anfrage`,
+};
+---
+<BaseLayout title={title} description={description} path="/anfrage" schema={schema}>
+  <section class="relative overflow-hidden bg-gradient-to-b from-petrol-50 to-sand-50">
+    <Icon name="paw" class="paw-deco pointer-events-none absolute -right-6 top-8 h-32 w-32 text-clay-300/20" />
+    <div class="relative mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 lg:py-16 lg:px-8">
+      <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Anfrage mit Fotos</p>
+      <h1 class="mt-3 font-serif text-4xl text-petrol-900 sm:text-5xl">Zeig mir deinen Hund</h1>
+      <p class="prose-lead mx-auto mt-6 max-w-2xl">
+        Manchmal sagt ein Foto mehr als viele Worte – ob Haut, Fell, Ohren oder eine Auffälligkeit.
+        Beschreib mir kurz dein Anliegen und lade passende Bilder hoch. Ich schaue mir alles an und
+        melde mich persönlich bei dir.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-2xl px-4 pb-20 sm:px-6 lg:px-8">
+    <div id="anfrage-card" class="rounded-3xl border border-sand-200 bg-white p-6 shadow-sm sm:p-9">
+      <form id="anfrage-form" class="space-y-5" novalidate>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-sm font-medium text-sand-700">Dein Name *</span>
+            <input type="text" name="name" required autocomplete="name" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium text-sand-700">Name deines Hundes</span>
+            <input type="text" name="hund" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium text-sand-700">E-Mail *</span>
+            <input type="email" name="email" required autocomplete="email" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium text-sand-700">Telefon (optional)</span>
+            <input type="tel" name="phone" autocomplete="tel" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="text-sm font-medium text-sand-700">Beschreibung *</span>
+          <textarea name="message" rows="5" required placeholder="Was beobachtest du bei deinem Hund? Seit wann? Was hast du schon versucht?" class="mt-1.5 w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none"></textarea>
+        </label>
+
+        <div>
+          <span class="text-sm font-medium text-sand-700">Fotos (optional, bis zu 8)</span>
+          <div class="mt-1.5 rounded-lg border border-dashed border-sand-300 bg-sand-50 p-4">
+            <input type="file" name="bilder" multiple accept="image/*" class="w-full text-sm text-sand-600 file:mr-3 file:rounded-full file:border-0 file:bg-petrol-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-petrol-700 hover:file:bg-petrol-200" />
+            <div id="anfrage-preview" class="mt-3 flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+
+        <label class="flex items-start gap-3 text-sm text-sand-600">
+          <input type="checkbox" name="consent" required class="mt-1 h-4 w-4 rounded border-sand-300 text-petrol-600 focus:ring-petrol-500" />
+          <span>Ich bin einverstanden, dass meine Angaben und Bilder zur Bearbeitung meiner Anfrage gespeichert und verarbeitet werden. Hinweise in der <a href="/datenschutz" class="underline">Datenschutzerklärung</a>.</span>
+        </label>
+
+        <p id="anfrage-msg" class="hidden rounded-lg px-3 py-2 text-sm"></p>
+
+        <button id="anfrage-submit" type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto">
+          Anfrage senden
+        </button>
+      </form>
+    </div>
+
+    <p class="mt-4 text-center text-sm text-sand-500">
+      Lieber direkt schreiben? <a href="/kontakt" class="font-medium text-petrol-700 underline underline-offset-2 hover:text-clay-600">Über WhatsApp</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { supabase } from "../lib/supabase";
+  import { uploadMedia } from "../lib/db";
+
+  const form = document.getElementById("anfrage-form") as HTMLFormElement;
+  const card = document.getElementById("anfrage-card")!;
+  const msg = document.getElementById("anfrage-msg")!;
+  const submit = document.getElementById("anfrage-submit") as HTMLButtonElement;
+  const fileInput = form.querySelector('input[name="bilder"]') as HTMLInputElement;
+  const preview = document.getElementById("anfrage-preview")!;
+
+  function showMsg(text: string, ok = false) {
+    msg.textContent = text;
+    msg.className = `rounded-lg px-3 py-2 text-sm ${ok ? "bg-petrol-50 text-petrol-800" : "bg-rust-500/10 text-rust-600 border border-rust-500/30"}`;
+    msg.classList.remove("hidden");
+  }
+
+  // Vorschau der ausgewählten Bilder
+  fileInput?.addEventListener("change", () => {
+    preview.innerHTML = "";
+    const files = Array.from(fileInput.files || []).slice(0, 8);
+    files.forEach((f) => {
+      const url = URL.createObjectURL(f);
+      const img = document.createElement("img");
+      img.src = url;
+      img.className = "h-16 w-16 rounded-lg object-cover";
+      preview.appendChild(img);
+    });
+  });
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    msg.classList.add("hidden");
+    const fd = new FormData(form);
+    const name = String(fd.get("name") || "").trim();
+    const email = String(fd.get("email") || "").trim();
+    const description = String(fd.get("message") || "").trim();
+    const hund = String(fd.get("hund") || "").trim();
+    if (!name || !email || !description || !fd.get("consent")) {
+      showMsg("Bitte fülle Name, E-Mail, Beschreibung aus und stimme der Verarbeitung zu.");
+      return;
+    }
+
+    submit.disabled = true;
+    submit.textContent = "Wird gesendet …";
+
+    // 1) Bilder hochladen (max. 8)
+    const files = Array.from(fileInput?.files || []).slice(0, 8);
+    const urls: string[] = [];
+    let uploadFailed = false;
+    for (const f of files) {
+      try {
+        urls.push(await uploadMedia(f, "anfragen"));
+      } catch (err) {
+        uploadFailed = true;
+        console.error("Upload fehlgeschlagen:", err);
+      }
+    }
+
+    // 2) Anfrage speichern
+    const fullMessage = hund ? `Hund: ${hund}\n\n${description}` : description;
+    const base: Record<string, unknown> = {
+      name,
+      email,
+      phone: String(fd.get("phone") || "").trim() || null,
+      channel: "formular",
+      status: "offen",
+      message: fullMessage,
+    };
+
+    async function insert(withImages: boolean) {
+      const payload = withImages
+        ? { ...base, bild_urls: urls }
+        : { ...base, message: urls.length ? `${fullMessage}\n\nBilder:\n${urls.join("\n")}` : fullMessage };
+      return supabase.from("anfragen").insert(payload);
+    }
+
+    let { error } = await insert(true);
+    if (error && /bild_urls/i.test(error.message || "")) {
+      ({ error } = await insert(false)); // Spalte fehlt noch -> URLs in die Nachricht
+    }
+
+    if (error) {
+      showMsg("Das hat gerade nicht geklappt. Bitte versuch es später erneut oder melde dich über WhatsApp.");
+      submit.disabled = false;
+      submit.textContent = "Anfrage senden";
+      console.error(error);
+      return;
+    }
+
+    card.innerHTML = `
+      <div class="py-8 text-center">
+        <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-petrol-100 text-petrol-700 text-2xl">✓</span>
+        <p class="mt-5 font-serif text-2xl text-petrol-900">Danke, ${name.replace(/[<>&"]/g, "")}!</p>
+        <p class="mx-auto mt-3 max-w-md text-sand-600">Deine Anfrage${urls.length ? " samt Fotos" : ""} ist angekommen. Selin schaut sich alles an und meldet sich persönlich bei dir.</p>
+        ${uploadFailed ? '<p class="mx-auto mt-3 max-w-md text-xs text-rust-600">Hinweis: Einige Bilder konnten nicht hochgeladen werden – bei Bedarf sende sie uns bitte über WhatsApp nach.</p>' : ""}
+      </div>`;
+  });
+</script>
