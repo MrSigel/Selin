@@ -145,19 +145,17 @@ const schema = {
   }
 
   (async () => {
-    // Statische Fotos als Basis
+    // Sofortanzeige: feste Foto-Liste als Fallback (falls DB leer/nicht erreichbar)
     items = [...galeriePhotos];
     renderPage();
-    // Vom CRM hinzugefügte Bilder vorne anfügen (Duplikate der festen Auswahl ausschließen)
+    // Quelle der Wahrheit ist das CRM: sobald die Galerie-Tabelle Einträge hat,
+    // wird ausschließlich sie angezeigt (spiegelt Hinzufügen/Löschen/Verstecken im CRM).
     try {
-      const staticSrcs = new Set(galeriePhotos.map((p) => p.src));
-      const crm = (await listPublicGalerie())
-        .map((c) => ({ src: c.bild_url, text: c.geschichte || "" }))
-        .filter((c) => c.src && !staticSrcs.has(c.src));
+      const crm = await listPublicGalerie();
       if (crm.length) {
-        items = [...crm, ...galeriePhotos];
+        items = crm.map((c) => ({ src: c.bild_url, text: c.geschichte || "" }));
         renderPage();
       }
-    } catch { /* Tabelle evtl. noch nicht angelegt – statische Fotos genügen */ }
+    } catch { /* DB nicht erreichbar – feste Liste genügt */ }
   })();
 </script>
