@@ -15,7 +15,7 @@ const assets = resolve(__dirname, "..", "src", "assets");
 mkdirSync(resolve(pub, "images"), { recursive: true });
 mkdirSync(resolve(pub, "brand"), { recursive: true });
 
-const LOGO = resolve(pub, "New_logo.jpeg");
+const LOGO = resolve(pub, "brand", "New_logo.jpeg");
 const PINE = "#172d24";
 const CREAM = "#efe7df"; // entspricht dem Logo-Hintergrund
 const DOG_LIGHT = "#ece0cc"; // warmes Creme für dunkle Flächen
