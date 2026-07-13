@@ -1,26 +1,35 @@
 ---
 import { Image } from "astro:assets";
-import logoDark from "../assets/logo-full.png";
-import logoLight from "../assets/logo-full-light.png";
+import markDark from "../assets/mark.png";
+import markLight from "../assets/mark-light.png";
+import wordDark from "../assets/logo-word.png";
+import wordLight from "../assets/logo-word-light.png";
 
 interface Props {
-  /** Höhe/Extra-Klassen fürs Logo-Bild, z. B. "h-14" */
   class?: string;
   variant?: "dark" | "light";
 }
-const { class: extra = "h-12", variant = "dark" } = Astro.props;
-// variant "light" = auf dunklem Grund (Footer) → cremefarbenes Logo
-const logo = variant === "light" ? logoLight : logoDark;
+const { class: extra = "", variant = "dark" } = Astro.props;
+// variant "light" = auf dunklem Grund (Footer) → cremefarbene Marke + heller Untertitel
+const mark = variant === "light" ? markLight : markDark;
+const word = variant === "light" ? wordLight : wordDark;
+const subColor = variant === "light" ? "text-sand-100/80" : "text-petrol-700";
 ---
 <a
   href="/"
-  class="group inline-flex items-center"
+  class={`group inline-flex items-center gap-2.5 sm:gap-3 ${extra}`}
   aria-label="Startseite Selin Weikard – Ganzheitliche Hundegesundheit"
 >
   <Image
-    src={logo}
-    alt="Selin Weikard – Ganzheitliche Hundegesundheit"
+    src={mark}
+    alt=""
     loading="eager"
-    class={`w-auto shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 ${extra}`}
+    class="h-12 w-auto shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5"
   />
+  <span class="flex flex-col leading-none">
+    <Image src={word} alt="Selin Weikard" loading="eager" class="h-[27px] w-auto" />
+    <span class={`mt-1.5 text-[0.66rem] font-medium uppercase tracking-[0.14em] ${subColor}`}>
+      Ganzheitliche Hundegesundheit
+    </span>
+  </span>
 </a>
