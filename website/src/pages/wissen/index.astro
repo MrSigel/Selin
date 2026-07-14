@@ -75,10 +75,12 @@ const schema = {
     return `
       <a href="/wissen/beitrag?id=${encodeURIComponent(a.id)}"
          class="reveal is-visible group grid overflow-hidden rounded-3xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg lg:grid-cols-2">
-        <div class="relative overflow-hidden">
-          <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="${escapeHtml(a.titel)}" style="object-position:center 28%"
-               class="h-full min-h-[16rem] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <span class="absolute left-4 top-4 rounded-full bg-clay-600 px-3 py-1 text-xs font-semibold text-white">Neuester Artikel</span>
+        <div class="relative h-full min-h-[16rem] overflow-hidden bg-petrol-50">
+          <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="" aria-hidden="true"
+               class="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-50" />
+          <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="${escapeHtml(a.titel)}"
+               class="absolute inset-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-105" />
+          <span class="absolute left-4 top-4 z-10 rounded-full bg-clay-600 px-3 py-1 text-xs font-semibold text-white">Neuester Artikel</span>
         </div>
         <div class="flex flex-col justify-center p-8 sm:p-10">
           ${meta(a)}
@@ -93,9 +95,11 @@ const schema = {
     return `
       <a href="/wissen/beitrag?id=${encodeURIComponent(a.id)}"
          class="reveal is-visible group flex flex-col overflow-hidden rounded-2xl border border-sand-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-        <div class="relative block overflow-hidden">
-          <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="${escapeHtml(a.titel)}" loading="lazy" style="object-position:center 28%"
-               class="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <div class="relative block aspect-[16/9] w-full overflow-hidden bg-petrol-50">
+          <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="" aria-hidden="true" loading="lazy"
+               class="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-50" />
+          <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="${escapeHtml(a.titel)}" loading="lazy"
+               class="absolute inset-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-105" />
         </div>
         <div class="flex flex-1 flex-col p-6">
           ${meta(a)}

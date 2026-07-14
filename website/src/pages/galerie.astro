@@ -103,9 +103,11 @@ const schema = {
       <figure data-full="${escapeHtml(item.src)}" data-text="${escapeHtml(item.text)}" role="button" tabindex="0"
         aria-label="Bild vergrößern"
         class="group cursor-pointer overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-clay-500">
-        <div class="aspect-[4/3] w-full overflow-hidden">
-          <img src="${escapeHtml(item.src)}" alt="" loading="lazy" style="object-position:center 28%"
-               class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <div class="relative aspect-[4/3] w-full overflow-hidden bg-petrol-50">
+          <img src="${escapeHtml(item.src)}" alt="" aria-hidden="true" loading="lazy"
+               class="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-50" />
+          <img src="${escapeHtml(item.src)}" alt="" loading="lazy"
+               class="absolute inset-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-105" />
         </div>
         ${story}
       </figure>`;
