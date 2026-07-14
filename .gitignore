@@ -10,6 +10,13 @@ dist/
 .env.*
 !.env.example
 
+# Lokale Notizen & Zugangsdaten – NIEMALS committen
+Daten Selin Strato.txt
+*Passwort*
+*Zugangsdaten*
+credentials*
+secrets*
+
 # Logs
 *.log
 npm-debug.log*
