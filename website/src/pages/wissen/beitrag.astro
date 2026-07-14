@@ -73,7 +73,7 @@ const description = "Fachartikel zu ganzheitlicher Hundegesundheit von Selin Wei
       </header>
       <div class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
         <img src="${escapeHtml(a.bild_url || fallbackImg)}" alt="${escapeHtml(a.titel)}"
-             class="mb-10 aspect-[16/9] w-full rounded-2xl object-cover shadow-lg" />
+             class="mb-10 w-full h-auto rounded-2xl shadow-lg" />
         <div class="rich-text">${renderInhalt(a.inhalt || "")}</div>
         <div class="mt-12 rounded-2xl border border-sand-200 bg-sand-100 p-6 text-center sm:p-8">
           <p class="font-serif text-xl text-petrol-900">Fragen zu deinem Hund?</p>
