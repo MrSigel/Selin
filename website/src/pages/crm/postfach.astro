@@ -1,10 +1,185 @@
 ---
 import CrmLayout from "../../layouts/CrmLayout.astro";
-import CrmEmpty from "../../components/CrmEmpty.astro";
 ---
 <CrmLayout title="Postfach" active="postfach">
-  <CrmEmpty
-    icon="inbox"
-    note="Das E-Mail-Postfach (Ein- und Ausgang) wird in einem späteren Schritt angebunden. Anfragen laufen aktuell über WhatsApp und sind unter „Anfragen“ zu finden."
-  />
+  <div class="mb-4 flex items-center gap-3">
+    <button id="mb-refresh" class="inline-flex items-center gap-2 rounded-full border border-sand-300 bg-white px-4 py-2 text-sm font-medium text-petrol-800 hover:border-petrol-300 hover:bg-sand-50">↻ Aktualisieren</button>
+    <button id="mb-compose" class="inline-flex items-center gap-2 rounded-full bg-clay-600 px-4 py-2 text-sm font-medium text-white hover:bg-clay-700">+ Neue E-Mail</button>
+    <span id="mb-status" class="text-sm text-sand-500"></span>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-[minmax(0,22rem)_1fr]">
+    <!-- Liste -->
+    <div class="overflow-hidden rounded-2xl border border-sand-200 bg-white">
+      <ul id="mb-list" class="max-h-[70vh] divide-y divide-sand-100 overflow-y-auto text-sm">
+        <li class="p-6 text-center text-sand-500">Wird geladen …</li>
+      </ul>
+    </div>
+    <!-- Lesebereich -->
+    <div id="mb-reader" class="min-h-[24rem] rounded-2xl border border-sand-200 bg-white p-6">
+      <p class="text-sand-500">Wähle links eine E-Mail aus.</p>
+    </div>
+  </div>
+
+  <!-- Compose / Reply Modal -->
+  <div id="mb-modal" class="fixed inset-0 z-[70] hidden items-start justify-center overflow-y-auto bg-petrol-950/50 p-4 sm:items-center">
+    <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl sm:p-8">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 id="mb-modal-title" class="font-serif text-xl text-petrol-900">Neue E-Mail</h2>
+        <button id="mb-modal-close" class="rounded-lg p-1.5 text-sand-500 hover:bg-sand-100">✕</button>
+      </div>
+      <form id="mb-form" class="space-y-3">
+        <input name="to" type="email" required placeholder="Empfänger" class="w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+        <input name="subject" type="text" required placeholder="Betreff" class="w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none" />
+        <textarea name="text" rows="8" required placeholder="Nachricht …" class="w-full rounded-lg border border-sand-300 bg-sand-50 px-4 py-2.5 focus:border-petrol-500 focus:bg-white focus:outline-none"></textarea>
+        <input type="hidden" name="inReplyTo" />
+        <p id="mb-form-msg" class="hidden text-sm"></p>
+        <div class="flex justify-end gap-3">
+          <button type="button" id="mb-cancel" class="rounded-full px-5 py-2.5 text-sm font-medium text-sand-600 hover:bg-sand-100">Abbrechen</button>
+          <button type="submit" class="rounded-full bg-petrol-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-petrol-800">Senden</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </CrmLayout>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+  import { fmtDate, escapeHtml } from "../../lib/db";
+
+  const listEl = document.getElementById("mb-list")!;
+  const reader = document.getElementById("mb-reader")!;
+  const statusEl = document.getElementById("mb-status")!;
+  const modal = document.getElementById("mb-modal")!;
+  const form = document.getElementById("mb-form") as HTMLFormElement;
+  const formMsg = document.getElementById("mb-form-msg")!;
+
+  async function token() {
+    const { data } = await supabase.auth.getSession();
+    return data.session?.access_token || "";
+  }
+  async function api(path: string, opts: RequestInit = {}) {
+    const t = await token();
+    const r = await fetch(path, {
+      ...opts,
+      headers: { ...(opts.headers || {}), Authorization: "Bearer " + t },
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || "Fehler " + r.status);
+    return data;
+  }
+
+  function row(m: any) {
+    const d = m.date ? fmtDate(m.date) : "";
+    return `<li>
+      <button data-uid="${m.uid}" class="block w-full px-4 py-3 text-left hover:bg-sand-50 ${m.seen ? "" : "bg-clay-50/50"}">
+        <div class="flex items-center justify-between gap-2">
+          <span class="truncate font-medium text-petrol-900">${escapeHtml(m.from || m.fromAddress || "Unbekannt")}</span>
+          <span class="shrink-0 text-xs text-sand-400">${escapeHtml(d)}</span>
+        </div>
+        <div class="mt-0.5 flex items-center gap-2">
+          ${m.seen ? "" : '<span class="h-2 w-2 shrink-0 rounded-full bg-clay-500"></span>'}
+          <span class="truncate text-sand-600">${escapeHtml(m.subject || "(kein Betreff)")}</span>
+        </div>
+      </button>
+    </li>`;
+  }
+
+  async function loadInbox() {
+    listEl.innerHTML = `<li class="p-6 text-center text-sand-500">Wird geladen …</li>`;
+    statusEl.textContent = "";
+    try {
+      const { messages } = await api("/api/mail/inbox");
+      if (!messages.length) {
+        listEl.innerHTML = `<li class="p-6 text-center text-sand-500">Keine E-Mails im Posteingang.</li>`;
+        return;
+      }
+      listEl.innerHTML = messages.map(row).join("");
+      listEl.querySelectorAll<HTMLButtonElement>("[data-uid]").forEach((b) => {
+        b.addEventListener("click", () => openMessage(b.dataset.uid!));
+      });
+    } catch (e: any) {
+      listEl.innerHTML = `<li class="p-6 text-center text-rust-600">${escapeHtml(e.message || "Konnte nicht geladen werden")}</li>`;
+      statusEl.textContent = "Hinweis: Das Postfach funktioniert nur auf der Live-Seite (Serverless-Functions), nicht in der lokalen Vorschau.";
+    }
+  }
+
+  async function openMessage(uid: string) {
+    reader.innerHTML = `<p class="text-sand-500">Wird geladen …</p>`;
+    try {
+      const m = await api("/api/mail/message?uid=" + encodeURIComponent(uid));
+      const bodyHtml = m.html
+        ? `<iframe class="mt-4 h-[52vh] w-full rounded-lg border border-sand-100" sandbox=""></iframe>`
+        : `<div class="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-sand-700">${escapeHtml(m.text || "(kein Inhalt)")}</div>`;
+      reader.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 class="font-serif text-xl text-petrol-900">${escapeHtml(m.subject)}</h2>
+            <p class="mt-1 text-sm text-sand-600">Von: ${escapeHtml(m.from)}</p>
+            <p class="text-xs text-sand-400">${escapeHtml(m.date ? new Date(m.date).toLocaleString("de-DE") : "")}</p>
+          </div>
+          <button id="mb-reply" class="shrink-0 rounded-full bg-clay-600 px-4 py-2 text-sm font-medium text-white hover:bg-clay-700">Antworten</button>
+        </div>
+        ${bodyHtml}`;
+      if (m.html) {
+        const iframe = reader.querySelector("iframe") as HTMLIFrameElement;
+        if (iframe) iframe.srcdoc = m.html;
+      }
+      const fromAddr = (m.from.match(/<([^>]+)>/) || [null, m.from])[1];
+      document.getElementById("mb-reply")?.addEventListener("click", () =>
+        openCompose({ to: fromAddr, subject: /^re:/i.test(m.subject) ? m.subject : "Re: " + m.subject })
+      );
+    } catch (e: any) {
+      reader.innerHTML = `<p class="text-rust-600">${escapeHtml(e.message || "Fehler")}</p>`;
+    }
+  }
+
+  function openCompose(prefill: { to?: string; subject?: string } = {}) {
+    form.reset();
+    (form.querySelector('[name=to]') as HTMLInputElement).value = prefill.to || "";
+    (form.querySelector('[name=subject]') as HTMLInputElement).value = prefill.subject || "";
+    document.getElementById("mb-modal-title")!.textContent = prefill.to ? "Antworten" : "Neue E-Mail";
+    formMsg.classList.add("hidden");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+  function closeCompose() {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const btn = form.querySelector("button[type=submit]") as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = "Senden …";
+    formMsg.classList.add("hidden");
+    try {
+      await api("/api/mail/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: fd.get("to"), subject: fd.get("subject"), text: fd.get("text"),
+        }),
+      });
+      formMsg.textContent = "Gesendet ✓";
+      formMsg.className = "text-sm text-petrol-700";
+      formMsg.classList.remove("hidden");
+      setTimeout(closeCompose, 900);
+    } catch (err: any) {
+      formMsg.textContent = err.message || "Senden fehlgeschlagen";
+      formMsg.className = "text-sm text-rust-600";
+      formMsg.classList.remove("hidden");
+    } finally {
+      btn.disabled = false; btn.textContent = "Senden";
+    }
+  });
+
+  document.getElementById("mb-refresh")?.addEventListener("click", loadInbox);
+  document.getElementById("mb-compose")?.addEventListener("click", () => openCompose());
+  document.getElementById("mb-cancel")?.addEventListener("click", closeCompose);
+  document.getElementById("mb-modal-close")?.addEventListener("click", closeCompose);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeCompose(); });
+
+  loadInbox();
+</script>

@@ -1,0 +1,12 @@
+{
+  "name": "selin-serverless-api",
+  "private": true,
+  "type": "module",
+  "description": "Vercel Serverless Functions (E-Mail: IMAP/SMTP) für selin-weikard.de",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "imapflow": "^1.0.164",
+    "mailparser": "^3.7.1",
+    "nodemailer": "^6.9.14"
+  }
+}
