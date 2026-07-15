@@ -103,8 +103,6 @@ export const methodSteps = [
 export type Pkg = {
   slug: string;
   name: string;
-  price: string;
-  priceValue: number;
   tagline: string;
   content: string;
   features: string[];
@@ -118,8 +116,6 @@ export const packages: Pkg[] = [
   {
     slug: "erst-check",
     name: "Erst-Check",
-    price: "99 €",
-    priceValue: 99,
     tagline: "Der erste ehrliche Blick auf deinen Hund.",
     content:
       "60 Minuten Einzelsession online – Anamnese, erste Einschätzung von Körper, Ernährung & Verhalten, mit schriftlichem Kurz-Feedback danach.",
@@ -136,8 +132,6 @@ export const packages: Pkg[] = [
   {
     slug: "ursachen-klarheit",
     name: "Ursachen-Klarheit",
-    price: "349 €",
-    priceValue: 349,
     tagline: "Endlich verstehen, was wirklich los ist.",
     content:
       "Zwei ausführliche Beratungen plus individueller Plan und ein Follow-up – für alle, die der Ursache wirklich auf den Grund gehen wollen.",
@@ -155,8 +149,6 @@ export const packages: Pkg[] = [
   {
     slug: "gesundheits-reset",
     name: "Gesundheits-Reset",
-    price: "890 €",
-    priceValue: 890,
     tagline: "Sechs Wochen konsequente Begleitung.",
     content:
       "3–4 Sitzungen über 6 Wochen, vertiefte ganzheitliche Begleitung mit schriftlichen Anpassungen und WhatsApp-Begleitung an Werktagen.",
@@ -173,8 +165,6 @@ export const packages: Pkg[] = [
   {
     slug: "volle-begleitung",
     name: "Volle Begleitung",
-    price: "1.890 €",
-    priceValue: 1890,
     tagline: "Drei Monate, mehrere Themen, ein Ziel.",
     content:
       "6–8 Sitzungen über 3 Monate über mehrere Themenbereiche hinweg – Körper, Ernährung und Verhalten – mit durchgehender Begleitung.",
@@ -191,8 +181,6 @@ export const packages: Pkg[] = [
   {
     slug: "lifetime-partner",
     name: "Lifetime-Partner",
-    price: "2.990 €",
-    priceValue: 2990,
     tagline: "Ein halbes Jahr an deiner Seite.",
     content:
       "6 Monate intensive Begleitung mit durchgehendem persönlichem Zugang – inklusive Academy-Zugang für die gesamte Laufzeit.",

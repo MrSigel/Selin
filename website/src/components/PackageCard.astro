@@ -21,7 +21,7 @@ const { pkg, compact = false } = Astro.props;
   }
   <h3 class="font-serif text-xl text-petrol-900">{pkg.name}</h3>
   <p class="mt-1 text-sm text-sand-600">{pkg.tagline}</p>
-  <p class="mt-4 font-serif text-3xl text-petrol-800">{pkg.price}</p>
+  <p class="mt-4 text-sm font-medium text-sand-500">{pkg.meta}</p>
 
   {
     !compact && (

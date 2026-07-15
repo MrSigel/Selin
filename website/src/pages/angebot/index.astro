@@ -9,13 +9,13 @@ import CtaBanner from "../../components/CtaBanner.astro";
 import { packages, faqs, whatsappLink, site } from "../../data/site";
 import heroImg from "../../assets/morpheus-7.jpeg";
 
-const title = "Angebot & Preise – ganzheitliche Hundegesundheits-Begleitung";
+const title = "Angebot – ganzheitliche Hundegesundheits-Begleitung";
 const description =
-  "Transparente Pakete von der ersten Einschätzung bis zur langfristigen Begleitung. Erst-Check ab 99 €. Online, weltweit – Ursache statt Symptom.";
+  "Klare Pakete von der ersten Einschätzung bis zur langfristigen Begleitung. Online, weltweit – Ursache statt Symptom.";
 
 const trustChips = [
   { icon: "compass", t: "Online · weltweit" },
-  { icon: "search", t: "Transparente Preise" },
+  { icon: "search", t: "Klare Pakete" },
   { icon: "heart", t: "Unverbindlich starten" },
 ];
 
@@ -45,8 +45,6 @@ const schema = [
     itemListElement: packages.map((p) => ({
       "@type": "Offer",
       name: p.name,
-      price: p.priceValue,
-      priceCurrency: "EUR",
       url: `${site.domain}/angebot/${p.slug}`,
       description: p.content,
     })),
@@ -141,7 +139,7 @@ const schema = [
       {packages.map((pkg) => <PackageCard pkg={pkg} />)}
     </div>
     <p class="reveal mx-auto mt-8 max-w-2xl text-center text-sm text-sand-500">
-      Alle Preise transparent und einmalig · online · weltweit.
+      Alle Pakete online · weltweit · Details besprechen wir persönlich im Gespräch.
     </p>
   </section>
 

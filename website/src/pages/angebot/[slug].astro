@@ -21,7 +21,7 @@ const flow = [
   { icon: "play", t: "Sitzung online", d: "Wir sprechen per Videocall – danach bekommst du alles schriftlich." },
 ];
 
-const title = `${pkg.name} (${pkg.price}) – ganzheitliche Hundegesundheit`;
+const title = `${pkg.name} – ganzheitliche Hundegesundheit`;
 const description = `${pkg.tagline} ${pkg.content}`;
 
 const schema = [
@@ -35,8 +35,6 @@ const schema = [
     areaServed: "Weltweit",
     offers: {
       "@type": "Offer",
-      price: pkg.priceValue,
-      priceCurrency: "EUR",
       url: `${site.domain}/angebot/${pkg.slug}`,
       availability: "https://schema.org/InStock",
     },
@@ -141,11 +139,8 @@ const schema = [
           class="w-full h-auto"
         />
         <div class="p-7">
-          <div class="flex items-end justify-between">
-            <p class="font-serif text-4xl text-petrol-800">{pkg.price}</p>
-            <span class="pb-1 text-sm text-sand-500">{pkg.meta}</span>
-          </div>
-          <p class="mt-1 text-sm text-sand-500">Einmalig · online · weltweit</p>
+          <p class="font-serif text-2xl text-petrol-800">{pkg.name}</p>
+          <p class="mt-1 text-sm text-sand-500">{pkg.meta} · online · weltweit</p>
           <div class="mt-6 flex flex-col gap-3">
             <Button href={whatsappLink(prefill)} variant="primary" size="lg" external class="wag-hover group">
               <Icon name="paw" class="wag h-5 w-5" />
@@ -179,8 +174,8 @@ const schema = [
               <span class="text-xs font-medium text-sand-500">{p.meta}</span>
               <h3 class="mt-1 font-serif text-lg text-petrol-900 group-hover:text-petrol-700">{p.name}</h3>
               <p class="mt-1 flex-1 text-sm text-sand-500">{p.tagline}</p>
-              <p class="mt-4 flex items-center justify-between font-serif text-xl text-petrol-700">
-                {p.price}
+              <p class="mt-4 flex items-center justify-between text-sm font-medium text-petrol-700">
+                Details ansehen
                 <Icon name="arrowRight" class="h-4 w-4 text-clay-500 transition-transform group-hover:translate-x-1" strokeWidth={2} />
               </p>
             </a>
