@@ -1,0 +1,57 @@
+---
+import CrmLayout from "../../layouts/CrmLayout.astro";
+---
+<CrmLayout title="Instagram" active="instagram">
+  <p class="mb-5 max-w-2xl text-sm text-sand-500">
+    Füge den Link zu einem Instagram-Beitrag oder Reel ein – der Beitrag erscheint dann automatisch
+    auf der <a href="/" target="_blank" class="font-medium text-petrol-700 underline">Startseite</a>.
+    Der neueste Beitrag steht vorne. Bild oder Video musst du nicht hochladen, der Link genügt.
+  </p>
+  <div id="crm-root"></div>
+</CrmLayout>
+
+<script>
+  import { mountResource } from "../../lib/crm-ui";
+  import { instagramEmbedUrl } from "../../lib/db";
+
+  mountResource({
+    table: "instagram_posts",
+    singular: "Beitrag",
+    newLabel: "+ Neuer Beitrag",
+    order: "sort",
+    asc: true,
+    defaults: { published: true, sort: 0 },
+    emptyText: "Noch keine Beiträge. Füge deinen ersten Instagram-Link hinzu.",
+    columns: [
+      { key: "url", label: "Beitrag", type: "link", linkLabel: "auf Instagram öffnen", hrefTemplate: (r) => r.url },
+      { key: "beschreibung", label: "Beschreibung", type: "truncate" },
+      { key: "sort", label: "Reihenfolge" },
+      { key: "published", label: "Öffentlich", type: "bool" },
+    ],
+    fields: [
+      {
+        key: "url",
+        label: "Instagram-Link",
+        type: "text",
+        required: true,
+        placeholder: "https://www.instagram.com/p/ABC123/",
+        help: "Beitrag oder Reel – in der Instagram-App auf „Teilen“ → „Link kopieren“.",
+      },
+      {
+        key: "beschreibung",
+        label: "Kurze Beschreibung (optional)",
+        type: "textarea",
+        maxlength: 200,
+        help: "Wird über dem Beitrag angezeigt. Maximal 200 Zeichen.",
+      },
+      { key: "sort", label: "Reihenfolge (kleiner = weiter vorne)", type: "number" },
+      { key: "published", label: "Öffentlich sichtbar", type: "checkbox", placeholder: "auf der Startseite anzeigen" },
+    ],
+    validate: (row) => {
+      if (!instagramEmbedUrl(String(row.url || ""))) {
+        return "Das sieht nicht nach einem Instagram-Beitrag aus. Beispiel: https://www.instagram.com/p/ABC123/";
+      }
+      return null;
+    },
+  });
+</script>

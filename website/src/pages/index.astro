@@ -661,6 +661,36 @@ const journey = [
     </div>
   </section>
 
+  <!-- ===================== INSTAGRAM ===================== -->
+  <section id="instagram" class="relative hidden overflow-hidden bg-sand-50 py-24">
+    <Icon name="paw" class="paw-deco pointer-events-none absolute -right-8 top-12 h-36 w-36 text-clay-300/20" />
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wider text-clay-600">Instagram</p>
+        <h2 class="mt-3 font-serif text-3xl text-petrol-900 sm:text-4xl">Aus dem Alltag mit Morpheus</h2>
+        <p class="mt-4 text-lg leading-relaxed text-sand-600">
+          Kleine Einblicke, ehrliche Zwischenstände und was mich gerade beschäftigt –
+          frisch von meinem Instagram-Kanal.
+        </p>
+      </div>
+
+      <div id="ig-grid" class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+      <div id="ig-follow" class="mt-10 hidden text-center">
+        <a
+          id="ig-follow-link"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full border border-sand-300 bg-white px-6 py-3 text-sm font-medium text-petrol-800 transition-all duration-200 hover:-translate-y-0.5 hover:border-petrol-300 hover:shadow-md"
+        >
+          <Icon name="instagram" class="h-5 w-5 text-clay-600" strokeWidth={1.8} />
+          Auf Instagram folgen
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== FAQ ===================== -->
   <section class="bg-petrol-50/60 py-24">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
@@ -683,6 +713,105 @@ const journey = [
     <CtaBanner />
   </div>
 </BaseLayout>
+
+<script>
+  import { listPublicInstagram, instagramEmbedUrl, escapeHtml } from "../lib/db";
+  import { site } from "../data/site";
+
+  const section = document.getElementById("instagram");
+  const grid = document.getElementById("ig-grid");
+  const CONSENT_KEY = "selin-cookie-consent";
+  const MAX_POSTS = 3;
+
+  const consentGiven = () => localStorage.getItem(CONSENT_KEY) === "all";
+
+  function iframeHtml(embed: string): string {
+    return `<iframe src="${escapeHtml(embed)}" title="Instagram-Beitrag" loading="lazy"
+      scrolling="no" class="h-full w-full border-0"></iframe>`;
+  }
+
+  // Zwei-Klick-Lösung: ohne Einwilligung wird nichts von Instagram geladen.
+  function placeholderHtml(url: string): string {
+    return `<div class="flex h-full flex-col items-center justify-center gap-3 bg-sand-100 p-6 text-center">
+      <p class="text-sm leading-relaxed text-sand-600">Beim Laden dieses Beitrags werden Daten an Instagram übertragen.</p>
+      <button type="button" data-ig-load class="rounded-full bg-clay-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-clay-700">Beitrag laden</button>
+      <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-xs text-sand-500 underline underline-offset-2 hover:text-petrol-700">Stattdessen auf Instagram ansehen</a>
+    </div>`;
+  }
+
+  function card(p: { url: string; beschreibung: string | null }): string {
+    const embed = instagramEmbedUrl(p.url);
+    if (!embed) return "";
+    const text = p.beschreibung
+      ? `<figcaption class="border-t border-sand-100 p-5 text-sm leading-relaxed text-sand-600">${escapeHtml(p.beschreibung)}</figcaption>`
+      : "";
+    return `<figure class="reveal is-visible overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm">
+      <div class="ig-frame h-[28rem] w-full overflow-hidden" data-embed="${escapeHtml(embed)}" data-url="${escapeHtml(p.url)}">
+        ${consentGiven() ? iframeHtml(embed) : placeholderHtml(p.url)}
+      </div>
+      ${text}
+    </figure>`;
+  }
+
+  function loadFrame(frame: HTMLElement) {
+    if (frame.querySelector("iframe")) return;
+    frame.innerHTML = iframeHtml(frame.dataset.embed || "");
+  }
+
+  function wire() {
+    grid?.querySelectorAll<HTMLButtonElement>("[data-ig-load]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const frame = btn.closest<HTMLElement>(".ig-frame");
+        if (frame) loadFrame(frame);
+      });
+    });
+  }
+
+  // Instagram meldet seine Höhe per postMessage – iframe entsprechend anpassen.
+  window.addEventListener("message", (e) => {
+    let host = "";
+    try { host = new URL(e.origin).hostname; } catch { return; }
+    if (!/(^|\.)instagram\.com$/.test(host)) return;
+    let d: any = e.data;
+    if (typeof d === "string") { try { d = JSON.parse(d); } catch { return; } }
+    const h = Number(d?.details?.height);
+    if (d?.type !== "MEASURE" || !h) return;
+    grid?.querySelectorAll<HTMLIFrameElement>("iframe").forEach((f) => {
+      if (f.contentWindow === e.source && f.parentElement) {
+        f.parentElement.style.height = Math.ceil(h) + "px";
+      }
+    });
+  });
+
+  // Nachträgliche Einwilligung: Platzhalter sofort ersetzen.
+  window.addEventListener("selin-consent-all", () => {
+    grid?.querySelectorAll<HTMLElement>(".ig-frame").forEach(loadFrame);
+  });
+
+  (async () => {
+    if (!section || !grid) return;
+    let posts: { url: string; beschreibung: string | null }[] = [];
+    try {
+      posts = await listPublicInstagram();
+    } catch {
+      return; // DB nicht erreichbar – Abschnitt bleibt aus
+    }
+    const html = posts.slice(0, MAX_POSTS).map(card).filter(Boolean).join("");
+    if (!html) return; // keine Beiträge – Abschnitt bleibt aus
+    grid.innerHTML = html;
+    section.classList.remove("hidden");
+    wire();
+
+    if (site.instagramProfile) {
+      const follow = document.getElementById("ig-follow");
+      const link = document.getElementById("ig-follow-link") as HTMLAnchorElement | null;
+      if (follow && link) {
+        link.href = site.instagramProfile;
+        follow.classList.remove("hidden");
+      }
+    }
+  })();
+</script>
 
 <style>
   /* Hero-Bild kommt beim Laden langsam von 25% auf 100% nach vorne */

@@ -34,6 +34,17 @@ create table if not exists public.galerie (
   sort integer not null default 0
 );
 
+-- ======================= INSTAGRAM ============================
+-- Beiträge werden nur als Link gepflegt; die Startseite bettet sie ein.
+create table if not exists public.instagram_posts (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  published boolean not null default true,
+  url text not null,
+  beschreibung text check (char_length(beschreibung) <= 200),
+  sort integer not null default 0
+);
+
 -- =================== ERST-CHECK LEADS =========================
 create table if not exists public.erst_check_leads (
   id uuid primary key default gen_random_uuid(),
@@ -154,6 +165,7 @@ create trigger trg_transaktionen_updated before update on public.transaktionen f
 -- ---------- Indexe ----------
 create index if not exists idx_wissen_pub on public.wissen_artikel(published, pub_date desc);
 create index if not exists idx_galerie_sort on public.galerie(published, sort, created_at desc);
+create index if not exists idx_instagram_sort on public.instagram_posts(published, sort, created_at desc);
 create index if not exists idx_leads_created on public.leads(created_at desc);
 create index if not exists idx_anfragen_created on public.anfragen(created_at desc);
 create index if not exists idx_termine_start on public.termine(start_at);
@@ -163,6 +175,7 @@ create index if not exists idx_termine_start on public.termine(start_at);
 -- ============================================================
 alter table public.wissen_artikel        enable row level security;
 alter table public.galerie                enable row level security;
+alter table public.instagram_posts        enable row level security;
 alter table public.erst_check_leads       enable row level security;
 alter table public.leads                  enable row level security;
 alter table public.anfragen               enable row level security;
@@ -177,7 +190,7 @@ do $$
 declare t text;
 begin
   foreach t in array array[
-    'wissen_artikel','galerie','erst_check_leads','leads','anfragen','termine',
+    'wissen_artikel','galerie','instagram_posts','erst_check_leads','leads','anfragen','termine',
     'dokumente','social_posts','newsletter_subscribers','transaktionen'
   ] loop
     execute format('drop policy if exists admin_all_%1$s on public.%1$s;', t);
@@ -190,6 +203,8 @@ drop policy if exists public_read_wissen on public.wissen_artikel;
 create policy public_read_wissen on public.wissen_artikel for select to anon using (published = true);
 drop policy if exists public_read_galerie on public.galerie;
 create policy public_read_galerie on public.galerie for select to anon using (published = true);
+drop policy if exists public_read_instagram on public.instagram_posts;
+create policy public_read_instagram on public.instagram_posts for select to anon using (published = true);
 
 -- Öffentlich anlegbar (nur Insert): Lead-Erfassung
 drop policy if exists public_insert_erstcheck on public.erst_check_leads;

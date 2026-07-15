@@ -40,6 +40,10 @@ export interface ResourceConfig {
   asc?: boolean;
   defaults?: Record<string, unknown>;
   emptyText?: string;
+  /** Beschriftung des Anlegen-Buttons (Standard: „+ Neu") */
+  newLabel?: string;
+  /** Prüft die Eingabe vor dem Speichern. Rückgabe = Fehlertext, null = in Ordnung. */
+  validate?: (row: Record<string, unknown>) => string | null;
   /** optionale Zusammenfassung über der Tabelle (z. B. Summen) */
   summary?: (rows: any[]) => string;
 }
@@ -149,7 +153,7 @@ export function mountResource(cfg: ResourceConfig) {
   root.innerHTML = `
     <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
       <p id="crm-count" class="text-sm text-sand-500">Wird geladen …</p>
-      <button id="crm-new" class="inline-flex items-center gap-2 rounded-full bg-clay-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-clay-700">+ Neu</button>
+      <button id="crm-new" class="inline-flex items-center gap-2 rounded-full bg-clay-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-clay-700">${escapeHtml(cfg.newLabel || "+ Neu")}</button>
     </div>
     <div id="crm-summary"></div>
     <div class="overflow-x-auto rounded-2xl border border-sand-200 bg-white">
@@ -259,6 +263,8 @@ export function mountResource(cfg: ResourceConfig) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const payload = collect();
+    const problem = cfg.validate?.(payload);
+    if (problem) { toast(problem, false); return; }
     const btn = form.querySelector("button[type=submit]") as HTMLButtonElement;
     btn.disabled = true; btn.textContent = "Speichert …";
     try {

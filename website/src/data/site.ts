@@ -10,8 +10,11 @@ export const site = {
   domain: "https://www.selin-weikard.de",
   description:
     "Ganzheitliche Begleitung für Hundegesundheit: Ursache statt Symptom. Homöopathie, Ernährung und Naturheilkunde – online, weltweit. Aus eigener Erfahrung mit Rhodesian Ridgeback Morpheus.",
-  email: "info@limit-breakers.eu",
+  // Kundenkontakt-Adresse (Footer, Kontaktseite). Rechtliche Adresse steht in `legal`.
+  email: "hundecoach@selin-weikard.de",
   phone: "+359 895 500 755",
+  // Instagram-Profil (volle URL). Leer = kein „Folgen"-Button auf der Startseite.
+  instagramProfile: "",
   // WhatsApp: internationale Nummer ohne + und ohne Leerzeichen (+49 170 7277779)
   // Alle Anfragen laufen ausschließlich über WhatsApp.
   whatsappNumber: "491707277779",

@@ -26,7 +26,30 @@ export interface GalerieItem {
   sort: number;
 }
 
+export interface InstagramPost {
+  id: string;
+  created_at?: string;
+  published: boolean;
+  url: string;
+  beschreibung: string | null;
+  sort: number;
+}
+
 // ---------- Helfer ----------
+/**
+ * Wandelt eine beliebige Instagram-Beitrags-URL in die offizielle Einbett-URL um.
+ * Unterstützt /p/ (Bild), /reel/ + /reels/ (Video) und /tv/. Gibt null zurück,
+ * wenn der Link kein einbettbarer Instagram-Beitrag ist.
+ */
+export function instagramEmbedUrl(url: string): string | null {
+  const m = (url || "").match(
+    /(?:instagram\.com|instagr\.am)\/(p|reel|reels|tv)\/([A-Za-z0-9_-]+)/i
+  );
+  if (!m) return null;
+  const typ = m[1].toLowerCase() === "reels" ? "reel" : m[1].toLowerCase();
+  return `https://www.instagram.com/${typ}/${m[2]}/embed`;
+}
+
 export function slugify(s: string): string {
   return s
     .toLowerCase()
@@ -182,6 +205,18 @@ export async function deleteGalerie(id: string): Promise<void> {
 export async function setGaleriePublished(id: string, published: boolean): Promise<void> {
   const { error } = await supabase.from("galerie").update({ published }).eq("id", id);
   if (error) throw error;
+}
+
+// ---------- Instagram ----------
+export async function listPublicInstagram(): Promise<InstagramPost[]> {
+  const { data, error } = await supabase
+    .from("instagram_posts")
+    .select("*")
+    .eq("published", true)
+    .order("sort", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data as InstagramPost[]) || [];
 }
 
 // ---------- Erst-Check Lead ----------
